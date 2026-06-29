@@ -76,6 +76,8 @@
     font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
     font-weight: 600; color: var(--color-brand);
   }
+  /* Eyebrow sobre fondo oscuro (sobre media) */
+  .eyebrow.on-dark { color: #C7C9F2; }
 
   /* Botones pill */
   .btn {
@@ -102,6 +104,8 @@
     content: ""; position: absolute; inset: 0;
     background: var(--overlay-brand); z-index: -1;
   }
+  /* Overlay alternativo (fallback cuando la foto tiene poco contraste) */
+  .media-surface.overlay-ink::before { background: var(--overlay-ink); }
 }
 
 @media (prefers-reduced-motion: reduce) {
