@@ -1,80 +1,233 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "./Button";
+import { BookingButton } from "@/components/booking/BookingButton";
+import { useBooking } from "@/components/booking/BookingProvider";
+import { lockLenis, unlockLenis } from "@/lib/lenis";
 import { site } from "@/data/site";
 
+const overlayItems = [
+  { label: "Sucursales", type: "modal" as const },
+  { label: "Nosotros", type: "link" as const, href: "/conocenos/" },
+  { label: "Novedades", type: "link" as const, href: "/blog/" },
+];
+
+const telHref = (n: string) => `tel:${n.replace(/\s/g, "")}`;
+const waHref = (n: string) => `https://wa.me/52${n.replace(/\D/g, "")}`;
+
 export function Header() {
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [sucursalesOpen, setSucursalesOpen] = useState(false);
+  const { openBooking } = useBooking();
+
+  // Bloquea el scroll del body (y el smooth scroll) mientras haya overlay/modal abierto
+  useEffect(() => {
+    if (!(menuOpen || sucursalesOpen)) return;
+    document.body.style.overflow = "hidden";
+    lockLenis();
+    return () => {
+      document.body.style.overflow = "";
+      unlockLenis();
+    };
+  }, [menuOpen, sucursalesOpen]);
+
+  // Escape cierra primero el modal, luego el menú
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (sucursalesOpen) setSucursalesOpen(false);
+      else if (menuOpen) setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen, sucursalesOpen]);
+
+  const closeAll = () => {
+    setSucursalesOpen(false);
+    setMenuOpen(false);
+  };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur-md">
-      <div className="container-x flex h-[74px] items-center justify-between">
-        <Link href="/" className="flex items-baseline gap-2">
-          <span className="font-serif text-2xl font-semibold text-ink">{site.brand.name}</span>
-          <span className="text-[0.56rem] font-semibold uppercase tracking-[0.2em] text-muted">
-            {site.brand.tagline}
-          </span>
-        </Link>
+    <>
+      <header className="bg-bg">
+        <div className="flex h-[74px] w-full items-center justify-between px-6 md:px-10">
+          {/* IZQUIERDA — toggle + logo, pegados al extremo */}
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              aria-label="Abrir menú"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(true)}
+              className="flex flex-col gap-[5px]"
+            >
+              <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
+              <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
+              <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
+            </button>
 
-        <ul className="flex items-center gap-[34px] max-[900px]:hidden">
-          {site.nav.map((item) => (
-            <li key={item.label}>
-              <Link
-                href={item.href}
-                className="text-[0.92rem] font-medium text-ink transition-colors hover:text-brand"
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+            <Link href="/">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={site.brand.logo} alt={site.brand.name} className="h-5 w-auto" />
+            </Link>
+          </div>
 
-        <div className="flex items-center gap-[18px]">
-          <a
-            href={`tel:${site.phone.tel}`}
-            className="text-[0.82rem] font-semibold text-brand max-[900px]:hidden"
-          >
-            <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-muted">
-              {site.phone.label}
-            </span>
-            {site.phone.display}
-          </a>
+          {/* DERECHA — pastilla de menú glass + CTA, pegados al extremo */}
+          <div className="flex items-center gap-6 lg:gap-8">
+            <nav className="max-[900px]:hidden">
+              <ul className="glass flex items-center rounded-full px-6 py-2.5">
+                {site.nav.map((item, i) => (
+                  <Fragment key={item.label}>
+                    {i > 0 && (
+                      <li aria-hidden className="mx-[16px] h-3.5 w-px bg-ink/20" />
+                    )}
+                    <li>
+                      <Link
+                        href={item.href}
+                        className="text-[0.92rem] font-medium text-ink transition-colors hover:text-brand"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  </Fragment>
+                ))}
+              </ul>
+            </nav>
 
-          <Button href={site.cta.href} variant="primary">
-            {site.cta.label}
-          </Button>
+            <BookingButton variant="primary" className="hover:translate-y-0">
+              {site.cta.label}
+            </BookingButton>
+          </div>
+        </div>
+      </header>
 
+      {/* OVERLAY — menú a pantalla completa */}
+      <div
+        data-lenis-prevent
+        className={`fixed inset-0 z-[60] flex flex-col bg-brand-deep text-white transition-opacity duration-300 ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!menuOpen}
+      >
+        {/* Franja superior con logo blanco + cerrar */}
+        <div className="flex h-[74px] shrink-0 items-center justify-between px-6 md:px-10">
+          <Link href="/" onClick={closeAll}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={site.brand.logo}
+              alt={site.brand.name}
+              className="h-5 w-auto brightness-0 invert"
+            />
+          </Link>
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Menú"
-            aria-expanded={open}
-            className="hidden flex-col gap-[5px] max-[900px]:flex"
+            aria-label="Cerrar menú"
+            onClick={() => setMenuOpen(false)}
+            className="relative h-7 w-7"
           >
-            <span className="h-0.5 w-6 rounded-sm bg-ink" />
-            <span className="h-0.5 w-6 rounded-sm bg-ink" />
-            <span className="h-0.5 w-6 rounded-sm bg-ink" />
+            <span className="absolute left-0 top-1/2 h-[3px] w-7 -translate-y-1/2 rotate-45 rounded-sm bg-white" />
+            <span className="absolute left-0 top-1/2 h-[3px] w-7 -translate-y-1/2 -rotate-45 rounded-sm bg-white" />
           </button>
+        </div>
+
+        {/* Contenido anclado abajo: opciones (izquierda) + contacto (derecha) */}
+        <div className="flex flex-1 flex-col justify-end gap-10 px-6 pb-12 md:flex-row md:items-end md:justify-between md:px-10">
+          {/* Opciones / páginas, esquina inferior izquierda */}
+          <nav className="flex flex-col items-start gap-3">
+            {overlayItems.map((item) =>
+              item.type === "modal" ? (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setSucursalesOpen(true)}
+                  className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={closeAll}
+                  className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
+          </nav>
+
+          {/* Contáctanos, columna derecha */}
+          <div className="flex flex-col items-start gap-3 md:items-end md:text-right">
+            <span className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-white/60">
+              Contáctanos
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                closeAll();
+                openBooking();
+              }}
+              className="font-accent text-[clamp(2rem,5vw,3.6rem)] leading-[1.05] text-white transition-colors hover:text-brand-tint"
+            >
+              Agenda una Cita
+            </button>
+          </div>
         </div>
       </div>
 
-      {open && (
-        <ul className="container-x flex flex-col gap-3.5 pb-5 max-[900px]:flex">
-          {site.nav.map((item) => (
-            <li key={item.label}>
-              <Link
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="text-[0.95rem] font-medium text-ink transition-colors hover:text-brand"
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </header>
+      {/* MODAL — Sucursales */}
+      <div
+        className={`fixed inset-0 z-[70] flex items-center justify-center p-4 transition-opacity duration-200 ${
+          sucursalesOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!sucursalesOpen}
+        onClick={() => setSucursalesOpen(false)}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div
+          data-lenis-prevent
+          className="glass relative w-full max-w-md rounded-block p-8"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            aria-label="Cerrar"
+            onClick={() => setSucursalesOpen(false)}
+            className="absolute right-5 top-5 text-2xl leading-none text-ink/60 transition-colors hover:text-ink"
+          >
+            ×
+          </button>
+
+          <h2 className="font-sans text-2xl font-light text-ink">Sucursales</h2>
+          <p className="mt-1 text-[0.9rem] text-muted">Agenda o contáctanos en tu sucursal más cercana.</p>
+
+          <div className="mt-6 flex flex-col gap-4">
+            {site.branches.map((b) => (
+              <div key={b.name} className="rounded-card border border-line bg-white/60 p-5">
+                <h3 className="text-lg font-medium text-ink">{b.name}</h3>
+                <div className="mt-2 flex flex-col gap-1 text-[0.9rem]">
+                  <a href={telHref(b.phone)} className="text-muted transition-colors hover:text-brand">
+                    Tel: {b.phone}
+                  </a>
+                  <a
+                    href={waHref(b.whatsapp)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted transition-colors hover:text-brand"
+                  >
+                    WhatsApp: {b.whatsapp}
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

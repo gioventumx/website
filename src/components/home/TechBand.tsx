@@ -1,5 +1,5 @@
 import { MediaSurface } from "@/components/ui/MediaSurface";
-import { Button } from "@/components/ui/Button";
+import { BookingButton } from "@/components/booking/BookingButton";
 import { home } from "@/data/home";
 
 export function TechBand() {
@@ -13,9 +13,7 @@ export function TechBand() {
           {b.titleTop} <span className="font-accent block text-brand-tint">{b.titleAccent}</span>
         </h2>
         <p className="mx-auto mb-7 mt-[18px] text-brand-tint">{b.body}</p>
-        <Button href={b.cta.href} variant="light">
-          {b.cta.label}
-        </Button>
+        <BookingButton variant="light">{b.cta.label}</BookingButton>
       </div>
     </MediaSurface>
   );

@@ -1,12 +1,12 @@
 import type { NavItem, Branch, SocialLink, FooterLink } from "./types";
 
 export const site = {
-  brand: { name: "Gioventù", tagline: "Dermatología y Estética" },
+  brand: { name: "Gioventù", tagline: "Dermatología y Estética", logo: "/gioventu-logo.svg" },
 
   nav: [
-    { label: "Servicios", href: "#servicios" },
-    { label: "Nosotros", href: "/conocenos/" },
-    { label: "Sucursales", href: "#contacto" },
+    { label: "Dermatología", href: "/dermatologia/" },
+    { label: "Medicina Estética", href: "/estetica/" },
+    { label: "Wellness Spa", href: "/wellness/" },
   ] satisfies NavItem[],
 
   phone: { label: "Llama ahora", display: "55 4052 6837", tel: "5540526837" },
@@ -39,5 +39,6 @@ export const site = {
     branchesTitle: "Sucursales",
     legal: "© 2026 Gioventù — Todos los derechos reservados.",
     credit: "Created by SCNDAL",
+    creditLogo: "/Black-webtag-scndal.svg",
   },
 };

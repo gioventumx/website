@@ -20,14 +20,13 @@ export function MediaSurface({
   className = "",
   children,
 }: Props) {
-  // Sin media real todavía: el placeholder es el color plano de marca (brand-deep)
-  // + el overlay del sistema base. Al integrar la media real se pasa `src`.
-  const placeholder = !src;
-
+  // brand-deep como base plana detrás de la media: sirve de placeholder cuando aún
+  // no hay `src`, y de fallback si el video/imagen no carga o no reproduce en móvil
+  // (el texto sigue legible sobre el overlay del sistema base).
   const classes = [
     "media-surface",
+    "bg-brand-deep",
     overlay === "ink" ? "overlay-ink" : "",
-    placeholder ? "bg-brand-deep" : "",
     className,
   ]
     .filter(Boolean)

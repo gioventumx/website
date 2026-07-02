@@ -6,7 +6,8 @@ export type FooterLink = { label: string; href: string };
 export type SocialPlatform = "instagram" | "facebook" | "tiktok";
 export type SocialLink = { platform: SocialPlatform; href: string; label: string };
 
-export type Feature = { title: string; description: string };
+export type FeatureIcon = "tech" | "care" | "team";
+export type Feature = { title: string; description: string; icon: FeatureIcon };
 
 export type Service = {
   slug: string;
@@ -15,6 +16,7 @@ export type Service = {
   description: string;
   href: string;
   more: string;
+  image: string;
 };
 
 export type Review = {

@@ -1,5 +1,5 @@
 import { MediaSurface } from "@/components/ui/MediaSurface";
-import { Button } from "@/components/ui/Button";
+import { BookingButton } from "@/components/booking/BookingButton";
 import { home } from "@/data/home";
 
 export function IntroLomas() {
@@ -15,16 +15,19 @@ export function IntroLomas() {
             <span className="font-accent block text-brand">{i.titleAccent}</span>
           </h2>
           <p className="mt-[18px] text-[1.02rem] text-muted">{i.body}</p>
-          <Button href={i.cta.href} variant="outline" className="mt-[26px]">
+          <BookingButton variant="outline" className="mt-[26px]">
             {i.cta.label}
-          </Button>
+          </BookingButton>
         </div>
 
-        <MediaSurface
-          as="image"
-          label="imagen — clínica / equipo"
-          className="aspect-[4/3] rounded-block shadow-card"
-        />
+        {/* Frame glass alrededor de la imagen */}
+        <div className="glass rounded-block p-3">
+          <MediaSurface
+            as="image"
+            label="imagen — clínica / equipo"
+            className="aspect-[4/3] rounded-card"
+          />
+        </div>
       </div>
     </section>
   );

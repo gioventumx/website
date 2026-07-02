@@ -8,6 +8,7 @@ export const services: Service[] = [
     description: "Renueva, mantén y promueve tu belleza con tratamientos de vanguardia.",
     href: "/estetica/",
     more: "Más información",
+    image: "/medicina-estetica.png",
   },
   {
     slug: "salud-de-la-piel",
@@ -16,6 +17,7 @@ export const services: Service[] = [
     description: "Médicos dermatólogos tratan padecimientos específicos de tu piel.",
     href: "/dermatologia/",
     more: "Más información",
+    image: "/dermatologia.png",
   },
   {
     slug: "masajes",
@@ -24,14 +26,7 @@ export const services: Service[] = [
     description: "Relájate y renuévate con nuestro menú de masajes corporales.",
     href: "/wellness/",
     more: "Más información",
-  },
-  {
-    slug: "aparatologia-premium",
-    category: "Tecnología",
-    title: "Aparatología premium",
-    description: "Equipos de grado médico para resultados visibles y seguros.",
-    href: "/estetica/",
-    more: "Más información",
+    image: "/masajes.png",
   },
   {
     slug: "skin-care",
@@ -40,6 +35,7 @@ export const services: Service[] = [
     description: "Rutinas y protocolos diseñados por dermatólogos para tu tipo de piel.",
     href: "/dermatologia/",
     more: "Más información",
+    image: "/skincare.png",
   },
   {
     slug: "faciales",
@@ -48,5 +44,6 @@ export const services: Service[] = [
     description: "Limpieza profunda, hidratación y rejuvenecimiento facial a tu medida.",
     href: "/wellness/",
     more: "Más información",
+    image: "/faciales.png",
   },
 ];

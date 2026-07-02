@@ -2,18 +2,24 @@ import type { Feature, CTA } from "./types";
 
 export const home = {
   hero: {
+    video: "/GIO-web.mp4",
     eyebrow: "Centro dermatológico y estético · Lomas Verdes",
     titleTop: "Bienestar y tecnología",
     titleAccent: "para una piel radiante",
-    body: "Dermatólogos y médicos especializados combinan ciencia y tecnología de vanguardia para cuidar tu piel desde adentro hacia afuera.",
+    body: "Dermatología, medicina estética y wellness en un mismo lugar. Dermatólogos y médicos especializados combinan ciencia y tecnología de vanguardia para cuidar tu piel.",
     cta: { label: "Agendar en WhatsApp", href: "#" } as CTA,
     rating: { value: "5.0", text: "en Google · pacientes reales" },
   },
 
+  notification: {
+    title: "Acaban de agendar una cita",
+    body: "Disponibilidad limitada con nuestros dermatólogos. Reserva la tuya.",
+  },
+
   features: [
-    { title: "Tecnología de punta", description: "Equipo médico premium de última generación" },
-    { title: "Atención personalizada", description: "Tratamientos a la medida de tu piel" },
-    { title: "Equipo especializado", description: "Cosmiatras, dermatólogos y médicos" },
+    { title: "Tecnología de punta", description: "Equipo médico premium de última generación", icon: "tech" },
+    { title: "Atención personalizada", description: "Tratamientos a la medida de tu piel", icon: "care" },
+    { title: "Equipo especializado", description: "Cosmiatras, dermatólogos y médicos", icon: "team" },
   ] satisfies Feature[],
 
   intro: {
@@ -25,9 +31,9 @@ export const home = {
   },
 
   services: {
-    eyebrow: "Nuestros servicios",
-    titleTop: "Todo lo que tu piel necesita",
-    titleAccent: "en un solo lugar",
+    titleTop: "Tres especialidades, un mismo lugar",
+    titleAccent: "Todo lo que tu piel necesita",
+    body: "Dermatología, medicina estética y wellness en un mismo lugar, con tratamientos diseñados para cada tipo de piel.",
   },
 
   benefits: {

@@ -3,7 +3,7 @@ import type { Review } from "@/data/types";
 
 export function ReviewCard({ review }: { review: Review }) {
   return (
-    <div className="rounded-card border border-line bg-bg p-6">
+    <div className="glass p-6">
       <div className="mb-3 flex items-center gap-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-[0.95rem] font-semibold text-white">
           {review.initial}

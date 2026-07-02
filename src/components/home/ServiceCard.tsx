@@ -2,22 +2,34 @@ import Link from "next/link";
 import { MediaSurface } from "@/components/ui/MediaSurface";
 import type { Service } from "@/data/types";
 
-export function ServiceCard({ service }: { service: Service }) {
+export function ServiceCard({ service, clone = false }: { service: Service; clone?: boolean }) {
   return (
-    <Link href={service.href} className="group block">
+    <Link
+      href={service.href}
+      aria-hidden={clone || undefined}
+      tabIndex={clone ? -1 : undefined}
+      className="group w-[80vw] shrink-0 snap-start sm:w-[46vw] md:w-[320px]"
+    >
       <MediaSurface
         as="image"
-        className="flex min-h-[320px] flex-col justify-end rounded-card p-[26px] shadow-card transition-transform duration-[250ms] group-hover:-translate-y-1.5"
+        src={service.image}
+        className="relative flex min-h-[400px] flex-col justify-end rounded-card p-5 shadow-card transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-2 group-hover:shadow-2xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
       >
-        <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[#C7C9F2]">
-          {service.category}
+        {/* Botón circular con flecha diagonal, arriba a la derecha */}
+        <span
+          aria-hidden
+          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg text-ink transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
+        >
+          ↗
         </span>
-        <h3 className="font-accent mb-2 mt-1.5 text-[1.7rem] leading-[1.1]">{service.title}</h3>
-        <p className="mb-3.5 text-[0.88rem] text-brand-tint">{service.description}</p>
-        <span className="inline-flex items-center gap-[0.4em] text-[0.85rem] font-semibold text-white">
-          {service.more}
-          <span className="transition-transform group-hover:translate-x-1">→</span>
-        </span>
+
+        {/* Título abajo a la izquierda, sobre la imagen */}
+        <div className="text-white">
+          <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/70">
+            {service.category}
+          </span>
+          <h3 className="font-accent mt-1 text-[1.7rem] leading-[1.1]">{service.title}</h3>
+        </div>
       </MediaSurface>
     </Link>
   );

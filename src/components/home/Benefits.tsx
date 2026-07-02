@@ -17,7 +17,7 @@ export function Benefits() {
           {b.chips.map((chip) => (
             <span
               key={chip}
-              className="flex items-center gap-[0.55em] rounded-full border border-line bg-surface px-[1.3em] py-[0.7em] text-[0.95rem] font-medium"
+              className="glass flex items-center gap-[0.55em] rounded-full px-[1.3em] py-[0.7em] text-[0.95rem] font-medium"
             >
               <span className="h-2 w-2 rounded-full bg-brand" />
               {chip}
