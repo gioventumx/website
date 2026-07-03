@@ -5,7 +5,7 @@ export type Destacado = {
   title: string;
   hook: string;
   href: string;
-  /** TODO: imagen de fondo real (ej. "/destacados/facial.png"). Vacío = placeholder. */
+  /** TODO: imagen de fondo real (ej. "/destacados/facial.webp"). Vacío = placeholder. */
   image?: string;
 };
 
@@ -15,13 +15,13 @@ export const destacados: Destacado[] = [
     title: "Rejuvenecimiento Facial",
     hook: "Recupera la firmeza y luminosidad de tu piel.",
     href: "/estetica/",
-    image: undefined,
+    image: "/rejuvenecimiento-facial-card.webp",
   },
   {
     slug: "depilacion-laser",
     title: "Depilación Láser",
     hook: "Adiós al vello. Piel suave, para siempre.",
     href: "/depilacion/",
-    image: undefined,
+    image: "/depilacion-laser-card.webp",
   },
 ];

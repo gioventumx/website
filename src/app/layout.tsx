@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Gioventù — Centro Dermatológico y Estético",
   description:
     "Centro dermatológico y estético en Lomas Verdes. Ciencia y tecnología de vanguardia para una piel radiante.",
-  icons: { icon: "/favicon-gioventu.png" },
+  icons: { icon: "/favicon-gioventu.webp" },
 };
 
 export default function RootLayout({

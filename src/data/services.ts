@@ -8,7 +8,7 @@ export const services: Service[] = [
     description: "Médicos dermatólogos tratan padecimientos específicos de tu piel.",
     href: "/dermatologia/",
     more: "Más información",
-    image: "/dermatologia.png",
+    image: "/dermatologia.webp",
   },
   {
     slug: "medicina-estetica",
@@ -17,7 +17,7 @@ export const services: Service[] = [
     description: "Renueva, mantén y promueve tu belleza con tratamientos de vanguardia.",
     href: "/estetica/",
     more: "Más información",
-    image: "/medicina-estetica.png",
+    image: "/medicina-estetica.webp",
   },
   {
     slug: "wellness",
@@ -26,7 +26,7 @@ export const services: Service[] = [
     description: "Masajes y faciales para reconectar cuerpo y piel.",
     href: "/wellness/",
     more: "Más información",
-    image: "/masajes.png",
+    image: "/masajes.webp",
   },
   {
     slug: "skincare",
@@ -35,6 +35,6 @@ export const services: Service[] = [
     description: "Rutinas y protocolos diseñados por dermatólogos para tu tipo de piel.",
     href: "/dermatologia/",
     more: "Más información",
-    image: "/skincare.png",
+    image: "/skincare.webp",
   },
 ];

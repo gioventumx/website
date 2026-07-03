@@ -9,8 +9,8 @@ import { destacados } from "@/data/destacados";
  */
 export function Destacados() {
   return (
-    <section className="bg-bg px-4 py-10 md:px-6 md:py-12">
-      <div className="container-x grid gap-5 md:grid-cols-2">
+    <section className="bg-bg px-4 pb-10 pt-3 md:px-6 md:pb-12 md:pt-4">
+      <div className="grid gap-5 md:grid-cols-2">
         {destacados.map((d) => (
           <Link key={d.slug} href={d.href} className="group block">
             <MediaSurface

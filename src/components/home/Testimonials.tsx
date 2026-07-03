@@ -7,7 +7,7 @@ export function Testimonials() {
   const t = home.testimonials;
 
   return (
-    <section className="bg-bg pb-[clamp(60px,8vw,96px)] pt-[clamp(30px,4vw,48px)]">
+    <section className="bg-bg pb-[clamp(30px,4vw,48px)] pt-[clamp(15px,2vw,24px)]">
       <div className="container-x">
         {/* Encabezado centrado: título + apoyo + score Google (vertical) */}
         <div className="mx-auto mb-10 max-w-[640px] text-center md:mb-12">

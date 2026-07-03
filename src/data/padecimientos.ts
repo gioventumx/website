@@ -4,7 +4,7 @@
 export type Padecimiento = {
   slug: string;
   label: string;
-  /** TODO: imagen de portada real (ej. "/dermatologia/cicatrices.png"). Vacío = placeholder. */
+  /** TODO: imagen de portada real (ej. "/dermatologia/cicatrices.webp"). Vacío = placeholder. */
   image?: string;
 };
 

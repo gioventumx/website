@@ -83,7 +83,7 @@ export const home = {
     titleAccent: "empieza aquí",
     body: "Reserva tu valoración con nuestros especialistas y descúbrelo.",
     cta: { label: "Agendar cita", href: "#" } as CTA,
-    // TODO: imagen de fondo real del CTA de cierre (ej. "/cta-cierre.png"). Vacío = placeholder.
+    // TODO: imagen de fondo real del CTA de cierre (ej. "/cta-cierre.webp"). Vacío = placeholder.
     image: "",
   },
 

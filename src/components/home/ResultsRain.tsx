@@ -65,7 +65,7 @@ export function ResultsRain() {
     >
       {/* Contenido: título + statement (siempre en el DOM, centrado) */}
       <div className="container-x relative z-[1] text-center">
-        <p className="mx-auto max-w-[900px] font-sans text-[clamp(1.5rem,3.2vw,2.4rem)] font-light leading-[1.35] tracking-[-0.01em] text-ink">
+        <p className="mx-auto max-w-[1040px] font-sans text-[clamp(1.5rem,3.2vw,2.4rem)] font-light leading-[1.35] tracking-[-0.01em] text-ink">
           {d.statement.map((seg, i) => {
             if (!seg.accent) {
               // Protege "ritual" de quedar huérfana: espacio duro antes de ese acento.

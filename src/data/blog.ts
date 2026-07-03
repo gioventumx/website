@@ -10,7 +10,7 @@ export type BlogPost = {
   title: string;
   /** TODO: extracto corto (1–2 líneas). */
   excerpt: string;
-  /** TODO: ruta de imagen de portada, ej. "/blog/mi-articulo.png". Vacío = placeholder. */
+  /** TODO: ruta de imagen de portada, ej. "/blog/mi-articulo.webp". Vacío = placeholder. */
   image?: string;
 };
 
