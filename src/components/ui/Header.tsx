@@ -53,7 +53,7 @@ export function Header() {
       <header className="bg-bg">
         <div className="flex h-[74px] w-full items-center justify-between px-6 md:px-10">
           {/* IZQUIERDA — toggle + logo, pegados al extremo */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <button
               type="button"
               aria-label="Abrir menú"
@@ -65,6 +65,8 @@ export function Header() {
               <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
               <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
             </button>
+
+            <span aria-hidden className="h-6 w-px bg-line" />
 
             <Link href="/">
               {/* eslint-disable-next-line @next/next/no-img-element */}

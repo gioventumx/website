@@ -1,6 +1,27 @@
-import type { Feature, CTA } from "./types";
+import type { Feature, CTA, StatementSegment } from "./types";
 
 export const home = {
+  statement: {
+    eyebrow: "Sobre Gioventù",
+    segments: [
+      { text: "Más de 10 años revelando la mejor versión de tu piel. " },
+      { text: "Dermatología", accent: "service" },
+      { text: " y " },
+      { text: "medicina estética", accent: "service" },
+      { text: " de la mano de " },
+      { text: "especialistas certificados", accent: "attribute" },
+      { text: ", con la " },
+      { text: "última tecnología", accent: "attribute" },
+      { text: ". Y cuando el cuerpo también pide pausa, nuestro " },
+      { text: "wellness spa", accent: "service" },
+      { text: ": masajes y faciales. Porque cuidarte no debería sentirse como un trámite, sino como un " },
+      { text: "ritual", accent: "attribute" },
+      { text: "." },
+    ] satisfies StatementSegment[],
+    local:
+      "Dermatología, medicina estética y wellness en Lomas Verdes y Zona Esmeralda, Estado de México.",
+  },
+
   hero: {
     video: "/GIO-web.mp4",
     eyebrow: "Centro dermatológico y estético · Lomas Verdes",
@@ -8,12 +29,12 @@ export const home = {
     titleAccent: "para una piel radiante",
     body: "Dermatología, medicina estética y wellness en un mismo lugar. Dermatólogos y médicos especializados combinan ciencia y tecnología de vanguardia para cuidar tu piel.",
     cta: { label: "Agendar en WhatsApp", href: "#" } as CTA,
-    rating: { value: "5.0", text: "en Google · pacientes reales" },
+    rating: { value: "4.9", text: "en Google · pacientes reales" },
   },
 
   notification: {
     title: "Acaban de agendar una cita",
-    body: "Disponibilidad limitada con nuestros dermatólogos. Reserva la tuya.",
+    body: "Disponibilidad limitada con nuestros expertos. Reserva la tuya.",
   },
 
   features: [
@@ -52,17 +73,18 @@ export const home = {
 
   testimonials: {
     eyebrow: "Testimonios",
-    titleTop: "Personas reales,",
-    titleAccent: "resultados reales",
-    body: "Lo que dicen nuestros pacientes, directo desde Google.",
+    titleTop: "Historias que dejan",
+    titleAccent: "huella",
+    body: "Detrás de cada reseña hay una piel que volvió a sentirse bien. Esto es lo que dicen quienes ya pasaron por Gioventù.",
   },
 
   band: {
-    eyebrow: "Tecnología médica",
-    titleTop: "Instalaciones de primer nivel",
-    titleAccent: "y equipo premium",
-    body: "Descubre la tecnología que garantiza una atención de última generación, segura y efectiva.",
-    cta: { label: "Agendar en WhatsApp", href: "#" } as CTA,
+    titleTop: "La mejor versión de tu piel",
+    titleAccent: "empieza aquí",
+    body: "Reserva tu valoración con nuestros especialistas y descúbrelo.",
+    cta: { label: "Agendar cita", href: "#" } as CTA,
+    // TODO: imagen de fondo real del CTA de cierre (ej. "/cta-cierre.png"). Vacío = placeholder.
+    image: "",
   },
 
   social: {

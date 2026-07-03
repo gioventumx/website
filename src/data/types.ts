@@ -9,6 +9,8 @@ export type SocialLink = { platform: SocialPlatform; href: string; label: string
 export type FeatureIcon = "tech" | "care" | "team";
 export type Feature = { title: string; description: string; icon: FeatureIcon };
 
+export type StatementSegment = { text: string; accent?: "service" | "attribute" };
+
 export type Service = {
   slug: string;
   category: string;

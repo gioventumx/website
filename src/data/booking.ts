@@ -20,6 +20,8 @@ export type BookingData = {
   branch: BranchKey | null;
   name: string;
   phone: string;
+  /** Origen de campaña (ej. ?suc= de la landing) para medición del lead. */
+  source: string;
 };
 
 export const emptyBooking: BookingData = {
@@ -28,6 +30,7 @@ export const emptyBooking: BookingData = {
   branch: null,
   name: "",
   phone: "",
+  source: "",
 };
 
 export const bookingServices: ServiceOption[] = [
@@ -49,6 +52,8 @@ export function serviceLabel(data: BookingData): string {
 export type BranchConfig = {
   name: string;
   address: string;
+  /** Horario de atención (texto para mostrar). */
+  hours: string;
   /** Número de WhatsApp con lada de país (52) para el link wa.me */
   wa: string;
 };
@@ -58,12 +63,14 @@ export const bookingBranches: Record<BranchKey, BranchConfig> = {
     name: "Gioventù Plaza Antigua",
     address:
       "Plaza Antigua 1, Av. Dr. Jiménez Cantú 212, Hacienda de Valle Escondido, 52938, Estado de México.",
+    hours: "Lun–Vie 10:30–19:30 · Sáb 10:30–15:30",
     wa: "525561496600",
   },
   cuspide: {
     name: "Gioventù Plaza Cúspide",
     address:
       "Av. Lomas Verdes 1200, Local 53 C, Lomas Verdes, 53125, Estado de México.",
+    hours: "Lun–Vie 10:00–19:00 · Sáb 9:00–14:00",
     wa: "525540583256",
   },
 };
@@ -77,6 +84,7 @@ export function buildWhatsAppUrl(data: BookingData): string | null {
     `Servicio: ${serviceLabel(data)}. ` +
     `Sucursal: ${branch.name}. ` +
     `Nombre: ${data.name}. ` +
-    `Teléfono: ${data.phone}.`;
+    `Teléfono: ${data.phone}.` +
+    (data.source ? ` Origen: ${data.source}.` : "");
   return `https://wa.me/${branch.wa}?text=${encodeURIComponent(text)}`;
 }

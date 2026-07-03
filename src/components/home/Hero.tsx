@@ -14,7 +14,7 @@ export function Hero() {
         as="video"
         src={h.video}
         overlay="ink"
-        className="flex min-h-[85vh] flex-col rounded-block"
+        className="flex min-h-[calc(100dvh_-_90px)] flex-col rounded-block md:min-h-[calc(100dvh_-_98px)]"
       >
         <HeroNotification />
 
@@ -43,7 +43,11 @@ export function Hero() {
           </div>
         </div>
 
-        <HeroFeatures />
+        {/* Features ancladas al fondo del hero, fuera del flujo, para que el
+            bloque de texto pueda centrarse en el eje vertical completo. */}
+        <div className="absolute inset-x-0 bottom-0">
+          <HeroFeatures />
+        </div>
       </MediaSurface>
     </section>
   );

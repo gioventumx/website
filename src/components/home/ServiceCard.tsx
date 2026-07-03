@@ -2,30 +2,32 @@ import Link from "next/link";
 import { MediaSurface } from "@/components/ui/MediaSurface";
 import type { Service } from "@/data/types";
 
-export function ServiceCard({ service, clone = false }: { service: Service; clone?: boolean }) {
+export function ServiceCard({ service }: { service: Service }) {
   return (
-    <Link
-      href={service.href}
-      aria-hidden={clone || undefined}
-      tabIndex={clone ? -1 : undefined}
-      className="group w-[80vw] shrink-0 snap-start sm:w-[46vw] md:w-[320px]"
-    >
+    <Link href={service.href} className="group block w-full">
       <MediaSurface
         as="image"
         src={service.image}
-        className="relative flex min-h-[400px] flex-col justify-end rounded-card p-5 shadow-card transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-2 group-hover:shadow-2xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
+        overlay="none"
+        className="relative flex min-h-[400px] flex-col justify-end overflow-hidden rounded-card p-5 shadow-card transition duration-[1200ms] ease-out group-hover:-translate-y-6 group-hover:shadow-xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
       >
+        {/* Degradado blanco SOLO detrás del texto (abajo) para asegurar lectura */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-white via-white/70 to-transparent"
+        />
+
         {/* Botón circular con flecha diagonal, arriba a la derecha */}
         <span
           aria-hidden
-          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg text-ink transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
+          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg text-ink shadow-sm transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
         >
           ↗
         </span>
 
         {/* Título abajo a la izquierda, sobre la imagen */}
-        <div className="text-white">
-          <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/70">
+        <div className="relative text-ink">
+          <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-ink/60">
             {service.category}
           </span>
           <h3 className="font-accent mt-1 text-[1.7rem] leading-[1.1]">{service.title}</h3>

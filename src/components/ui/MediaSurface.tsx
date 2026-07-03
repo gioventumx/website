@@ -4,7 +4,7 @@ type Props = {
   as?: "image" | "video";
   src?: string;
   poster?: string;
-  overlay?: "brand" | "ink";
+  overlay?: "brand" | "ink" | "none";
   /** Etiqueta de referencia mientras usamos placeholders (ej. "▶ video de fondo"). */
   label?: string;
   className?: string;
@@ -26,7 +26,7 @@ export function MediaSurface({
   const classes = [
     "media-surface",
     "bg-brand-deep",
-    overlay === "ink" ? "overlay-ink" : "",
+    overlay === "ink" ? "overlay-ink" : overlay === "none" ? "overlay-none" : "",
     className,
   ]
     .filter(Boolean)

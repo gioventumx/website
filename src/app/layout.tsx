@@ -7,6 +7,9 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  // TODO(cutover): reemplazar por el dominio real de producción. Se usa como base
+  // para los canonical absolutos (ej. /dermatologia/).
+  metadataBase: new URL("https://gioventu.mx"),
   title: "Gioventù — Centro Dermatológico y Estético",
   description:
     "Centro dermatológico y estético en Lomas Verdes. Ciencia y tecnología de vanguardia para una piel radiante.",

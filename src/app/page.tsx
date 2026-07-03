@@ -1,21 +1,27 @@
 import { Hero } from "@/components/home/Hero";
-import { IntroLomas } from "@/components/home/IntroLomas";
+import { BookingNudge } from "@/components/home/BookingNudge";
+import { ResultsRain } from "@/components/home/ResultsRain";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
-import { Benefits } from "@/components/home/Benefits";
+import { TechShowcase } from "@/components/home/TechShowcase";
 import { Testimonials } from "@/components/home/Testimonials";
+import { Destacados } from "@/components/home/Destacados";
 import { FAQ } from "@/components/home/FAQ";
-import { TechBand } from "@/components/home/TechBand";
+import { ClosingCTA } from "@/components/home/ClosingCTA";
+import { Blog } from "@/components/home/Blog";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <IntroLomas />
       <ServicesGrid />
-      <Benefits />
+      <ResultsRain />
+      <TechShowcase />
       <Testimonials />
+      <Destacados />
       <FAQ />
-      <TechBand />
+      <ClosingCTA />
+      <Blog />
+      <BookingNudge />
     </>
   );
 }

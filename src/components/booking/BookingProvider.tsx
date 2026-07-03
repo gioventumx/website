@@ -16,6 +16,10 @@ type BookingContextValue = {
   step: BookingStep;
   data: BookingData;
   openBooking: () => void;
+  /** Abre el modal con una sucursal preseleccionada (el usuario aún puede cambiarla). */
+  bookBranch: (branch: BranchKey) => void;
+  /** Registra el origen de campaña (ej. ?suc=) para medición; se conserva entre reinicios. */
+  setSource: (source: string) => void;
   close: () => void;
   back: () => void;
   next: () => void;
@@ -38,10 +42,23 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
   const [step, setStep] = useState<BookingStep>(1);
   const [data, setData] = useState<BookingData>(emptyBooking);
 
+  // Reinicia el formulario pero CONSERVA el origen de campaña (source).
   const openBooking = useCallback(() => {
-    setData(emptyBooking);
+    setData((d) => ({ ...emptyBooking, source: d.source }));
     setStep(1);
     setOpen(true);
+  }, []);
+
+  // Preselecciona sucursal y arranca en el paso 1 (servicio); la sucursal queda
+  // marcada en el paso 2 y sigue siendo cambiable. No rompe el flujo de pasos.
+  const bookBranch = useCallback((branch: BranchKey) => {
+    setData((d) => ({ ...emptyBooking, source: d.source, branch }));
+    setStep(1);
+    setOpen(true);
+  }, []);
+
+  const setSource = useCallback((source: string) => {
+    setData((d) => ({ ...d, source }));
   }, []);
 
   const close = useCallback(() => setOpen(false), []);
@@ -96,6 +113,8 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
       step,
       data,
       openBooking,
+      bookBranch,
+      setSource,
       close,
       back,
       next,
@@ -104,7 +123,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
       setField,
       submit,
     }),
-    [open, step, data, openBooking, close, back, next, selectService, selectBranch, setField, submit]
+    [open, step, data, openBooking, bookBranch, setSource, close, back, next, selectService, selectBranch, setField, submit]
   );
 
   return (

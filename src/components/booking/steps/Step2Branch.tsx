@@ -6,7 +6,7 @@ import { useBooking } from "../BookingProvider";
 const order: BranchKey[] = ["antigua", "cuspide"];
 
 export function Step2Branch() {
-  const { selectBranch } = useBooking();
+  const { selectBranch, data } = useBooking();
 
   return (
     <div>
@@ -18,12 +18,18 @@ export function Step2Branch() {
       <div className="mt-6 flex flex-col gap-4">
         {order.map((key) => {
           const branch = bookingBranches[key];
+          const active = data.branch === key;
           return (
             <div key={key} className="group">
               <button
                 type="button"
                 onClick={() => selectBranch(key)}
-                className="w-full rounded-card border border-line bg-white/60 p-5 text-center transition-colors hover:border-brand focus-visible:border-brand"
+                aria-pressed={active}
+                className={`w-full rounded-card border p-5 text-center transition-colors focus-visible:border-brand ${
+                  active
+                    ? "border-brand bg-brand-tint"
+                    : "border-line bg-white/60 hover:border-brand"
+                }`}
               >
                 <span className="text-lg font-medium text-ink">{branch.name}</span>
               </button>

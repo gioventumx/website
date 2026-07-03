@@ -24,7 +24,7 @@ export function FAQ() {
         </div>
 
         {/* Acordeón accesible (esquema claro) */}
-        <div className="border-t border-line">
+        <div className="self-start rounded-block bg-white p-6 shadow-card md:p-8 [&>div:last-child]:border-b-0">
           {faq.map((item, i) => {
             const isOpen = openIndex === i;
             return (

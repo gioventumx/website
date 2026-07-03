@@ -122,6 +122,9 @@
   }
   /* Overlay alternativo (fallback cuando la foto tiene poco contraste) */
   .media-surface.overlay-ink::before { background: var(--overlay-ink); }
+  /* Sin tinte: la foto se ve limpia (la legibilidad del texto se resuelve con un
+     degradado local detrás del texto, no tiñendo toda la imagen) */
+  .media-surface.overlay-none::before { background: transparent; }
 
   /* ====== Liquid glass — SOLO en elementos acotados, nunca en secciones ====== */
   /* Sobre fondo claro (#F2F4FB): el borde fino define el panel */
@@ -176,6 +179,51 @@
   animation: feature-float 4s ease-in-out infinite;
 }
 
+/* Nudge de reserva flotante (sticky abajo-izquierda): flota suave y, al final
+   de cada ciclo, da una vibración breve para captar la atención. */
+@keyframes nudge-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30%      { transform: translateY(-5px) rotate(0deg); }
+  55%      { transform: translateY(0) rotate(0deg); }
+  /* ráfaga de vibración */
+  70% { transform: translateY(0) rotate(-2.4deg); }
+  76% { transform: translateY(0) rotate(2.4deg); }
+  82% { transform: translateY(0) rotate(-1.8deg); }
+  88% { transform: translateY(0) rotate(1.2deg); }
+  94% { transform: translateY(0) rotate(0deg); }
+}
+.nudge-float { animation: nudge-float 3.4s ease-in-out infinite; }
+
+/* Statement tipográfico — reveal palabra por palabra + "encendido" del acento.
+   Estado base (sin .statement-animate) = visible y con resaltes finales:
+   así en no-JS / reduced-motion el texto se ve completo y con acentos. */
+.st-word { display: inline-block; }
+.st-accent[data-level="service"] { color: var(--color-brand); }
+.st-accent[data-level="attribute"] { color: var(--color-ink); }
+
+.statement-animate .st-word,
+.statement-animate .st-line {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .5s ease, transform .5s ease;
+  transition-delay: calc(var(--i) * 40ms);
+}
+.statement-animate.is-visible .st-word,
+.statement-animate.is-visible .st-line {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* El acento se "enciende" ~250ms después de que aparece su palabra */
+.statement-animate .st-accent {
+  transition: color .5s ease, opacity .5s ease;
+  transition-delay: calc(var(--i) * 40ms + 250ms);
+}
+.statement-animate .st-accent[data-level="service"] { color: var(--color-ink); }
+.statement-animate .st-accent[data-level="attribute"] { opacity: .45; }
+.statement-animate.is-visible .st-accent[data-level="service"] { color: var(--color-brand); }
+.statement-animate.is-visible .st-accent[data-level="attribute"] { opacity: 1; }
+
 /* Cursor de puntero en elementos interactivos */
 button:not(:disabled),
 [role="button"],
@@ -191,4 +239,5 @@ button:disabled {
   * { transition: none !important; scroll-behavior: auto !important; }
   .animate-bell { animation: none !important; }
   .feature-icon { animation: none !important; }
+  .nudge-float { animation: none !important; }
 }

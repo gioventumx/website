@@ -1,4 +1,4 @@
-import type { FeatureIcon } from "@/data/types";
+import type { Feature, FeatureIcon } from "@/data/types";
 import { home } from "@/data/home";
 
 const icons: Record<FeatureIcon, React.ReactNode> = {
@@ -22,11 +22,11 @@ const icons: Record<FeatureIcon, React.ReactNode> = {
   ),
 };
 
-export function HeroFeatures() {
+export function HeroFeatures({ features = home.features }: { features?: Feature[] }) {
   return (
     <div className="container-x w-full pb-5 md:pb-6">
       <div className="grid gap-x-8 gap-y-5 pt-4 max-[760px]:grid-cols-1 md:grid-cols-4">
-        {home.features.map((feature, i) => (
+        {features.map((feature, i) => (
           <div
             key={feature.title}
             className={`group flex items-start gap-3 text-left text-white ${
