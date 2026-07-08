@@ -4,10 +4,21 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { MediaSurface } from "@/components/ui/MediaSurface";
 import { Button } from "@/components/ui/Button";
-import { blog } from "@/data/blog";
+import {
+  blogMeta,
+  departamentoNombre,
+  getAllPostsSorted,
+  postsByDepartamento,
+} from "@/data/blog";
 
-export function Blog() {
-  const b = blog;
+// Sección de blog reutilizable. Sin props = últimos 3 de todo el blog (Home).
+// Con `departamento` filtra a ese departamento; `ctaHref` cambia el destino del botón.
+type Props = { departamento?: string; ctaHref?: string };
+
+export function Blog({ departamento, ctaHref = "/blog/" }: Props = {}) {
+  const b = blogMeta;
+  // Últimos 3 artículos (selectores puros, sin fs → seguros en cliente).
+  const posts = (departamento ? postsByDepartamento(departamento) : getAllPostsSorted()).slice(0, 3);
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -46,14 +57,14 @@ export function Blog() {
               {b.body}
             </p>
           </div>
-          <Button variant="outline" href="/blog/" className="shrink-0">
+          <Button variant="outline" href={ctaHref} className="shrink-0">
             {b.cta}
           </Button>
         </div>
 
         {/* Tarjetas: 1 col móvil, 2 tablet, 3 desktop */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {b.posts.map((post, i) => (
+          {posts.map((post, i) => (
             <div
               key={post.slug}
               className={[
@@ -67,18 +78,18 @@ export function Blog() {
                   {/* Portada (placeholder mientras no haya imagen) */}
                   <MediaSurface
                     as="image"
-                    src={post.image}
+                    src={post.imagen}
                     overlay="none"
-                    label={post.image ? undefined : "imagen"}
+                    label={post.imagen ? undefined : "imagen"}
                     className="aspect-[16/10] w-full"
                   />
 
                   <div className="flex flex-1 flex-col p-5">
                     <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-brand">
-                      {post.category}
+                      {departamentoNombre(post.departamento)}
                     </span>
                     <h3 className="mt-2 font-sans text-[1.15rem] font-medium leading-snug text-ink">
-                      {post.title}
+                      {post.titulo}
                     </h3>
                     <p className="mt-2 line-clamp-2 text-[0.9rem] leading-relaxed text-muted">
                       {post.excerpt}

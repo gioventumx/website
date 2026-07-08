@@ -15,7 +15,10 @@ type BookingContextValue = {
   open: boolean;
   step: BookingStep;
   data: BookingData;
-  openBooking: () => void;
+  /** Abre el modal. Con `service` preselecciona el servicio y arranca en el paso 2. */
+  openBooking: (opts?: { service?: ServiceOption }) => void;
+  /** true si el servicio vino preseleccionado (oculta el "Atrás" en el paso 2). */
+  serviceLocked: boolean;
   /** Abre el modal con una sucursal preseleccionada (el usuario aún puede cambiarla). */
   bookBranch: (branch: BranchKey) => void;
   /** Registra el origen de campaña (ej. ?suc=) para medición; se conserva entre reinicios. */
@@ -41,11 +44,16 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<BookingStep>(1);
   const [data, setData] = useState<BookingData>(emptyBooking);
+  const [serviceLocked, setServiceLocked] = useState(false);
 
   // Reinicia el formulario pero CONSERVA el origen de campaña (source).
-  const openBooking = useCallback(() => {
-    setData((d) => ({ ...emptyBooking, source: d.source }));
-    setStep(1);
+  // Con `service` (ej. desde /dermatologia/): lo deja preseleccionado y arranca en
+  // el paso 2 (sucursal), saltándose el paso 1. Sin `service`: flujo normal (paso 1).
+  const openBooking = useCallback((opts?: { service?: ServiceOption }) => {
+    const service = opts?.service ?? null;
+    setData((d) => ({ ...emptyBooking, source: d.source, service }));
+    setServiceLocked(service !== null);
+    setStep(service ? 2 : 1);
     setOpen(true);
   }, []);
 
@@ -53,6 +61,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
   // marcada en el paso 2 y sigue siendo cambiable. No rompe el flujo de pasos.
   const bookBranch = useCallback((branch: BranchKey) => {
     setData((d) => ({ ...emptyBooking, source: d.source, branch }));
+    setServiceLocked(false);
     setStep(1);
     setOpen(true);
   }, []);
@@ -113,6 +122,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
       step,
       data,
       openBooking,
+      serviceLocked,
       bookBranch,
       setSource,
       close,
@@ -123,7 +133,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
       setField,
       submit,
     }),
-    [open, step, data, openBooking, bookBranch, setSource, close, back, next, selectService, selectBranch, setField, submit]
+    [open, step, data, openBooking, serviceLocked, bookBranch, setSource, close, back, next, selectService, selectBranch, setField, submit]
   );
 
   return (

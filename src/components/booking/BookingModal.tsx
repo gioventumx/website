@@ -7,9 +7,11 @@ import { Step3Details } from "./steps/Step3Details";
 import { SuccessView } from "./steps/SuccessView";
 
 export function BookingModal() {
-  const { open, step, close, back } = useBooking();
+  const { open, step, close, back, serviceLocked } = useBooking();
 
-  const showBack = step === 2 || step === 3;
+  // En el paso 2, si el servicio vino preseleccionado no hay paso 1 al que volver,
+  // así que ocultamos "Atrás". En el paso 3 siempre se puede volver a la sucursal.
+  const showBack = step === 3 || (step === 2 && !serviceLocked);
 
   return (
     <div

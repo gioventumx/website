@@ -2,9 +2,24 @@
 
 import { useState } from "react";
 import { MediaSurface } from "@/components/ui/MediaSurface";
-import { faq } from "@/data/faq";
+import { faq as homeFaq, type FaqItem } from "@/data/faq";
 
-export function FAQ() {
+type Props = {
+  /** Preguntas a mostrar. Por defecto usa el FAQ del Home. */
+  items?: FaqItem[];
+  eyebrow?: string;
+  titleTop?: string;
+  titleAccent?: string;
+  imageLabel?: string;
+};
+
+export function FAQ({
+  items = homeFaq,
+  eyebrow = "Preguntas frecuentes",
+  titleTop = "Resolvemos",
+  titleAccent = "tus dudas",
+  imageLabel = "imagen — clínica / equipo",
+}: Props = {}) {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
@@ -12,20 +27,20 @@ export function FAQ() {
       <div className="container-x grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-20">
         {/* IZQUIERDA — texto arriba, imagen abajo (pegada al borde inferior) */}
         <div className="flex flex-col">
-          <span className="eyebrow">Preguntas frecuentes</span>
+          <span className="eyebrow">{eyebrow}</span>
           <h2 className="mt-3 font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
-            Resolvemos <span className="font-accent text-brand">tus dudas</span>
+            {titleTop} <span className="font-accent text-brand">{titleAccent}</span>
           </h2>
           <MediaSurface
             as="image"
-            label="imagen — clínica / equipo"
+            label={imageLabel}
             className="mt-10 aspect-[4/3] rounded-card md:mt-auto"
           />
         </div>
 
         {/* Acordeón accesible (esquema claro) */}
         <div className="self-start rounded-block bg-white p-6 shadow-card md:p-8 [&>div:last-child]:border-b-0">
-          {faq.map((item, i) => {
+          {items.map((item, i) => {
             const isOpen = openIndex === i;
             return (
               <div key={i} className="border-b border-line">

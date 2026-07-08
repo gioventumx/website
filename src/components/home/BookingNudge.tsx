@@ -46,7 +46,7 @@ export function BookingNudge() {
     >
       <button
         type="button"
-        onClick={openBooking}
+        onClick={() => openBooking()}
         aria-label={`${n.title}. ${n.body}`}
         className="nudge-float relative flex max-w-[290px] items-center gap-3 rounded-card border border-line bg-white p-3.5 text-left text-ink shadow-xl transition-shadow hover:shadow-2xl"
       >

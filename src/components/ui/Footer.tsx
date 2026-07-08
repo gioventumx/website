@@ -58,12 +58,20 @@ export function Footer() {
         {/* Divisor + fila inferior */}
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3.5 border-t border-white/10 pt-6 text-[0.78rem] text-[#807da0]">
           <span>{site.footer.legal}</span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={site.footer.creditLogo}
-            alt={site.footer.credit}
-            className="h-3.5 w-auto opacity-70 invert"
-          />
+          <a
+            href="https://scndal.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={site.footer.credit}
+            className="opacity-70 transition-opacity hover:opacity-100"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={site.footer.creditLogo}
+              alt={site.footer.credit}
+              className="h-6 w-auto invert"
+            />
+          </a>
         </div>
       </div>
     </footer>

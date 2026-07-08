@@ -1,74 +1,188 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { MediaSurface } from "@/components/ui/MediaSurface";
-import { padecimientos } from "@/data/padecimientos";
+import { useBooking } from "@/components/booking/BookingProvider";
+import { padecimientos, bentoLayout, type BentoPos } from "@/data/padecimientos";
+
+// ────────────────────────────────────────────────────────────────────────────
+// BENTO — composición manual (posiciones EXACTAS por style inline).
+// Grid 12 col × 10 fil (ver .bento-grid en globals.css). Cada pieza se coloca con
+// gridColumn/gridRow concretos. El tamaño del título escala según el ÁREA de la
+// pieza (grande/media/chica). Tres tipos: treatment · cta (índigo) · decor.
+// ────────────────────────────────────────────────────────────────────────────
+
+type Size = "grande" | "media" | "chica";
+
+// Área = columnas × filas que ocupa la pieza. De ahí sale la escala de texto.
+function sizeOf(col: string, row: string): Size {
+  const [c1, c2] = col.split("/").map((s) => parseInt(s, 10));
+  const [r1, r2] = row.split("/").map((s) => parseInt(s, 10));
+  const area = (c2 - c1) * (r2 - r1);
+  return area >= 9 ? "grande" : area >= 5 ? "media" : "chica";
+}
+
+// Título del tratamiento. En móvil queda en el tamaño "encogido" (estado estable
+// con descripción visible). En desktop: grande por defecto y encoge al hover, para
+// cederle protagonismo a la descripción. Las 3 variantes van LITERALES por tamaño
+// (Tailwind debe verlas completas para generarlas: base · lg · lg:group-hover).
+const titleClasses: Record<Size, string> = {
+  grande:
+    "text-[clamp(1.3rem,1.7vw,1.7rem)] lg:text-[clamp(1.6rem,2vw,2.2rem)] lg:group-hover:text-[clamp(1.3rem,1.7vw,1.7rem)]",
+  media:
+    "text-[clamp(1.1rem,1.35vw,1.3rem)] lg:text-[clamp(1.25rem,1.6vw,1.6rem)] lg:group-hover:text-[clamp(1.1rem,1.35vw,1.3rem)]",
+  chica:
+    "text-[clamp(1.05rem,1.2vw,1.2rem)] lg:text-[clamp(1.15rem,1.4vw,1.4rem)] lg:group-hover:text-[clamp(1.05rem,1.2vw,1.2rem)]",
+};
+
+// Tamaño de la descripción según la escala de la pieza (completa, sin truncar).
+const descSize: Record<Size, string> = {
+  grande: "text-[0.98rem]",
+  media: "text-[0.88rem]",
+  chica: "text-[0.84rem]",
+};
+
+// Piezas cuyo título se parte en 2 líneas con salto FIJO (por slug). El <br>
+// mantiene la misma partición en normal y hover: solo cambia el tamaño, no el
+// reacomodo del texto.
+const forcedBreaks: Record<string, [string, string]> = {
+  "ojeras-y-bolsas": ["Ojeras", "y bolsas"],
+  "eliminacion-de-verrugas": ["Eliminación", "de verrugas"],
+};
+
+// Alturas mínimas en móvil (apilado); en desktop manda la fila del grid (lg:min-h-0).
+const mobileMinH: Record<Size, string> = {
+  grande: "min-h-[150px]",
+  media: "min-h-[120px]",
+  chica: "min-h-[104px]",
+};
 
 export function PadecimientosGrid() {
   const p = padecimientos;
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  // Entrada al hacer scroll (una sola vez); con reduced-motion aparece directo.
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  const { openBooking } = useBooking();
+  // Todas las piezas y el CTA del bento abren el modal con Dermatología preseleccionada.
+  const bookDerma = () => openBooking({ service: "Dermatología" });
 
   return (
-    <section ref={sectionRef} className="bg-bg px-6 py-[clamp(60px,8vw,100px)] md:px-10">
-      <div className="container-x">
-        <div className="mb-10 max-w-[640px]">
-          <span className="eyebrow">{p.eyebrow}</span>
-          <h2 className="mt-3 font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
-            {p.titleTop} <span className="font-accent text-brand">{p.titleAccent}</span>
-          </h2>
-        </div>
+    <section className="bg-bg px-4 py-[clamp(40px,5vw,64px)] md:px-8">
+      <div className="mx-auto mb-5 max-w-[640px] text-center">
+        <span className="eyebrow">{p.eyebrow}</span>
+        <h2 className="mt-3 font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
+          {p.titleTop} <span className="font-accent text-brand">{p.titleAccent}</span>
+        </h2>
+      </div>
 
-        {/* 2 col móvil/tablet · 5 col desktop */}
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-          {p.items.map((item, i) => (
-            <div
-              key={item.slug}
-              className={[
-                "transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none",
-                visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-              ].join(" ")}
-              style={{ transitionDelay: visible ? `${i * 80}ms` : "0ms" } as CSSProperties}
-            >
-              <Link href={`/dermatologia/${item.slug}/`} className="group block">
-                <MediaSurface
-                  as="image"
-                  src={item.image}
-                  overlay="ink"
-                  label={item.image ? undefined : "imagen"}
-                  className="flex min-h-[220px] items-end rounded-card p-4 shadow-card transition-transform duration-300 ease-out group-hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
-                >
-                  <span className="font-accent text-[1.05rem] italic leading-[1.15] text-white">
-                    {item.label}
-                  </span>
-                </MediaSurface>
-              </Link>
-            </div>
-          ))}
-        </div>
+      <div className="bento-grid">
+        {bentoLayout.map((piece) => (
+          <Piece key={piece.id} piece={piece} onBook={bookDerma} />
+        ))}
       </div>
     </section>
+  );
+}
+
+function Piece({ piece, onBook }: { piece: BentoPos; onBook: () => void }) {
+  // Posición EXACTA: valores concretos inline (no dependen del compilador).
+  const style = { gridColumn: piece.col, gridRow: piece.row } as CSSProperties;
+
+  // ── CTA especial — índigo pleno (#3336B8), sin imagen. Resalta del resto. ──
+  if (piece.kind === "cta") {
+    return (
+      <div style={style}>
+        <button
+          type="button"
+          onClick={onBook}
+          className={`group flex h-full w-full flex-col items-center justify-center gap-3 rounded-card bg-brand p-5 text-center shadow-card md:p-6 ${mobileMinH.grande} lg:min-h-0`}
+        >
+          <h3 className="font-accent text-[clamp(1.3rem,1.9vw,1.95rem)] italic leading-[1.14] text-white">
+            {piece.label}
+          </h3>
+          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-[0.82rem] font-semibold text-brand">
+            Agenda ahora
+            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
+              →
+            </span>
+          </span>
+        </button>
+      </div>
+    );
+  }
+
+  // ── Decorativa — solo imagen + overlay (sin texto, sin CTA, sin hover). ──
+  if (piece.kind === "decor") {
+    return (
+      <div style={style}>
+        <MediaSurface
+          as="image"
+          src={piece.image}
+          overlay="ink"
+          className={`h-full rounded-card shadow-card ${mobileMinH.chica} lg:min-h-0`}
+        />
+      </div>
+    );
+  }
+
+  // ── Tratamiento — imagen + overlay + nombre serif escalado + hover. ──
+  const size = sizeOf(piece.col, piece.row);
+  return (
+    <div style={style}>
+      <MediaSurface
+        as="image"
+        src={piece.image}
+        overlay="ink"
+        className={`group relative flex h-full flex-col justify-center rounded-card p-4 shadow-card md:p-5 ${mobileMinH[size]} lg:min-h-0`}
+      >
+        {/* Clic principal (toda la tarjeta). Hoy abre el modal; a futuro será
+            <Link href={`/dermatologia/${piece.slug}/`}> a su página. */}
+        <button
+          type="button"
+          onClick={onBook}
+          data-slug={piece.slug}
+          aria-label={`Agendar: ${piece.label}`}
+          className="absolute inset-0 z-[1] rounded-card"
+        />
+
+        {/* Flecha circular (arriba-derecha) — mismo patrón que las cards del Home.
+            Decorativa: aparece SOLO en hover (desktop) y queda siempre visible en
+            móvil; el clic lo maneja la capa principal (abre el modal). */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute right-3 top-3 z-[2] flex h-8 w-8 items-center justify-center rounded-full bg-white text-[0.95rem] leading-none text-ink shadow-sm transition-[opacity,transform] duration-300 ease-out opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none lg:opacity-0 lg:group-hover:opacity-100"
+        >
+          ↗
+        </span>
+
+        {/* Contenido: título (encoge al hover) + descripción (aparece/crece al hover;
+            siempre visible en móvil). pointer-events-none → el clic pasa a la capa. */}
+        <div className="pointer-events-none relative z-[2] flex flex-col">
+          <span
+            className={`font-accent italic leading-[1.12] text-white transition-[font-size] duration-300 ease-out motion-reduce:transition-none ${titleClasses[size]}`}
+          >
+            {piece.slug && forcedBreaks[piece.slug] ? (
+              <>
+                {forcedBreaks[piece.slug][0]}
+                <br />
+                {forcedBreaks[piece.slug][1]}
+              </>
+            ) : (
+              piece.label
+            )}
+          </span>
+
+          {/* Descripción colapsable (grid-rows 0fr→1fr). En reposo ocupa 0 de alto,
+              así el título queda centrado; al hover se expande y empuja el título
+              hacia arriba, dejando el hueco para el texto. En móvil siempre visible. */}
+          <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none lg:grid-rows-[0fr] lg:group-hover:grid-rows-[1fr]">
+            <div className="overflow-hidden">
+              <p
+                className={`pt-1.5 font-medium leading-snug text-white opacity-100 transition-opacity duration-300 ease-out motion-reduce:transition-none lg:opacity-0 lg:group-hover:opacity-100 ${descSize[size]}`}
+              >
+                {piece.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      </MediaSurface>
+    </div>
   );
 }

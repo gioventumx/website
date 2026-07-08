@@ -182,11 +182,30 @@ function runSimulation(
   Runner.run(runner, engine);
 
   const bodies: (Matter.Body | null)[] = new Array(chips.length).fill(null);
+
+  // Reinsertar un chip arriba (misma lógica que la lluvia inicial) para que
+  // "vuelva a caer". Se usa cuando un cuerpo escapa por tunneling al arrastrarlo.
+  const respawn = (b: Matter.Body) => {
+    const x = 80 + Math.random() * Math.max(1, W - 160);
+    Body.setPosition(b, { x, y: -80 });
+    Body.setVelocity(b, { x: 0, y: 0 });
+    Body.setAngularVelocity(b, 0);
+    Body.setAngle(b, 0);
+  };
+
   let raf = requestAnimationFrame(function sync() {
     for (let i = 0; i < bodies.length; i++) {
       const b = bodies[i];
       if (!b) continue;
       const el = chips[i];
+      // Si un chip se escapó de la zona (atravesó el piso o los muros al arrastrarlo
+      // con fuerza), lo devolvemos arriba para que caiga de nuevo. No lo tocamos si es
+      // el que se está arrastrando ahora mismo, para no arrancárselo al cursor.
+      const escaped =
+        b.position.y > H + 200 || b.position.x < -200 || b.position.x > W + 200;
+      if (escaped && !(mc && mc.body === b)) {
+        respawn(b);
+      }
       // Legibilidad: la pastilla es simétrica a 180°, así que reducimos el ángulo
       // MOSTRADO a [-90°, 90°]. El texto nunca queda de cabeza y el contorno sigue
       // coincidiendo con el cuerpo físico (mismo footprint, no se desincroniza).

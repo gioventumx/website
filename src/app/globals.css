@@ -152,6 +152,29 @@
   .glass-dark { background: rgba(30, 31, 107, .85); }
 }
 
+/* ============================================================
+   BENTO DE DERMATOLOGÍA — composición manual (posiciones explícitas)
+   Base (móvil): flex en columna → las piezas se apilan (P1…P15). Como NO es grid,
+   los `grid-column`/`grid-row` inline de cada pieza se ignoran aquí sin romper nada.
+   Desktop (≥1024px): grid 12 columnas × 10 filas; cada pieza se coloca con su
+   grid-column/grid-row inline (valores concretos "1 / 3", "1 / 6", …).
+   El apilado es el DEFAULT: si el media query no aplicara, queda apilado, no roto.
+   ============================================================ */
+.bento-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(10, minmax(0, 1fr));
+    height: min(74vh, 740px);
+    gap: 16px;
+  }
+}
+
 /* Campaneo para llamar la atención sobre el badge del hero */
 @keyframes bell-ring {
   0%   { transform: rotate(0); }

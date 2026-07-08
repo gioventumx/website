@@ -1,18 +1,24 @@
-// Copy de la página /dermatologia/ (hero, intro, testimonio, encabezados).
-// Los padecimientos viven en data/padecimientos.ts. El CTA de cierre reutiliza
-// home.band vía <ClosingCTA />. Imágenes = placeholder (TODO).
+// Copy de la página /dermatologia/ (hero, intro). Los padecimientos viven en
+// data/padecimientos.ts y los testimonios en data/testimonios-derma.ts. El CTA de
+// cierre reutiliza home.band vía <ClosingCTA />. Imágenes = placeholder (TODO).
 
 import type { Feature } from "./types";
 
 export const dermatologia = {
+  // Migas de pan (breadcrumb) del hero — navegación + SEO. La última es la actual.
+  breadcrumb: [
+    { label: "Inicio", href: "/" },
+    { label: "Dermatología", href: "/dermatologia/" },
+  ],
+
   hero: {
-    eyebrow: "Centro dermatológico · Lomas Verdes",
     titleTop: "Cuidado experto",
     titleAccent: "para la salud de tu piel",
     body: "Médicos dermatólogos evalúan tu padecimiento y diseñan el tratamiento específico para obtener los mejores resultados.",
     cta: "Agendar cita",
-    // TODO: imagen/video de fondo real del hero. Vacío = placeholder.
-    image: "",
+    // Mismo video de fondo que el hero del Home (muted, autoplay, loop, playsInline).
+    video: "/GIO-web.mp4",
+    rating: { value: "4.9", text: "en Google · pacientes reales" },
     features: [
       { title: "Tecnología de punta", description: "Equipo médico de última generación", icon: "tech" },
       { title: "Atención personalizada", description: "Un plan a la medida de tu piel", icon: "care" },
@@ -27,13 +33,4 @@ export const dermatologia = {
     body: "Te ayudamos a sacar lo mejor de tu piel con tratamientos personalizados, medicina estética, faciales y cuidado especializado, apoyados por dermatólogos expertos.",
     cta: "Agendar cita",
   },
-
-  testimonial: {
-    eyebrow: "Personas reales, resultados reales",
-    quote:
-      "Decidí probar el tratamiento de láser CO2 y en pocas sesiones las manchas desaparecieron. Mi piel luce más limpia y rejuvenecida.",
-    author: "Julio R. · Paciente de Dermatología",
-  },
-
-  branchesHead: { eyebrow: "Encuentra", titleTop: "tu", titleAccent: "sucursal" },
 };

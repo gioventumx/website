@@ -7,6 +7,8 @@ type Props = {
   overlay?: "brand" | "ink" | "none";
   /** Etiqueta de referencia mientras usamos placeholders (ej. "▶ video de fondo"). */
   label?: string;
+  /** Carga inmediata (LCP, p. ej. hero above-the-fold). Por defecto lazy. */
+  priority?: boolean;
   className?: string;
   children?: ReactNode;
 };
@@ -17,6 +19,7 @@ export function MediaSurface({
   poster,
   overlay = "brand",
   label,
+  priority = false,
   className = "",
   children,
 }: Props) {
@@ -39,7 +42,16 @@ export function MediaSurface({
           <video src={src} poster={poster} autoPlay muted loop playsInline />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt="" />
+          <img
+            src={src}
+            alt=""
+            // Lazy por defecto: el navegador difiere la descarga hasta acercarse
+            // al viewport (bento bajo el fold). No hay CLS porque el contenedor ya
+            // tiene tamaño (grid/min-h) y la imagen es absolute + object-fit:cover.
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+            fetchPriority={priority ? "high" : "auto"}
+          />
         ))}
 
       {label && (
