@@ -1,14 +1,21 @@
 import Link from "next/link";
 import { BookingButton } from "@/components/booking/BookingButton";
 import { SocialIcon } from "@/components/ui/SocialIcon";
+import { ClinicJsonLd } from "@/components/ui/ClinicJsonLd";
 import { site } from "@/data/site";
+
+const tel = (n: string) => `tel:+52${n.replace(/\D/g, "")}`;
+const wa = (n: string) => `https://wa.me/52${n.replace(/\D/g, "")}`;
 
 export function Footer() {
   return (
     <footer id="contacto" className="px-4 pb-4 md:px-6 md:pb-6">
+      {/* Schema LocalBusiness (MedicalClinic) por sucursal — una sola vez */}
+      <ClinicJsonLd />
+
       <div className="rounded-block bg-ink px-6 py-12 text-[#CFCCE0] md:px-12 md:py-14">
-        {/* Fila principal — 3 zonas */}
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr] md:gap-12">
+        {/* Fila principal — 4 zonas */}
+        <div className="grid gap-10 md:grid-cols-2 md:gap-12 lg:grid-cols-[1.4fr_1fr_1.5fr_1fr]">
           {/* IZQUIERDA — logo + descripción */}
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -22,7 +29,7 @@ export function Footer() {
             </p>
           </div>
 
-          {/* CENTRO — links */}
+          {/* LINKS */}
           <nav>
             <ul className="flex flex-col gap-2.5">
               {site.footer.assistance.links.map((link) => (
@@ -35,8 +42,45 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* DERECHA — CTA + redes */}
-          <div className="flex flex-col items-start gap-6 md:items-end">
+          {/* SUCURSALES — dirección (→ Maps), teléfonos (tel:) y horarios */}
+          <div>
+            <h3 className="mb-4 text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-white">
+              {site.footer.branchesTitle}
+            </h3>
+            <ul className="flex flex-col gap-5">
+              {site.branches.map((b) => (
+                <li key={b.name} className="text-[0.84rem] leading-relaxed">
+                  <p className="font-semibold text-white">Sucursal {b.name}</p>
+                  <a
+                    href={b.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 block max-w-[280px] text-[#9794b5] transition-colors hover:text-white"
+                  >
+                    {b.address}
+                  </a>
+                  <p className="mt-1.5">
+                    <a href={tel(b.phone)} className="transition-colors hover:text-white">
+                      Tel: {b.phone}
+                    </a>
+                    <span className="text-[#807da0]"> · </span>
+                    <a
+                      href={wa(b.whatsapp)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-white"
+                    >
+                      WhatsApp: {b.whatsapp}
+                    </a>
+                  </p>
+                  <p className="mt-1 text-[0.8rem] text-[#807da0]">{b.hours}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* CTA + redes */}
+          <div className="flex flex-col items-start gap-6 lg:items-end">
             <BookingButton variant="primary">{site.cta.label}</BookingButton>
             <div className="flex gap-3">
               {site.socials.map((social) => (

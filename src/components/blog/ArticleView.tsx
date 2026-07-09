@@ -95,7 +95,7 @@ export function ArticleView({
               priority
               className="mb-8 aspect-[16/10] w-full rounded-block"
             />
-            <TableOfContents headings={headings} />
+            <TableOfContents headings={headings} className="mb-8" />
             <PostBody markdown={body} />
             <TagPills tags={post.etiquetas} />
 

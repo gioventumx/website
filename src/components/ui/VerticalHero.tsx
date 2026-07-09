@@ -1,6 +1,7 @@
 import { MediaSurface } from "@/components/ui/MediaSurface";
 import { BookingButton } from "@/components/booking/BookingButton";
 import { Stars } from "@/components/ui/Stars";
+import { GoogleRatingInline } from "@/components/ui/GoogleRating";
 import { HeroFeatures } from "@/components/home/HeroFeatures";
 import { HeroNotification } from "@/components/home/HeroNotification";
 import type { ServiceOption } from "@/data/booking";
@@ -49,9 +50,7 @@ export function VerticalHero({ hero, service }: { hero: VerticalHeroData; servic
               </BookingButton>
               <div className="flex items-center gap-2.5 text-[0.85rem] text-brand-tint">
                 <Stars rating={5} />
-                <span>
-                  <b className="text-white">{hero.rating.value}</b> {hero.rating.text}
-                </span>
+                <GoogleRatingInline />
               </div>
             </div>
           </div>

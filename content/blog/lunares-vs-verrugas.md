@@ -1,6 +1,6 @@
 ---
-image: /derma-services/lunares.webp
-imageAlt: Dermatóloga con guantes revisando un lunar en el cuello de una paciente joven durante una valoración de piel
+image: /blog-thumbs/lunares-vs-verrugas.webp
+imageAlt: Dermatólogo examina con dermatoscopio un lunar en el cuello de una paciente para diferenciarlo de una verruga
 dateModified: "2026-07-09"
 faq:
   - q: "¿Cómo sé si un lunar es peligroso?"

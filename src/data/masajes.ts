@@ -19,7 +19,7 @@ export const masajes = {
     body: "Masajes relajantes, descontracturantes y reductivos en nuestro Wellness Spa, con masajistas profesionales y técnicas para cada necesidad de tu cuerpo.",
     cta: "Agendar cita",
     image: "/masajes-hero.webp",
-    rating: { value: "4.9", text: "en Google · clientas reales" },
+    rating: { value: "4.7", text: "en Google · 186 reseñas" },
     features: [
       { title: "Masajistas profesionales", description: "Manos expertas en cada técnica", icon: "team" },
       { title: "Técnica para tu cuerpo", description: "La presión que cada cuerpo necesita", icon: "care" },

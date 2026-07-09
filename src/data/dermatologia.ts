@@ -18,7 +18,7 @@ export const dermatologia = {
     cta: "Agendar cita",
     // Mismo video de fondo que el hero del Home (muted, autoplay, loop, playsInline).
     video: "/GIO-web.mp4",
-    rating: { value: "4.9", text: "en Google · pacientes reales" },
+    rating: { value: "4.7", text: "en Google · 186 reseñas" },
     features: [
       { title: "Tecnología de punta", description: "Equipo médico de última generación", icon: "tech" },
       { title: "Atención personalizada", description: "Un plan a la medida de tu piel", icon: "care" },

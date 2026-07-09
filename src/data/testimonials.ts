@@ -2,8 +2,8 @@ import type { Review } from "./types";
 
 export const testimonials = {
   googleScore: {
-    value: "4.9",
-    count: "Calificación en Google · +100 opiniones",
+    value: "4.7",
+    count: "en Google · 186 reseñas",
   },
   // Reseñas reales de Google (C1→C7 del wireframe). Altura variable por el largo del texto.
   reviews: [

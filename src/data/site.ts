@@ -13,8 +13,42 @@ export const site = {
   cta: { label: "Agendar cita", href: "#" },
 
   branches: [
-    { name: "Cúspide", phone: "55 5349 2712", whatsapp: "55 4058 3256" },
-    { name: "Antigua", phone: "55 5308 2028", whatsapp: "55 6149 6600" },
+    {
+      name: "Cúspide",
+      phone: "55 5349 2712",
+      whatsapp: "55 4058 3256",
+      address:
+        "Avenida Lomas Verdes 1200, Local 53-C, Lomas Verdes, 53125, Naucalpan, Estado de México",
+      locality: "Naucalpan de Juárez",
+      postalCode: "53125",
+      mapsUrl: "https://maps.app.goo.gl/fhJU362MAcHB1k2W9",
+      hours: "Lun a Vie 10:00–19:00 · Sáb 9:00–14:00 · Dom cerrado",
+      openingHours: [
+        { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "10:00", closes: "19:00" },
+        { days: ["Saturday"], opens: "09:00", closes: "14:00" },
+      ],
+      rating: { value: "4.6", count: 103 },
+      // Coordenadas exactas del pin de Google Maps.
+      geo: { lat: 19.514679, lng: -99.265757 },
+    },
+    {
+      name: "Antigua",
+      phone: "55 5308 2028",
+      whatsapp: "55 6149 6600",
+      address:
+        "Av. Dr. Jiménez Cantú Lote A-2-5, Oficina Torre 2, 212, Hacienda de Valle Escondido, 52938, Estado de México",
+      locality: "Atizapán de Zaragoza",
+      postalCode: "52938",
+      mapsUrl: "https://maps.app.goo.gl/nWJNj8796ijjmGjJ8",
+      hours: "Lun a Vie 10:00–19:00 · Sáb 10:00–14:00 · Dom cerrado",
+      openingHours: [
+        { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "10:00", closes: "19:00" },
+        { days: ["Saturday"], opens: "10:00", closes: "14:00" },
+      ],
+      rating: { value: "4.8", count: 83 },
+      // Coordenadas exactas del pin de Google Maps.
+      geo: { lat: 19.572154, lng: -99.302732 },
+    },
   ] satisfies Branch[],
 
   socials: [

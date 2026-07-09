@@ -32,7 +32,7 @@ export const conocenos = {
     stats: [
       { value: "+10", label: "años de experiencia" },
       { value: "2", label: "sucursales" },
-      { value: "4.9", label: "en Google" },
+      { value: "4.7", label: "en Google · 186 reseñas" },
     ],
   },
 };

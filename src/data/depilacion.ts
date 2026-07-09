@@ -99,8 +99,8 @@ export const depilacion = {
     titleTop: "Personas reales,",
     titleAccent: "resultados inigualables",
     googleScore: {
-      value: "4.9",
-      count: "Calificación en Google · +60 opiniones",
+      value: "4.7",
+      count: "en Google · 186 reseñas",
     },
     // TODO: reemplazar por reseñas reales de depilación de Google.
     reviews: [

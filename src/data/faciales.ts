@@ -25,7 +25,7 @@ export const faciales = {
     body: "Estética facial y limpieza profunda en nuestro Wellness Spa: hidratación, microdermoabrasión y rejuvenecimiento facial, con el respaldo de una clínica dermatológica.",
     cta: "Agendar cita",
     image: "/faciales-hero.webp",
-    rating: { value: "4.9", text: "en Google · clientas reales" },
+    rating: { value: "4.7", text: "en Google · 186 reseñas" },
     features: [
       { title: "Cosmetólogas expertas", description: "Manos especializadas en el cuidado de tu piel", icon: "team" },
       { title: "Atención personalizada", description: "Un facial a la medida de tu piel", icon: "care" },

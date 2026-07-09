@@ -1,6 +1,7 @@
 import { MediaSurface } from "@/components/ui/MediaSurface";
 import { BookingButton } from "@/components/booking/BookingButton";
 import { Stars } from "@/components/ui/Stars";
+import { GoogleRatingInline } from "@/components/ui/GoogleRating";
 import { HeroNotification } from "@/components/home/HeroNotification";
 import { HeroFeatures } from "@/components/home/HeroFeatures";
 import { home } from "@/data/home";
@@ -35,9 +36,7 @@ export function Hero() {
             <BookingButton variant="light">{h.cta.label}</BookingButton>
             <div className="flex items-center gap-2.5 text-[0.85rem] text-brand-tint">
               <Stars rating={5} />
-              <span>
-                <b className="text-white">{h.rating.value}</b> {h.rating.text}
-              </span>
+              <GoogleRatingInline />
             </div>
           </div>
           </div>

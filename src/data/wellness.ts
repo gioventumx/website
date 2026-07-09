@@ -1,20 +1,20 @@
-// Copy del hub /wellness/ (versión mínima: hero + 2 tarjetas de acceso).
-// Hero con copy PLACEHOLDER (TODO). Imágenes = placeholder.
+// Copy del hub /wellness/: hero + 2 tarjetas de acceso + intro + CTA banner.
+// Los segmentos `accent` van en Playfair italic (font-accent text-brand).
 
 import type { Feature } from "./types";
 import type { Destacado } from "./destacados";
 
+type Seg = { text: string; accent?: boolean };
+
 export const wellness = {
   hero: {
     eyebrow: "Wellness Spa",
-    // TODO: copy final del hero (placeholder).
-    titleTop: "TODO · Título del hero",
-    titleAccent: "de wellness (placeholder)",
-    body: "TODO · Texto del hero (placeholder). Reemplazar por copy final de wellness.",
+    titleTop: "Un espacio para que el cuerpo",
+    titleAccent: "también descanse",
+    body: "Nuestro wellness spa, dentro de una clínica dermatológica. Faciales y masajes con protocolos definidos, en un ambiente pensado para desconectarte.",
     cta: "Agendar cita",
-    // TODO: imagen/video de fondo real. Vacío = placeholder.
-    image: "",
-    rating: { value: "4.9", text: "en Google · clientas reales" },
+    image: "/wellness-hero.webp",
+    rating: { value: "4.7", text: "en Google · 186 reseñas" },
     features: [
       { title: "Cosmetólogas y terapeutas", description: "Un equipo dedicado a tu bienestar", icon: "team" },
       { title: "Atención personalizada", description: "Una experiencia a tu medida", icon: "care" },
@@ -39,4 +39,22 @@ export const wellness = {
       image: "/masajes-hero.webp",
     },
   ] satisfies Destacado[],
+
+  // Intro (después de las dos tarjetas). Título con accent + párrafos con italic inline.
+  intro: {
+    titleTop: "Cuidarte no debería sentirse",
+    titleAccent: "como un trámite",
+    paragraphs: [
+      [
+        { text: "En Gioventù el bienestar no es un extra, es parte de cómo entendemos el cuidado de la piel. Descubre nuestro " },
+        { text: "wellness spa", accent: true },
+        { text: ", con " },
+        { text: "faciales", accent: true },
+        { text: " para que tu piel recupere luz y textura con tratamientos cosmetológicos profesionales y los " },
+        { text: "masajes", accent: true },
+        { text: ", para que el cuerpo suelte lo que lleva semanas cargando." },
+      ],
+      [{ text: "Ninguno de los dos es un lujo. Son la pausa que te toca." }],
+    ] satisfies Seg[][],
+  },
 };

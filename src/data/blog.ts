@@ -97,13 +97,15 @@ export const posts: BlogPost[] = [
     autor: "Andrea Ríos",
     fecha: "2026-05-13",
     tiempoLectura: 5,
-    imagen: "/derma-services/lunares.webp",
+    imagen: "/blog-thumbs/lunares-vs-verrugas.webp",
     destacado: true,
   },
   {
     slug: "rejuvenecimiento-facial",
     titulo: "Rejuvenecimiento facial: los tratamientos más efectivos",
-    excerpt: "Todo lo que puedes hacer para recuperar una piel firme y luminosa.",
+    tituloAccent: "los tratamientos más efectivos",
+    excerpt:
+      "HIFU, toxina botulínica, bioestimuladores y PDRN: los tratamientos no invasivos que regeneran tu piel y te hacen lucir más joven sin cirugía.",
     departamento: "medicina-estetica",
     categoriaPrincipal: "rejuvenecimiento",
     categoriasSecundarias: [],
@@ -111,12 +113,14 @@ export const posts: BlogPost[] = [
     autor: "Equipo Gioventù",
     fecha: "2026-05-10",
     tiempoLectura: 6,
-    imagen: undefined,
+    imagen: "/blog-thumbs/rejuvenecimiento-facial.webp",
   },
   {
     slug: "causas-flacidez",
     titulo: "Causas de la flacidez y cómo eliminarla",
-    excerpt: "Guía de tratamientos efectivos para reafirmar la piel.",
+    tituloAccent: "cómo eliminarla",
+    excerpt:
+      "El colágeno se vence con la edad, el sol y los cambios de peso. Descubre qué causa la flacidez y qué tratamientos de grado médico sí la reafirman.",
     departamento: "medicina-estetica",
     categoriaPrincipal: "flacidez",
     categoriasSecundarias: ["rejuvenecimiento"],
@@ -124,12 +128,14 @@ export const posts: BlogPost[] = [
     autor: "Equipo Gioventù",
     fecha: "2026-05-03",
     tiempoLectura: 5,
-    imagen: undefined,
+    imagen: "/blog-thumbs/causas-flacidez.webp",
   },
   {
     slug: "rosacea-sintomas-causas",
     titulo: "Rosácea: síntomas y causas para el cuidado de tu piel",
-    excerpt: "Cómo reconocer la rosácea y qué hacer para controlarla.",
+    tituloAccent: "síntomas y causas",
+    excerpt:
+      "Enrojecimiento persistente, brotes y arañitas: reconoce los síntomas y detonantes de la rosácea y aprende cómo controlarla con criterio médico.",
     departamento: "dermatologia",
     categoriaPrincipal: "rosacea",
     categoriasSecundarias: [],
@@ -137,12 +143,14 @@ export const posts: BlogPost[] = [
     autor: "Andrea Ríos",
     fecha: "2026-04-28",
     tiempoLectura: 4,
-    imagen: undefined,
+    imagen: "/blog-thumbs/rosacea-sintomas-causas.webp",
   },
   {
     slug: "depilacion-laser-guia",
-    titulo: "Depilación láser: guía completa para una piel sana",
-    excerpt: "Qué esperar, cómo prepararte y cuántas sesiones necesitas.",
+    titulo: "¿Cuáles son los 5 tipos de depilación? Guía completa",
+    tituloAccent: "5 tipos de depilación",
+    excerpt:
+      "Láser, cera, rastrillo, crema o hilo: comparamos los 5 tipos de depilación más populares para que elijas el método más seguro para tu piel.",
     departamento: "wellness",
     categoriaPrincipal: "depilacion",
     categoriasSecundarias: [],
@@ -150,7 +158,7 @@ export const posts: BlogPost[] = [
     autor: "Equipo Gioventù",
     fecha: "2026-04-20",
     tiempoLectura: 7,
-    imagen: undefined,
+    imagen: "/blog-thumbs/depilacion-laser-guia.webp",
   },
   {
     slug: "manchas-melasma",
@@ -168,7 +176,9 @@ export const posts: BlogPost[] = [
   {
     slug: "que-es-celulitis",
     titulo: "¿Qué es la celulitis y por qué sale? Guía completa",
-    excerpt: "Tipos, causas y tratamientos para mejorar su apariencia.",
+    tituloAccent: "por qué sale",
+    excerpt:
+      "Piel de naranja: por qué aparece, sus 5 causas, los 3 tipos que existen y los tratamientos que de verdad suavizan y reafirman la piel.",
     departamento: "wellness",
     categoriaPrincipal: "celulitis",
     categoriasSecundarias: [],
@@ -176,7 +186,7 @@ export const posts: BlogPost[] = [
     autor: "Equipo Gioventù",
     fecha: "2026-04-06",
     tiempoLectura: 5,
-    imagen: undefined,
+    imagen: "/blog-thumbs/que-es-celulitis.webp",
   },
 ];
 

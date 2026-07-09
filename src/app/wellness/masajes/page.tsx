@@ -59,11 +59,7 @@ export default async function MasajesPage({
       {/* Banner protagonista: masaje en pareja (entre intro y testimonios) */}
       <Banner {...masajes.coupleBanner} service="Wellness Spa" />
 
-      <TestimoniosMasonry
-        reviews={testimoniosMasajes.reviews}
-        score={testimoniosMasajes.googleScore}
-        id="testimonios"
-      />
+      <TestimoniosMasonry reviews={testimoniosMasajes.reviews} id="testimonios" />
 
       {/* CTA de agenda en formato BANNER, entre Testimonios y Preguntas */}
       <ClosingCTA

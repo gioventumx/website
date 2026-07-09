@@ -25,6 +25,12 @@ export const notifications: Record<string, NotifConfig> = {
     source: "dermatologia:notificacion",
     service: "Dermatología",
   },
+  "/estetica/": {
+    title: "Disponibilidad limitada esta semana",
+    body: "Nuestros especialistas atienden por cita. Reserva tu valoración.",
+    source: "estetica:notificacion",
+    service: "Medicina Estética",
+  },
   "/wellness/faciales/": {
     title: "Disponibilidad limitada esta semana",
     body: "Nuestras cosmetólogas atienden por cita. Reserva tu facial.",

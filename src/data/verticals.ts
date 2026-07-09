@@ -21,6 +21,13 @@ export const verticalNav: Record<string, { anchors: Anchor[] }> = {
       { id: "preguntas", label: "Preguntas" },
     ],
   },
+  "/estetica/": {
+    anchors: [
+      { id: "servicios", label: "Tratamientos" },
+      { id: "testimonios", label: "Testimonios" },
+      { id: "preguntas", label: "Preguntas" },
+    ],
+  },
   "/wellness/faciales/": {
     anchors: [
       { id: "faciales", label: "Faciales disponibles" },

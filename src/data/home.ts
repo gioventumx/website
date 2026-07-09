@@ -29,7 +29,7 @@ export const home = {
     titleAccent: "para una piel radiante",
     body: "Dermatología, medicina estética y wellness en un mismo lugar. Dermatólogos y médicos especializados combinan ciencia y tecnología de vanguardia para cuidar tu piel.",
     cta: { label: "Agendar en WhatsApp", href: "#" } as CTA,
-    rating: { value: "4.9", text: "en Google · pacientes reales" },
+    rating: { value: "4.7", text: "en Google · 186 reseñas" },
   },
 
   features: [

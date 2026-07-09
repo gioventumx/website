@@ -5,8 +5,8 @@ import type { Review } from "./types";
 
 export const testimoniosMasajes = {
   googleScore: {
-    value: "4.9",
-    count: "Calificación en Google · +100 opiniones",
+    value: "4.7",
+    count: "en Google · 186 reseñas",
   },
   reviews: [
     {

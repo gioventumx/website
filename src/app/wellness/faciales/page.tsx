@@ -57,11 +57,7 @@ export default async function FacialesPage({
       {/* INTRO — prosa grande centrada (statement) + lluvia de pills (faciales) */}
       <ResultsRain statement={faciales.statement} chips={faciales.chips} id="sobre" />
 
-      <TestimoniosMasonry
-        reviews={testimoniosFaciales.reviews}
-        score={testimoniosFaciales.googleScore}
-        id="testimonios"
-      />
+      <TestimoniosMasonry reviews={testimoniosFaciales.reviews} id="testimonios" />
 
       {/* CTA de agenda en formato BANNER, entre Testimonios y Preguntas */}
       <ClosingCTA
