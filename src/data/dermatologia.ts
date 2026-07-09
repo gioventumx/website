@@ -26,11 +26,17 @@ export const dermatologia = {
     ] satisfies Feature[],
   },
 
-  intro: {
-    eyebrow: "Dermatología en Lomas Verdes",
-    titleTop: "Consigue un tratamiento personalizado",
-    titleAccent: "para tu tipo de piel",
-    body: "Te ayudamos a sacar lo mejor de tu piel con tratamientos personalizados, medicina estética, faciales y cuidado especializado, apoyados por dermatólogos expertos.",
-    cta: "Agendar cita",
-  },
+  // Intro tipo "statement": prosa grande centrada, sin animación. Los segmentos con
+  // `accent` van en Playfair italic (font-accent text-brand); el resto en DM Sans Light.
+  statement: [
+    {
+      text: "En Gioventù entendemos que traer una duda sobre tu piel no es algo menor. Ese lunar que te preocupa, el acné que no cede, la mancha que apareció sin aviso; cada caso merece la atención de un ",
+    },
+    { text: "dermatólogo certificado", accent: true },
+    {
+      text: ", la tecnología más avanzada y el tratamiento correcto. Nuestros especialistas se mantienen al día con lo que la dermatología descubre cada año, porque el conocimiento no se detiene, y tu piel tampoco. ",
+    },
+    { text: "Diez años", accent: true },
+    { text: " acompañando pieles, no tratando casos." },
+  ] satisfies { text: string; accent?: boolean }[],
 };

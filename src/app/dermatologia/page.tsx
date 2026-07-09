@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { BookingButton } from "@/components/booking/BookingButton";
 import { ClosingCTA } from "@/components/home/ClosingCTA";
+import { CrossSell } from "@/components/ui/CrossSell";
 import { FAQ } from "@/components/home/FAQ";
 import { Blog } from "@/components/home/Blog";
 import { DermHero } from "@/components/dermatologia/DermHero";
@@ -35,8 +35,6 @@ export default async function DermatologiaPage({
   // seguimos registrando en el flujo de agendamiento para medición.
   const branch = normalizeSuc(suc);
 
-  const intro = dermatologia.intro;
-
   return (
     <>
       {/* Inyecta el origen (suc) en el flujo de agendamiento para medición */}
@@ -44,19 +42,20 @@ export default async function DermatologiaPage({
 
       <DermHero />
 
-      {/* INTRO centrada */}
-      <section className="bg-bg px-6 py-[clamp(60px,8vw,100px)] text-center md:px-10">
-        <div className="container-x">
-          <span className="eyebrow">{intro.eyebrow}</span>
-          <h2 className="mx-auto mt-3.5 max-w-[820px] font-sans text-[clamp(1.9rem,3.6vw,2.7rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
-            {intro.titleTop} <span className="font-accent text-brand">{intro.titleAccent}</span>
-          </h2>
-          <p className="mx-auto mt-4 max-w-[620px] text-muted">{intro.body}</p>
-          <div className="mt-7 flex justify-center">
-            <BookingButton variant="primary" service="Dermatología">
-              {intro.cta}
-            </BookingButton>
-          </div>
+      {/* INTRO — prosa grande centrada (statement), sin animación. Acentos en italic. */}
+      <section id="sobre" className="scroll-mt-[96px] bg-bg px-6 py-[clamp(60px,8vw,100px)] md:px-10">
+        <div className="container-x text-center">
+          <p className="mx-auto max-w-[1040px] font-sans text-[clamp(1.5rem,3.2vw,2.4rem)] font-light leading-[1.35] tracking-[-0.01em] text-ink">
+            {dermatologia.statement.map((seg, i) =>
+              seg.accent ? (
+                <span key={i} className="font-accent text-brand">
+                  {seg.text}
+                </span>
+              ) : (
+                <span key={i}>{seg.text}</span>
+              )
+            )}
+          </p>
         </div>
       </section>
 
@@ -64,13 +63,30 @@ export default async function DermatologiaPage({
 
       <Testimonios />
 
+      {/* CTA de agenda en formato BANNER, entre Testimonios y Preguntas */}
+      <ClosingCTA
+        service="Dermatología"
+        image="/dermacta.webp"
+        compact
+        body="Reserva tu cita con nuestros especialistas y descúbrelo."
+      />
+
       {/* FAQ — mismo componente/estilo que el Home, con datos propios de derma */}
-      <FAQ items={faqDerma} />
+      <FAQ items={faqDerma} id="preguntas" />
 
       {/* Blog — mismo componente del Home, filtrado al departamento Dermatología */}
       <Blog departamento="dermatologia" ctaHref="/blog/dermatologia/" />
 
-      <ClosingCTA service="Dermatología" image="/dermacta.webp" />
+      {/* Cross-sell final: ofrece las otras dos verticales (imagen cambia por hover) */}
+      <CrossSell
+        title="¿No encuentras lo que buscas?"
+        body="En Gioventù también somos especialistas en medicina estética y wellness. Descubre la especialidad que necesitas."
+        defaultImage="/faciales.webp"
+        verticals={[
+          { label: "Medicina Estética", href: "/estetica/", image: "/medicina-estetica-cta.webp" },
+          { label: "Wellness Spa", href: "/wellness/", image: "/wellness-cta.webp" },
+        ]}
+      />
     </>
   );
 }

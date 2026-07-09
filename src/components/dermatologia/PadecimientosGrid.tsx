@@ -64,12 +64,12 @@ export function PadecimientosGrid() {
   const bookDerma = () => openBooking({ service: "Dermatología" });
 
   return (
-    <section className="bg-bg px-4 py-[clamp(40px,5vw,64px)] md:px-8">
-      <div className="mx-auto mb-5 max-w-[640px] text-center">
-        <span className="eyebrow">{p.eyebrow}</span>
-        <h2 className="mt-3 font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
+    <section id="tratamientos" className="scroll-mt-[96px] bg-bg px-4 py-[clamp(40px,5vw,64px)] md:px-8">
+      <div className="mx-auto mb-8 max-w-[680px] text-center">
+        <h2 className="font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
           {p.titleTop} <span className="font-accent text-brand">{p.titleAccent}</span>
         </h2>
+        <p className="mt-4 text-muted">{p.body}</p>
       </div>
 
       <div className="bento-grid">

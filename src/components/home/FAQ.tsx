@@ -11,6 +11,8 @@ type Props = {
   titleTop?: string;
   titleAccent?: string;
   imageLabel?: string;
+  /** id para anclar la sección (ej. "preguntas" en verticales). */
+  id?: string;
 };
 
 export function FAQ({
@@ -19,11 +21,12 @@ export function FAQ({
   titleTop = "Resolvemos",
   titleAccent = "tus dudas",
   imageLabel = "imagen — clínica / equipo",
+  id,
 }: Props = {}) {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="bg-bg px-4 py-12 md:px-6 md:py-16">
+    <section id={id} className={`bg-bg px-4 py-12 md:px-6 md:py-16 ${id ? "scroll-mt-[96px]" : ""}`}>
       <div className="container-x grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-20">
         {/* IZQUIERDA — texto arriba, imagen abajo (pegada al borde inferior) */}
         <div className="flex flex-col">

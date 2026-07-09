@@ -32,9 +32,9 @@ export type BentoPos = {
 };
 
 export const padecimientos = {
-  eyebrow: "Padecimientos y tratamientos",
-  titleTop: "Un tratamiento para",
-  titleAccent: "cada necesidad de tu piel",
+  titleTop: "Tratamientos y",
+  titleAccent: "padecimientos",
+  body: "En Gioventù contamos con los mejores médicos especializados y dermatólogos, definamos juntos el tratamiento específico y adecuado para resolver y enfrentar correctamente cualquier padecimiento.",
 };
 
 // Composición exacta (coordenadas validadas). Orden P1…P15 = orden de apilado móvil.

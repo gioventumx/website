@@ -63,7 +63,9 @@ export function SmoothScroll() {
       }
       if (!(dest instanceof HTMLElement)) return;
       e.preventDefault();
-      if (!lenisScrollTo(dest)) {
+      // Offset = altura del header sticky (~96px) para que la sección no quede tapada.
+      // El fallback nativo lo resuelve con scroll-margin-top en cada sección anclada.
+      if (!lenisScrollTo(dest, -96)) {
         dest.scrollIntoView({ behavior: reduceMq.matches ? "auto" : "smooth" });
       }
     };
