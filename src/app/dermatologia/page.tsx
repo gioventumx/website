@@ -3,10 +3,12 @@ import { ClosingCTA } from "@/components/home/ClosingCTA";
 import { CrossSell } from "@/components/ui/CrossSell";
 import { FAQ } from "@/components/home/FAQ";
 import { Blog } from "@/components/home/Blog";
+import { ResultsRain } from "@/components/home/ResultsRain";
 import { DermHero } from "@/components/dermatologia/DermHero";
 import { PadecimientosGrid } from "@/components/dermatologia/PadecimientosGrid";
 import { Testimonios } from "@/components/dermatologia/Testimonios";
 import { BookingSource } from "@/components/dermatologia/BookingSource";
+import { BookingNudge } from "@/components/home/BookingNudge";
 import { dermatologia } from "@/data/dermatologia";
 import { faqDerma } from "@/data/faq-derma";
 import type { BranchKey } from "@/data/booking";
@@ -42,22 +44,8 @@ export default async function DermatologiaPage({
 
       <DermHero />
 
-      {/* INTRO — prosa grande centrada (statement), sin animación. Acentos en italic. */}
-      <section id="sobre" className="scroll-mt-[96px] bg-bg px-6 py-[clamp(60px,8vw,100px)] md:px-10">
-        <div className="container-x text-center">
-          <p className="mx-auto max-w-[1040px] font-sans text-[clamp(1.5rem,3.2vw,2.4rem)] font-light leading-[1.35] tracking-[-0.01em] text-ink">
-            {dermatologia.statement.map((seg, i) =>
-              seg.accent ? (
-                <span key={i} className="font-accent text-brand">
-                  {seg.text}
-                </span>
-              ) : (
-                <span key={i}>{seg.text}</span>
-              )
-            )}
-          </p>
-        </div>
-      </section>
+      {/* INTRO — prosa grande centrada (statement) + lluvia de pills (padecimientos) */}
+      <ResultsRain statement={dermatologia.statement} chips={dermatologia.chips} id="sobre" />
 
       <PadecimientosGrid />
 
@@ -74,10 +62,7 @@ export default async function DermatologiaPage({
       {/* FAQ — mismo componente/estilo que el Home, con datos propios de derma */}
       <FAQ items={faqDerma} id="preguntas" />
 
-      {/* Blog — mismo componente del Home, filtrado al departamento Dermatología */}
-      <Blog departamento="dermatologia" ctaHref="/blog/dermatologia/" />
-
-      {/* Cross-sell final: ofrece las otras dos verticales (imagen cambia por hover) */}
+      {/* Cross-sell: ofrece las otras dos verticales (imagen cambia por hover) */}
       <CrossSell
         title="¿No encuentras lo que buscas?"
         body="En Gioventù también somos especialistas en medicina estética y wellness. Descubre la especialidad que necesitas."
@@ -87,6 +72,12 @@ export default async function DermatologiaPage({
           { label: "Wellness Spa", href: "/wellness/", image: "/wellness-cta.webp" },
         ]}
       />
+
+      {/* Blog — mismo componente del Home, filtrado al departamento Dermatología */}
+      <Blog departamento="dermatologia" ctaHref="/blog/dermatologia/" />
+
+      {/* Notificación flotante de social proof (reaparece al scrollear) */}
+      <BookingNudge />
     </>
   );
 }

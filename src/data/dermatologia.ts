@@ -29,14 +29,37 @@ export const dermatologia = {
   // Intro tipo "statement": prosa grande centrada, sin animación. Los segmentos con
   // `accent` van en Playfair italic (font-accent text-brand); el resto en DM Sans Light.
   statement: [
-    {
-      text: "En Gioventù entendemos que traer una duda sobre tu piel no es algo menor. Ese lunar que te preocupa, el acné que no cede, la mancha que apareció sin aviso; cada caso merece la atención de un ",
-    },
+    { text: "En " },
+    { text: "Gioventù", accent: true },
+    { text: " entendemos que traer una duda sobre tu piel no es algo menor. Ese " },
+    { text: "lunar", accent: true },
+    { text: " que te preocupa, el " },
+    { text: "acné", accent: true },
+    { text: " que no cede, la " },
+    { text: "mancha", accent: true },
+    { text: " que apareció sin aviso; cada caso merece la atención de un " },
     { text: "dermatólogo certificado", accent: true },
-    {
-      text: ", la tecnología más avanzada y el tratamiento correcto. Nuestros especialistas se mantienen al día con lo que la dermatología descubre cada año, porque el conocimiento no se detiene, y tu piel tampoco. ",
-    },
+    { text: ", la " },
+    { text: "tecnología", accent: true },
+    { text: " más avanzada y el tratamiento correcto. " },
     { text: "Diez años", accent: true },
     { text: " acompañando pieles, no tratando casos." },
   ] satisfies { text: string; accent?: boolean }[],
+
+  // Chips (padecimientos) para la lluvia de pills de la intro.
+  chips: [
+    { slug: "eliminacion-de-verrugas", label: "Eliminación de verrugas", tint: true },
+    { slug: "lunares", label: "Lunares" },
+    { slug: "manchas-y-melasma", label: "Manchas y melasma", tint: true },
+    { slug: "acne", label: "Acné" },
+    { slug: "cicatrices", label: "Cicatrices", tint: true },
+    { slug: "estrias", label: "Estrías" },
+    { slug: "rosacea", label: "Rosácea", tint: true },
+    { slug: "dermatitis", label: "Dermatitis" },
+    { slug: "ojeras-y-bolsas", label: "Ojeras y bolsas", tint: true },
+    { slug: "vitiligo", label: "Vitíligo" },
+    { slug: "remocion-de-tatuajes", label: "Remoción de tatuajes", tint: true },
+    { slug: "alopecia", label: "Alopecia" },
+    { slug: "onicomicosis", label: "Onicomicosis", tint: true },
+  ] satisfies { slug: string; label: string; tint?: boolean }[],
 };

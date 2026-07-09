@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { MediaSurface } from "@/components/ui/MediaSurface";
-import { destacados } from "@/data/destacados";
+import { destacados, type Destacado } from "@/data/destacados";
 
 /**
  * Dos servicios destacados (tarjetas grandes lado a lado). Imagen a sangre con
  * overlay plano para legibilidad; hover eleva la tarjeta y mueve la flecha.
- * "Ver más" lleva a la página del servicio (no abre modal).
+ * "Ver más" lleva a la página del servicio (no abre modal). `items` permite
+ * reutilizar las tarjetas con otro contenido (ej. hub de Wellness).
  */
-export function Destacados() {
+export function Destacados({ items = destacados }: { items?: Destacado[] } = {}) {
   return (
     <section className="bg-bg px-4 pb-10 pt-3 md:px-6 md:pb-12 md:pt-4">
       <div className="grid gap-5 md:grid-cols-2">
-        {destacados.map((d) => (
+        {items.map((d) => (
           <Link key={d.slug} href={d.href} className="group block">
             <MediaSurface
               as="image"

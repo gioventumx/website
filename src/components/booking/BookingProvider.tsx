@@ -15,8 +15,9 @@ type BookingContextValue = {
   open: boolean;
   step: BookingStep;
   data: BookingData;
-  /** Abre el modal. Con `service` preselecciona el servicio y arranca en el paso 2. */
-  openBooking: (opts?: { service?: ServiceOption }) => void;
+  /** Abre el modal. Con `service` preselecciona el servicio y arranca en el paso 2.
+   *  Con `source` inyecta la atribución del origen (ej. desde la notificación). */
+  openBooking: (opts?: { service?: ServiceOption; source?: string }) => void;
   /** true si el servicio vino preseleccionado (oculta el "Atrás" en el paso 2). */
   serviceLocked: boolean;
   /** Abre el modal con una sucursal preseleccionada (el usuario aún puede cambiarla). */
@@ -49,9 +50,9 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
   // Reinicia el formulario pero CONSERVA el origen de campaña (source).
   // Con `service` (ej. desde /dermatologia/): lo deja preseleccionado y arranca en
   // el paso 2 (sucursal), saltándose el paso 1. Sin `service`: flujo normal (paso 1).
-  const openBooking = useCallback((opts?: { service?: ServiceOption }) => {
+  const openBooking = useCallback((opts?: { service?: ServiceOption; source?: string }) => {
     const service = opts?.service ?? null;
-    setData((d) => ({ ...emptyBooking, source: d.source, service }));
+    setData((d) => ({ ...emptyBooking, source: opts?.source ?? d.source, service }));
     setServiceLocked(service !== null);
     setStep(service ? 2 : 1);
     setOpen(true);

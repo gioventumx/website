@@ -12,6 +12,13 @@ export const verticalNav: Record<string, { anchors: Anchor[] }> = {
       { id: "preguntas", label: "Preguntas" },
     ],
   },
+  "/wellness/faciales/": {
+    anchors: [
+      { id: "faciales", label: "Faciales" },
+      { id: "testimonios", label: "Testimonios" },
+      { id: "preguntas", label: "Preguntas" },
+    ],
+  },
 };
 
 /** Normaliza el pathname a con trailing slash (config de rutas usa trailing slash). */

@@ -32,11 +32,6 @@ export const home = {
     rating: { value: "4.9", text: "en Google · pacientes reales" },
   },
 
-  notification: {
-    title: "Acaban de agendar una cita",
-    body: "Disponibilidad limitada con nuestros expertos. Reserva la tuya.",
-  },
-
   features: [
     { title: "Tecnología de punta", description: "Equipo médico premium de última generación", icon: "tech" },
     { title: "Atención personalizada", description: "Tratamientos a la medida de tu piel", icon: "care" },

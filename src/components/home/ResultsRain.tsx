@@ -4,8 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import type * as Matter from "matter-js";
 import { tratamientos } from "@/data/tratamientos";
 
-export function ResultsRain() {
-  const d = tratamientos;
+type Seg = { text: string; accent?: boolean | "service" | "attribute" };
+type Chip = { slug: string; label: string; tint?: boolean };
+type Props = { statement?: Seg[]; chips?: Chip[]; id?: string };
+
+// Sección "lluvia": statement de marca + chips que caen con física. Reutilizable:
+// recibe statement/chips/id por props (por defecto, los del Home).
+export function ResultsRain({
+  statement = tratamientos.statement,
+  chips = tratamientos.chips,
+  id = "resultados",
+}: Props = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const pitRef = useRef<HTMLDivElement>(null);
   const chipRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -58,18 +67,18 @@ export function ResultsRain() {
   return (
     <section
       ref={sectionRef}
-      id="resultados"
-      className={`relative overflow-hidden bg-bg px-6 md:px-10 ${
+      id={id}
+      className={`relative overflow-hidden scroll-mt-[96px] bg-bg px-6 md:px-10 ${
         physics ? "pb-[280px] max-[560px]:pb-[330px]" : "pb-[clamp(56px,8vw,96px)]"
       } pt-[clamp(56px,8vw,96px)]`}
     >
       {/* Contenido: título + statement (siempre en el DOM, centrado) */}
       <div className="container-x relative z-[1] text-center">
         <p className="mx-auto max-w-[1040px] font-sans text-[clamp(1.5rem,3.2vw,2.4rem)] font-light leading-[1.35] tracking-[-0.01em] text-ink">
-          {d.statement.map((seg, i) => {
+          {statement.map((seg, i) => {
             if (!seg.accent) {
               // Protege "ritual" de quedar huérfana: espacio duro antes de ese acento.
-              const next = d.statement[i + 1];
+              const next = statement[i + 1];
               const text =
                 next?.text === "ritual" && seg.text.endsWith(" ")
                   ? seg.text.slice(0, -1) + " "
@@ -79,7 +88,7 @@ export function ResultsRain() {
             return (
               <span
                 key={i}
-                className={`font-accent ${seg.accent === "service" ? "text-brand" : "text-ink"}`}
+                className={`font-accent ${seg.accent === "attribute" ? "text-ink" : "text-brand"}`}
               >
                 {seg.text}
               </span>
@@ -97,7 +106,7 @@ export function ResultsRain() {
             : "relative z-[1] mt-10 flex flex-wrap justify-center gap-3.5 px-6"
         }
       >
-        {d.chips.map((chip, i) => (
+        {chips.map((chip, i) => (
           <span
             key={chip.slug}
             ref={(el) => {

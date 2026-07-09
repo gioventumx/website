@@ -31,7 +31,9 @@ export function ClosingCTA({
           label={bg ? undefined : "imagen (TODO)"}
           className="mx-auto rounded-block md:w-3/5"
         >
-          <div className="container-x flex flex-col items-center gap-5 py-[clamp(22px,3vw,36px)] text-center md:flex-row md:items-center md:justify-between md:gap-8 md:text-left">
+          {/* Scrim plano extra (sin gradiente) para más contraste del texto */}
+          <div aria-hidden className="absolute inset-0 bg-black/30" />
+          <div className="relative container-x flex flex-col items-center gap-5 py-[clamp(22px,3vw,36px)] text-center md:flex-row md:items-center md:justify-between md:gap-8 md:text-left">
             <div>
               <h2 className="font-sans text-[clamp(1.4rem,2.4vw,1.9rem)] font-light leading-[1.2] text-white">
                 {b.titleTop} <span className="font-accent text-brand-tint">{b.titleAccent}</span>
@@ -57,7 +59,9 @@ export function ClosingCTA({
         label={bg ? undefined : "imagen (TODO)"}
         className="rounded-block text-center"
       >
-        <div className="container-x max-w-[620px] py-[clamp(44px,6vw,72px)]">
+        {/* Scrim plano extra (sin gradiente) para más contraste del texto */}
+        <div aria-hidden className="absolute inset-0 bg-black/30" />
+        <div className="relative container-x max-w-[620px] py-[clamp(44px,6vw,72px)]">
           <h2 className="font-sans text-[clamp(1.8rem,3.4vw,2.4rem)] font-light leading-[1.18] text-white">
             {b.titleTop}
             <span className="font-accent block text-brand-tint">{b.titleAccent}</span>

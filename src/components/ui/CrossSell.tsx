@@ -25,28 +25,33 @@ export function CrossSell({ title, body, verticals, defaultImage }: Props) {
     <section className="px-4 pb-4 md:px-6 md:pb-6">
       <div className="relative isolate overflow-hidden rounded-block bg-brand-deep text-center">
         {/* Capa base (reposo / touch) */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={base}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        {/* Capas por vertical: crossfade al hover/focus del botón correspondiente */}
-        {verticals.map((v, i) => (
+        {/* Sin imagen → queda el fondo índigo (placeholder). */}
+        {base && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            key={v.href}
-            src={v.image}
+            src={base}
             alt=""
             loading="lazy"
             decoding="async"
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out motion-reduce:transition-none ${
-              active === i ? "opacity-100" : "opacity-0"
-            }`}
+            className="absolute inset-0 h-full w-full object-cover"
           />
-        ))}
+        )}
+        {/* Capas por vertical: crossfade al hover/focus del botón correspondiente */}
+        {verticals.map((v, i) =>
+          v.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={v.href}
+              src={v.image}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out motion-reduce:transition-none ${
+                active === i ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ) : null
+        )}
         {/* Overlay plano (sin gradiente) */}
         <div aria-hidden className="absolute inset-0 bg-black/50" />
 

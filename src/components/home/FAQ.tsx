@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { MediaSurface } from "@/components/ui/MediaSurface";
 import { faq as homeFaq, type FaqItem } from "@/data/faq";
 
 type Props = {
@@ -10,9 +9,12 @@ type Props = {
   eyebrow?: string;
   titleTop?: string;
   titleAccent?: string;
-  imageLabel?: string;
+  /** Imagen de la columna izquierda. Por defecto /faqs.webp. */
+  image?: string;
   /** id para anclar la sección (ej. "preguntas" en verticales). */
   id?: string;
+  /** Envuelve la sección en una tarjeta con borde remarcado (sin fondo). */
+  bordered?: boolean;
 };
 
 export function FAQ({
@@ -20,25 +22,38 @@ export function FAQ({
   eyebrow = "Preguntas frecuentes",
   titleTop = "Resolvemos",
   titleAccent = "tus dudas",
-  imageLabel = "imagen — clínica / equipo",
+  image = "/faqs.webp",
   id,
+  bordered = true,
 }: Props = {}) {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
     <section id={id} className={`bg-bg px-4 py-12 md:px-6 md:py-16 ${id ? "scroll-mt-[96px]" : ""}`}>
-      <div className="container-x grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-20">
+      <div
+        className={`grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-20 ${
+          bordered
+            ? "rounded-block border-2 border-line p-6 md:p-10 lg:p-14"
+            : "container-x"
+        }`}
+      >
         {/* IZQUIERDA — texto arriba, imagen abajo (pegada al borde inferior) */}
         <div className="flex flex-col">
           <span className="eyebrow">{eyebrow}</span>
           <h2 className="mt-3 font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
             {titleTop} <span className="font-accent text-brand">{titleAccent}</span>
           </h2>
-          <MediaSurface
-            as="image"
-            label={imageLabel}
-            className="mt-10 aspect-[4/3] rounded-card md:mt-auto"
-          />
+          {/* Imagen completa (sin recorte ni fondo), pegada al fondo de la columna */}
+          {image && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={image}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="mt-10 w-full max-w-[400px] self-start object-contain object-bottom md:mt-auto"
+            />
+          )}
         </div>
 
         {/* Acordeón accesible (esquema claro) */}

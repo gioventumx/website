@@ -12,9 +12,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/`, changeFrequency: "monthly", priority: 1 },
     { url: `${SITE}/dermatologia/`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE}/depilacion-laser/`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${SITE}/wellness/`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${SITE}/wellness/faciales/`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE}/blog/`, changeFrequency: "weekly", priority: 0.8 },
     // { url: `${SITE}/estetica/`,   changeFrequency: "monthly", priority: 0.9 },
-    // { url: `${SITE}/wellness/`,   changeFrequency: "monthly", priority: 0.9 },
     // { url: `${SITE}/conocenos/`,  changeFrequency: "monthly", priority: 0.7 },
   ];
 

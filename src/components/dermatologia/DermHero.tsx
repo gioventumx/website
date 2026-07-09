@@ -3,6 +3,7 @@ import { MediaSurface } from "@/components/ui/MediaSurface";
 import { BookingButton } from "@/components/booking/BookingButton";
 import { Stars } from "@/components/ui/Stars";
 import { HeroFeatures } from "@/components/home/HeroFeatures";
+import { HeroNotification } from "@/components/home/HeroNotification";
 import { dermatologia } from "@/data/dermatologia";
 
 // Mismo bloque redondeado + media/overlay + layout del hero del Home. Diferencia:
@@ -19,6 +20,8 @@ export function DermHero() {
         overlay="ink"
         className="flex min-h-[calc(100dvh_-_90px)] flex-col rounded-block md:min-h-[calc(100dvh_-_98px)]"
       >
+        <HeroNotification />
+
         <div className="container-x flex w-full flex-1 items-center py-[clamp(70px,9vh,120px)]">
           <div className="max-w-[960px]">
             {/* Breadcrumb — reemplaza al eyebrow. Enlaces reales para SEO. */}

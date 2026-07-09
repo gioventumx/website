@@ -63,7 +63,6 @@ export default function DepilacionLaserPage() {
         eyebrow={faq.eyebrow}
         titleTop={faq.titleTop}
         titleAccent={faq.titleAccent}
-        imageLabel="imagen — sesión de depilación láser"
       />
 
       {/* 7) CTA DE CIERRE — bloque redondeado media+overlay (patrón ClosingCTA) */}

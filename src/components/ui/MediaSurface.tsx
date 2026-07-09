@@ -45,6 +45,7 @@ export function MediaSurface({
           <img
             src={src}
             alt=""
+            draggable={false}
             // Lazy por defecto: el navegador difiere la descarga hasta acercarse
             // al viewport (bento bajo el fold). No hay CLS porque el contenedor ya
             // tiene tamaño (grid/min-h) y la imagen es absolute + object-fit:cover.

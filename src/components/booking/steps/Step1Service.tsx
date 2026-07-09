@@ -12,7 +12,7 @@ export function Step1Service() {
   return (
     <div>
       <h2 className="font-sans text-2xl font-light text-ink">¿Qué estás buscando?</h2>
-      <p className="mt-1 text-[0.9rem] text-muted">Elige el área que te interesa.</p>
+      <p className="mt-1 text-[0.9rem] text-muted">Selecciona la especialidad que te interesa.</p>
 
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         {bookingServices.map((service) => {

@@ -1,0 +1,83 @@
+import type { Metadata } from "next";
+import { BookingSource } from "@/components/faciales/BookingSource";
+import { VerticalHero } from "@/components/ui/VerticalHero";
+import { FacialesCarrusel } from "@/components/faciales/FacialesCarrusel";
+import { FacialesTestimonios } from "@/components/faciales/FacialesTestimonios";
+import { ResultsRain } from "@/components/home/ResultsRain";
+import { ClosingCTA } from "@/components/home/ClosingCTA";
+import { FAQ } from "@/components/home/FAQ";
+import { CrossSell } from "@/components/ui/CrossSell";
+import { Blog } from "@/components/home/Blog";
+import { BookingNudge } from "@/components/home/BookingNudge";
+import { faciales } from "@/data/faciales";
+import { faqFaciales } from "@/data/faq-faciales";
+import type { BranchKey } from "@/data/booking";
+
+// Canonical estático a la URL limpia (no cambia con ?suc=). Metadata neutral de
+// sucursal (la página cambia con ?suc=): menciona ambas plazas, sin contradecir.
+export const metadata: Metadata = {
+  title: "Limpieza Facial Profunda y Estética Facial | Gioventù Wellness Spa",
+  description:
+    "Limpieza facial y estética facial en Gioventù Wellness Spa: hidratación, microdermoabrasión y rejuvenecimiento facial, con el respaldo de una clínica dermatológica. Agenda en Plaza Antigua o Plaza Cúspide.",
+  alternates: { canonical: "/wellness/faciales/" },
+};
+
+function normalizeSuc(raw?: string | string[]): BranchKey | null {
+  const v = Array.isArray(raw) ? raw[0] : raw;
+  return v === "antigua" || v === "cuspide" ? v : null;
+}
+
+export default async function FacialesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ suc?: string | string[] }>;
+}) {
+  const { suc } = await searchParams;
+  // Ya no mostramos sucursales, pero si la visita llegó por ?suc= (campaña) lo
+  // seguimos registrando en el flujo de agendamiento para medición.
+  const branch = normalizeSuc(suc);
+
+  return (
+    <>
+      {/* Inyecta el origen (suc) en el flujo de agendamiento para medición */}
+      <BookingSource suc={branch} />
+
+      <VerticalHero hero={faciales.hero} service="Wellness Spa" />
+
+      {/* Carrusel de faciales — justo debajo del hero */}
+      <FacialesCarrusel />
+
+      {/* INTRO — prosa grande centrada (statement) + lluvia de pills (faciales) */}
+      <ResultsRain statement={faciales.statement} chips={faciales.chips} id="sobre" />
+
+      <FacialesTestimonios />
+
+      {/* CTA de agenda en formato BANNER, entre Testimonios y Preguntas */}
+      <ClosingCTA
+        service="Wellness Spa"
+        compact
+        body="Agenda tu limpieza facial en Plaza Antigua o Plaza Cúspide."
+      />
+
+      {/* FAQ — mismo componente/estilo, con datos propios de faciales. Prueba: borde
+          tipo tarjeta (solo en faciales). */}
+      <FAQ items={faqFaciales} id="preguntas" bordered />
+
+      {/* Cross-sell: masajes (wellness) o dermatología */}
+      <CrossSell
+        title="¿Buscas algo más?"
+        body="Relaja el cuerpo con un masaje, o resuelve un padecimiento de piel con nuestros dermatólogos."
+        verticals={[
+          { label: "Masajes", href: "/wellness/masajes/", image: "" },
+          { label: "Dermatología", href: "/dermatologia/", image: "" },
+        ]}
+      />
+
+      {/* Blog — mismo componente del Home, filtrado al departamento Wellness */}
+      <Blog departamento="wellness" ctaHref="/blog/wellness/" />
+
+      {/* Notificación flotante de social proof (reaparece al scrollear) */}
+      <BookingNudge />
+    </>
+  );
+}
