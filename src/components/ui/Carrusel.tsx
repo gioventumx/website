@@ -3,29 +3,45 @@
 import { useEffect, useRef } from "react";
 import { MediaSurface } from "@/components/ui/MediaSurface";
 import { useBooking } from "@/components/booking/BookingProvider";
-import { faciales, type FacialPieza } from "@/data/faciales";
+import type { ServiceOption } from "@/data/booking";
 
-// Carrusel de faciales: tarjetas con el mismo formato visual que las cards de
-// servicios del Home. Auto-desplazamiento lento y continuo (derecha→izquierda) vía
-// scroll, y ARRASTRE con el mouse (drag) además del swipe táctil nativo. Se pausa al
-// hover y mientras arrastras. Loop sin costura duplicando las tarjetas.
-export function FacialesCarrusel() {
-  const p = faciales;
+export type CarruselItem = {
+  id: string;
+  label: string;
+  description: string;
+  slug: string;
+  image?: string;
+};
+
+type Props = {
+  head: { titleTop: string; titleAccent: string; body: string };
+  items: CarruselItem[];
+  service: ServiceOption;
+  /** eyebrow del label + id de ancla de la sección */
+  eyebrow: string;
+  id: string;
+};
+
+// Carrusel horizontal de servicios: tarjetas con el mismo formato visual que las
+// cards de servicios del Home. Auto-desplazamiento lento y continuo (derecha→
+// izquierda) vía scroll, y ARRASTRE con el mouse además del swipe táctil. Se pausa
+// al hover; loop sin costura duplicando las tarjetas. Cada tarjeta abre el modal.
+export function Carrusel({ head, items, service, eyebrow, id }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const { openBooking } = useBooking();
-  const book = () => openBooking({ service: "Wellness Spa" });
+  const book = () => openBooking({ service });
 
-  const loop = [...p.bento, ...p.bento];
+  const loop = [...items, ...items];
 
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const SPEED = 0.4; // px por frame ≈ 24px/s (lento)
+    const SPEED = 0.4;
 
     let raf = 0;
-    let paused = false; // hover
+    let paused = false;
     let dragging = false;
     let moved = false;
     let startX = 0;
@@ -51,7 +67,6 @@ export function FacialesCarrusel() {
     const onEnter = () => (paused = true);
     const onLeave = () => (paused = false);
 
-    // Drag SOLO con mouse; en touch se usa el swipe nativo del scroll.
     const onDown = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
       dragging = true;
@@ -74,7 +89,6 @@ export function FacialesCarrusel() {
       el.releasePointerCapture?.(e.pointerId);
       el.style.cursor = "";
     };
-    // Si hubo arrastre, cancela el click (para no abrir el modal sin querer).
     const onClick = (e: MouseEvent) => {
       if (moved) {
         e.preventDefault();
@@ -104,35 +118,34 @@ export function FacialesCarrusel() {
   }, []);
 
   return (
-    <section id="faciales" className="scroll-mt-[96px] bg-bg py-[clamp(40px,5vw,64px)]">
+    <section id={id} className="scroll-mt-[96px] bg-bg py-[clamp(40px,5vw,64px)]">
       <div className="container-x mb-8 max-w-[680px] text-center">
         <h2 className="mx-auto font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
-          {p.bentoHead.titleTop} <span className="font-accent text-brand">{p.bentoHead.titleAccent}</span>
+          {head.titleTop} <span className="font-accent text-brand">{head.titleAccent}</span>
         </h2>
-        <p className="mt-4 text-muted">{p.bentoHead.body}</p>
+        <p className="mt-4 text-muted">{head.body}</p>
       </div>
 
-      {/* Track scrolleable (auto + drag). Sin data-lenis-prevent: el wheel vertical
-          sigue moviendo la página; el arrastre horizontal se maneja con pointer. */}
       <div
         ref={trackRef}
         className="flex cursor-grab select-none overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {loop.map((f, i) => (
-          <FacialCard key={`${f.id}-${i}`} facial={f} onBook={book} aria={i < p.bento.length} />
+        {loop.map((it, i) => (
+          <Card key={`${it.id}-${i}`} item={it} eyebrow={eyebrow} onBook={book} aria={i < items.length} />
         ))}
       </div>
     </section>
   );
 }
 
-// Tarjeta con el mismo formato visual que ServiceCard del Home. Abre el modal.
-function FacialCard({
-  facial,
+function Card({
+  item,
+  eyebrow,
   onBook,
   aria,
 }: {
-  facial: FacialPieza;
+  item: CarruselItem;
+  eyebrow: string;
   onBook: () => void;
   aria: boolean;
 }) {
@@ -140,18 +153,17 @@ function FacialCard({
     <button
       type="button"
       onClick={onBook}
-      data-slug={facial.slug}
+      data-slug={item.slug}
       aria-hidden={aria ? undefined : true}
       tabIndex={aria ? undefined : -1}
-      aria-label={aria ? `Agendar: ${facial.label}` : undefined}
+      aria-label={aria ? `Agendar: ${item.label}` : undefined}
       className="group mr-5 block w-[290px] shrink-0 text-left"
-      // Permite scroll vertical de la página en touch; el horizontal lo hace el track.
       style={{ touchAction: "pan-y" }}
       draggable={false}
     >
       <MediaSurface
         as="image"
-        src={facial.image}
+        src={item.image}
         overlay="none"
         className="relative flex min-h-[400px] flex-col justify-end overflow-hidden rounded-card p-5 shadow-card"
       >
@@ -167,9 +179,9 @@ function FacialCard({
         </span>
         <div className="relative text-ink">
           <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-ink/60">
-            Facial
+            {eyebrow}
           </span>
-          <h3 className="mt-1 font-accent text-[1.7rem] leading-[1.1]">{facial.label}</h3>
+          <h3 className="mt-1 font-accent text-[1.7rem] leading-[1.1]">{item.label}</h3>
         </div>
       </MediaSurface>
     </button>

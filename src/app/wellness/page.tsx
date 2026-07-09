@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { VerticalHero } from "@/components/ui/VerticalHero";
 import { Destacados } from "@/components/home/Destacados";
+import { Blog } from "@/components/home/Blog";
 import { wellness } from "@/data/wellness";
 
 // Slug heredado de WP (/wellness/) — no cambiar. TODO: copy final de metadata.
@@ -17,6 +18,9 @@ export default function WellnessPage() {
     <>
       <VerticalHero hero={wellness.hero} service="Wellness Spa" />
       <Destacados items={wellness.cards} />
+
+      {/* Blog — filtrado al departamento Wellness, como en las páginas internas */}
+      <Blog departamento="wellness" ctaHref="/blog/wellness/" />
     </>
   );
 }

@@ -36,7 +36,7 @@ export function VerticalHero({ hero, service }: { hero: VerticalHeroData; servic
           <div className="max-w-[960px]">
             <span className="eyebrow on-dark">{hero.eyebrow}</span>
 
-            <h1 className="mt-4 font-sans text-[clamp(2.4rem,5.2vw,4rem)] font-light leading-[0.98] tracking-[-0.015em]">
+            <h1 className="mt-4 font-sans text-[clamp(2rem,4vw,3rem)] font-light leading-[1.02] tracking-[-0.015em]">
               {hero.titleTop}
               <span className="font-accent block text-[1.04em] text-brand-tint">{hero.titleAccent}</span>
             </h1>

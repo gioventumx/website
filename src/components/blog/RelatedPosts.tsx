@@ -13,7 +13,11 @@ export function RelatedPosts({ posts }: { posts: BlogPost[] }) {
         </h2>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {posts.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}/`} className="group block">
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}/`}
+              className="group block transition duration-[1200ms] ease-out hover:-translate-y-6 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            >
               <PostThumb
                 src={post.imagen}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

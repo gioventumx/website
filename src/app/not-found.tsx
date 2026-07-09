@@ -3,23 +3,16 @@ import { Button } from "@/components/ui/Button";
 
 // Página 404 (App Router): Next la renderiza para rutas no encontradas y devuelve
 // un 404 real (no soft 404). Header/Footer vienen del layout raíz.
-// Composición: tarjeta blanca a pantalla completa, texto centrado, y la ilustración
-// 404.webp DETRÁS del texto, completa (sin recorte) y de tamaño moderado.
+// Composición: tarjeta blanca que se adapta al contenido (sin ocupar la pantalla),
+// texto centrado, y la figura 404.webp a la derecha (persona completa, apoyada al
+// borde derecho) solapando un poco el texto por detrás. En móvil no se encima: la
+// figura baja debajo del texto.
 export default function NotFound() {
   return (
-    <section className="bg-bg px-4 pb-4 md:px-6 md:pb-6">
-      <div className="relative flex min-h-[calc(100dvh-98px)] flex-col items-center justify-center overflow-hidden rounded-block border border-line bg-white px-6 py-10 text-center">
-        {/* Ilustración detrás del texto: completa (contain), moderada, centrada */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/404.webp"
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 w-[min(82%,440px)] -translate-x-1/2 -translate-y-1/2 object-contain"
-        />
-
-        {/* Texto centrado, encima de la imagen */}
-        <div className="relative z-10 max-w-[560px]">
+    <section className="bg-bg px-4 py-[clamp(40px,7vw,72px)] md:px-6">
+      <div className="relative mx-auto max-w-[920px] overflow-hidden rounded-block border border-line bg-white px-6 py-12 md:min-h-[400px] md:px-12 md:py-16">
+        {/* Texto centrado (encima de la figura) */}
+        <div className="relative z-10 mx-auto max-w-[560px] text-center">
           <span className="eyebrow">Error 404</span>
           <h1 className="mt-3 font-sans text-[clamp(2.1rem,4.6vw,3.2rem)] font-light leading-[1.1] tracking-[-0.01em] text-ink">
             No encontramos
@@ -52,6 +45,16 @@ export default function NotFound() {
             </Link>
           </div>
         </div>
+
+        {/* Figura 404: móvil = debajo (en flujo, centrada, sin encimar);
+            desktop = absoluta a la derecha, completa, apoyada abajo, detrás del texto. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/404.webp"
+          alt=""
+          draggable={false}
+          className="mx-auto mt-10 block w-full max-w-[240px] md:pointer-events-none md:absolute md:bottom-0 md:right-2 md:z-0 md:mt-0 md:h-[88%] md:max-h-[380px] md:w-auto md:max-w-none"
+        />
       </div>
     </section>
   );

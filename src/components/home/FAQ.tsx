@@ -28,8 +28,33 @@ export function FAQ({
 }: Props = {}) {
   const [openIndex, setOpenIndex] = useState(0);
 
+  // JSON-LD FAQPage: SOLO preguntas con respuesta real (excluye TODO/vacías). Si no
+  // hay ninguna respuesta real, no se emite schema (ej. faciales/masajes por ahora).
+  const schemaItems = items.filter((it) => {
+    const a = it.a.trim();
+    return a.length > 0 && !a.startsWith("TODO");
+  });
+  const faqSchema =
+    schemaItems.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: schemaItems.map((it) => ({
+            "@type": "Question",
+            name: it.q,
+            acceptedAnswer: { "@type": "Answer", text: it.a },
+          })),
+        }
+      : null;
+
   return (
     <section id={id} className={`bg-bg px-4 py-12 md:px-6 md:py-16 ${id ? "scroll-mt-[96px]" : ""}`}>
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <div
         className={`grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-20 ${
           bordered
@@ -51,7 +76,11 @@ export function FAQ({
               alt=""
               loading="lazy"
               decoding="async"
-              className="mt-10 w-full max-w-[400px] self-start object-contain object-bottom md:mt-auto"
+              // En la tarjeta con borde, margen negativo que cancela el padding
+              // inferior → la imagen queda pegada al borde inferior de la tarjeta.
+              className={`mt-10 w-full max-w-[400px] self-start object-contain object-bottom md:mt-auto ${
+                bordered ? "md:-mb-10 lg:-mb-14" : ""
+              }`}
             />
           )}
         </div>

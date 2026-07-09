@@ -14,9 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/depilacion-laser/`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE}/wellness/`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE}/wellness/faciales/`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE}/wellness/masajes/`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE}/conocenos/`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE}/blog/`, changeFrequency: "weekly", priority: 0.8 },
+    // /estetica/ aún NO existe → se queda comentada hasta que su page.tsx exista.
     // { url: `${SITE}/estetica/`,   changeFrequency: "monthly", priority: 0.9 },
-    // { url: `${SITE}/conocenos/`,  changeFrequency: "monthly", priority: 0.7 },
   ];
 
   // Blog generado dinámicamente desde el catálogo: al agregar un post/categoría/

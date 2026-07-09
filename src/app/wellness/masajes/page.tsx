@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { BookingSource } from "@/components/booking/BookingSource";
 import { VerticalHero } from "@/components/ui/VerticalHero";
+import { Banner } from "@/components/ui/Banner";
 import { Carrusel } from "@/components/ui/Carrusel";
 import { TestimoniosMasonry } from "@/components/ui/TestimoniosMasonry";
 import { ResultsRain } from "@/components/home/ResultsRain";
@@ -9,18 +10,18 @@ import { FAQ } from "@/components/home/FAQ";
 import { CrossSell } from "@/components/ui/CrossSell";
 import { Blog } from "@/components/home/Blog";
 import { BookingNudge } from "@/components/home/BookingNudge";
-import { faciales } from "@/data/faciales";
-import { faqFaciales } from "@/data/faq-faciales";
-import { testimoniosFaciales } from "@/data/testimonios-faciales";
+import { masajes } from "@/data/masajes";
+import { faqMasajes } from "@/data/faq-masajes";
+import { testimoniosMasajes } from "@/data/testimonios-masajes";
 import type { BranchKey } from "@/data/booking";
 
 // Canonical estático a la URL limpia (no cambia con ?suc=). Metadata neutral de
-// sucursal (la página cambia con ?suc=): menciona ambas plazas, sin contradecir.
+// sucursal (la página cambia con ?suc=).
 export const metadata: Metadata = {
-  title: "Limpieza Facial Profunda y Estética Facial | Gioventù Wellness Spa",
+  title: "Masajes Corporales y de Spa | Gioventù Wellness Spa",
   description:
-    "Limpieza facial y estética facial en Gioventù Wellness Spa: hidratación, microdermoabrasión y rejuvenecimiento facial, con el respaldo de una clínica dermatológica. Agenda en Plaza Antigua o Plaza Cúspide.",
-  alternates: { canonical: "/wellness/faciales/" },
+    "Masajes corporales y de spa en Gioventù Wellness Spa: masajes relajantes, drenaje linfático y masaje descontracturante, con masajistas profesionales. Agenda en Plaza Antigua o Plaza Cúspide.",
+  alternates: { canonical: "/wellness/masajes/" },
 };
 
 function normalizeSuc(raw?: string | string[]): BranchKey | null {
@@ -28,38 +29,39 @@ function normalizeSuc(raw?: string | string[]): BranchKey | null {
   return v === "antigua" || v === "cuspide" ? v : null;
 }
 
-export default async function FacialesPage({
+export default async function MasajesPage({
   searchParams,
 }: {
   searchParams: Promise<{ suc?: string | string[] }>;
 }) {
   const { suc } = await searchParams;
-  // Ya no mostramos sucursales, pero si la visita llegó por ?suc= (campaña) lo
-  // seguimos registrando en el flujo de agendamiento para medición.
   const branch = normalizeSuc(suc);
 
   return (
     <>
       {/* Inyecta el origen (suc) en el flujo de agendamiento para medición */}
-      <BookingSource suc={branch} base="faciales" />
+      <BookingSource suc={branch} base="masajes" />
 
-      <VerticalHero hero={faciales.hero} service="Wellness Spa" />
+      <VerticalHero hero={masajes.hero} service="Wellness Spa" />
 
-      {/* Carrusel de faciales — justo debajo del hero */}
+      {/* Carrusel de masajes — justo debajo del hero */}
       <Carrusel
-        head={faciales.bentoHead}
-        items={faciales.bento}
+        head={masajes.carruselHead}
+        items={masajes.carrusel}
         service="Wellness Spa"
-        eyebrow="Facial"
-        id="faciales"
+        eyebrow="Masaje"
+        id="masajes"
       />
 
-      {/* INTRO — prosa grande centrada (statement) + lluvia de pills (faciales) */}
-      <ResultsRain statement={faciales.statement} chips={faciales.chips} id="sobre" />
+      {/* INTRO — prosa grande centrada (statement) + lluvia de pills (masajes) */}
+      <ResultsRain statement={masajes.statement} chips={masajes.chips} id="sobre" />
+
+      {/* Banner protagonista: masaje en pareja (entre intro y testimonios) */}
+      <Banner {...masajes.coupleBanner} service="Wellness Spa" />
 
       <TestimoniosMasonry
-        reviews={testimoniosFaciales.reviews}
-        score={testimoniosFaciales.googleScore}
+        reviews={testimoniosMasajes.reviews}
+        score={testimoniosMasajes.googleScore}
         id="testimonios"
       />
 
@@ -68,20 +70,21 @@ export default async function FacialesPage({
         service="Wellness Spa"
         compact
         image="/wellness-cta.webp"
-        body="Agenda tu limpieza facial en Plaza Antigua o Plaza Cúspide."
+        titleTop="Tu cuerpo lleva rato"
+        titleAccent="pidiéndolo"
+        body="Agenda tu masaje en Plaza Antigua o Plaza Cúspide."
       />
 
-      {/* FAQ — mismo componente/estilo, con datos propios de faciales. Prueba: borde
-          tipo tarjeta (solo en faciales). */}
-      <FAQ items={faqFaciales} id="preguntas" bordered />
+      {/* FAQ — mismo componente/estilo, con datos propios de masajes */}
+      <FAQ items={faqMasajes} id="preguntas" />
 
-      {/* Cross-sell: masajes (wellness) o dermatología */}
+      {/* Cross-sell: faciales (wellness) o dermatología */}
       <CrossSell
         title="¿Buscas algo más?"
-        body="Relaja el cuerpo con un masaje, o resuelve un padecimiento de piel con nuestros dermatólogos."
-        defaultImage="/faciales-hero.webp"
+        body="Renueva tu piel con un facial, o resuelve un padecimiento con nuestros dermatólogos."
+        defaultImage="/masajes-hero.webp"
         verticals={[
-          { label: "Masajes", href: "/wellness/masajes/", image: "" },
+          { label: "Faciales", href: "/wellness/faciales/", image: "/faciales-hero.webp" },
           { label: "Dermatología", href: "/dermatologia/", image: "/dermacta.webp" },
         ]}
       />

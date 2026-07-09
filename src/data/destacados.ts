@@ -21,7 +21,7 @@ export const destacados: Destacado[] = [
     slug: "depilacion-laser",
     title: "Depilación Láser",
     hook: "Adiós al vello. Piel suave, para siempre.",
-    href: "/depilacion/",
+    href: "/depilacion-laser/",
     image: "/depilacion-laser-card.webp",
   },
 ];

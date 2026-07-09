@@ -20,8 +20,8 @@ export type FacialPieza = {
 export const faciales = {
   hero: {
     eyebrow: "Faciales",
-    titleTop: "Limpieza facial profunda que le devuelve",
-    titleAccent: "la luz a tu piel",
+    titleTop: "Limpieza facial profunda",
+    titleAccent: "que devuelve la luz a tu piel",
     body: "Estética facial y limpieza profunda en nuestro Wellness Spa: hidratación, microdermoabrasión y rejuvenecimiento facial, con el respaldo de una clínica dermatológica.",
     cta: "Agendar cita",
     image: "/faciales-hero.webp",

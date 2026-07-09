@@ -12,7 +12,7 @@ import {
   departamentoNombre,
   categoriaNombre,
 } from "@/data/blog";
-import { getPostBody } from "@/lib/blog";
+import { getPostContent } from "@/lib/blog";
 
 // Un solo segmento dinámico resuelve DEPARTAMENTO o ARTÍCULO (evita el conflicto de
 // tener /blog/[departamento]/ y /blog/[slug]/ al mismo nivel). Las categorías van
@@ -42,6 +42,10 @@ export async function generateMetadata({
 
   const post = getPost(slug);
   if (post) {
+    const { data } = getPostContent(post.slug);
+    const image = data.image ?? post.imagen;
+    const imageAlt = data.imageAlt ?? post.titulo;
+    const ogImages = image ? [{ url: image, alt: imageAlt }] : undefined;
     return {
       title: `${post.titulo} | Blog Gioventù`,
       description: post.excerpt,
@@ -54,7 +58,15 @@ export async function generateMetadata({
         description: post.excerpt,
         url: `/blog/${post.slug}/`,
         publishedTime: post.fecha,
+        modifiedTime: data.dateModified ?? post.fecha,
         authors: [post.autor],
+        ...(ogImages ? { images: ogImages } : {}),
+      },
+      twitter: {
+        card: image ? "summary_large_image" : "summary",
+        title: post.titulo,
+        description: post.excerpt,
+        ...(image ? { images: [image] } : {}),
       },
     };
   }
@@ -90,7 +102,7 @@ export default async function BlogSlugPage({
   // 2) ¿Es un artículo? → vista completa del post.
   const post = getPost(slug);
   if (post) {
-    const body = getPostBody(post.slug);
+    const { body, data, headings, wordCount } = getPostContent(post.slug);
     const crumbs: Crumb[] = [
       { label: "Inicio", href: "/" },
       { label: "Blog", href: "/blog/" },
@@ -100,7 +112,16 @@ export default async function BlogSlugPage({
         href: `/blog/categoria/${post.categoriaPrincipal}/`,
       },
     ];
-    return <ArticleView post={post} body={body} crumbs={crumbs} />;
+    return (
+      <ArticleView
+        post={post}
+        body={body}
+        crumbs={crumbs}
+        frontmatter={data}
+        headings={headings}
+        wordCount={wordCount}
+      />
+    );
   }
 
   // 3) Ni departamento ni artículo → 404.

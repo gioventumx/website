@@ -63,13 +63,17 @@ export function ResultsRain({
   }, [mode]);
 
   const physics = mode === "physics";
+  // Alto del "pit" de la lluvia según cuántos chips caen: pocos (≤8, como faciales/
+  // masajes) → pit corto para que no quede un hueco grande bajo el texto; muchos
+  // (Home) → pit alto para que quepa la pila.
+  const pitPb = chips.length <= 8 ? "pb-[150px]" : "pb-[280px] max-[560px]:pb-[330px]";
 
   return (
     <section
       ref={sectionRef}
       id={id}
       className={`relative overflow-hidden scroll-mt-[96px] bg-bg px-6 md:px-10 ${
-        physics ? "pb-[280px] max-[560px]:pb-[330px]" : "pb-[clamp(56px,8vw,96px)]"
+        physics ? pitPb : "pb-[clamp(56px,8vw,96px)]"
       } pt-[clamp(56px,8vw,96px)]`}
     >
       {/* Contenido: título + statement (siempre en el DOM, centrado) */}

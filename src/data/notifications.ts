@@ -37,6 +37,12 @@ export const notifications: Record<string, NotifConfig> = {
     source: "wellness:notificacion",
     service: "Wellness Spa",
   },
+  "/wellness/masajes/": {
+    title: "Disponibilidad limitada esta semana",
+    body: "Nuestros masajistas atienden por cita. Reserva tu masaje.",
+    source: "masajes:notificacion",
+    service: "Wellness Spa",
+  },
 };
 
 /** Config de la ruta actual (normaliza trailing slash). Fallback: Home. */

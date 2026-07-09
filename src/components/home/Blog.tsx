@@ -74,7 +74,7 @@ export function Blog({ departamento, ctaHref = "/blog/" }: Props = {}) {
               style={{ transitionDelay: visible ? `${i * 120}ms` : "0ms" } as CSSProperties}
             >
               <Link href={`/blog/${post.slug}/`} className="group block h-full">
-                <article className="flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card transition-[transform,box-shadow] duration-500 ease-out group-hover:-translate-y-1.5 group-hover:shadow-xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0">
+                <article className="flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card transition duration-[1200ms] ease-out group-hover:-translate-y-6 group-hover:shadow-xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0">
                   {/* Portada (placeholder mientras no haya imagen) */}
                   <MediaSurface
                     as="image"

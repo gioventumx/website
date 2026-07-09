@@ -29,14 +29,14 @@ export const wellness = {
       title: "Faciales",
       hook: "Rituales de limpieza y luminosidad para tu piel.",
       href: "/wellness/faciales/",
-      image: "",
+      image: "/faciales-hero.webp",
     },
     {
       slug: "masajes",
       title: "Masajes",
       hook: "Suelta la tensión. Recupera tu descanso.",
       href: "/wellness/masajes/",
-      image: "",
+      image: "/masajes-hero.webp",
     },
   ] satisfies Destacado[],
 };

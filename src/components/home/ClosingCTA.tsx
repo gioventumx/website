@@ -15,10 +15,21 @@ export function ClosingCTA({
   image,
   compact = false,
   body,
-}: { service?: ServiceOption; image?: string; compact?: boolean; body?: string } = {}) {
+  titleTop,
+  titleAccent,
+}: {
+  service?: ServiceOption;
+  image?: string;
+  compact?: boolean;
+  body?: string;
+  titleTop?: string;
+  titleAccent?: string;
+} = {}) {
   const b = home.band;
   const bg = image ?? b.image;
   const bodyText = body ?? b.body;
+  const top = titleTop ?? b.titleTop;
+  const accent = titleAccent ?? b.titleAccent;
 
   // ── BANNER (compact): bajo, en fila en desktop ──
   if (compact) {
@@ -36,7 +47,7 @@ export function ClosingCTA({
           <div className="relative container-x flex flex-col items-center gap-5 py-[clamp(22px,3vw,36px)] text-center md:flex-row md:items-center md:justify-between md:gap-8 md:text-left">
             <div>
               <h2 className="font-sans text-[clamp(1.4rem,2.4vw,1.9rem)] font-light leading-[1.2] text-white">
-                {b.titleTop} <span className="font-accent text-brand-tint">{b.titleAccent}</span>
+                {top} <span className="font-accent text-brand-tint">{accent}</span>
               </h2>
               <p className="mt-2 max-w-[460px] text-[0.95rem] text-brand-tint">{bodyText}</p>
             </div>
@@ -63,8 +74,8 @@ export function ClosingCTA({
         <div aria-hidden className="absolute inset-0 bg-black/30" />
         <div className="relative container-x max-w-[620px] py-[clamp(44px,6vw,72px)]">
           <h2 className="font-sans text-[clamp(1.8rem,3.4vw,2.4rem)] font-light leading-[1.18] text-white">
-            {b.titleTop}
-            <span className="font-accent block text-brand-tint">{b.titleAccent}</span>
+            {top}
+            <span className="font-accent block text-brand-tint">{accent}</span>
           </h2>
           <p className="mx-auto mb-7 mt-[18px] max-w-[420px] text-brand-tint">{bodyText}</p>
           <BookingButton variant="light" service={service}>

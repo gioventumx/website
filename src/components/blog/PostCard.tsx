@@ -7,7 +7,7 @@ export function PostCard({ post }: { post: BlogPost }) {
   return (
     <Link
       href={`/blog/${post.slug}/`}
-      className="group block overflow-hidden rounded-card border border-line bg-white transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+      className="group block overflow-hidden rounded-card border border-line bg-white transition duration-[1200ms] ease-out hover:-translate-y-6 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0"
     >
       <PostThumb
         src={post.imagen}

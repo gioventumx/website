@@ -14,6 +14,13 @@
 
 export type Departamento = { slug: string; nombre: string };
 export type Categoria = { slug: string; nombre: string };
+/**
+ * Autor con página propia (/blog/autor/<slug>/) → entidad Person en el schema.
+ * Redacción, NO médicos: sin credenciales ni cédula. La revisión médica es aparte
+ * (reviewedBy, ver ArticleJsonLd). `post.autor` referencia el `nombre` de aquí; un
+ * autor fuera del catálogo (ej. "Equipo Gioventù") se muestra sin enlace.
+ */
+export type Autor = { slug: string; nombre: string; rol: string; bio: string };
 
 export type BlogPost = {
   slug: string;
@@ -55,6 +62,15 @@ export const departamentos: Departamento[] = [
   { slug: "wellness", nombre: "Wellness" },
 ];
 
+export const autores: Autor[] = [
+  {
+    slug: "andrea-rios",
+    nombre: "Andrea Ríos",
+    rol: "Redactora de salud y bienestar",
+    bio: "Redactora especializada en dermatología y medicina estética. Investiga y traduce el conocimiento del equipo médico de Gioventù a guías claras y accesibles. No sustituye el criterio clínico: los contenidos de salud son revisados por un dermatólogo de la clínica.",
+  },
+];
+
 export const categorias: Categoria[] = [
   { slug: "lunares", nombre: "Lunares" },
   { slug: "verrugas", nombre: "Verrugas" },
@@ -81,7 +97,7 @@ export const posts: BlogPost[] = [
     autor: "Andrea Ríos",
     fecha: "2026-05-13",
     tiempoLectura: 5,
-    imagen: undefined,
+    imagen: "/derma-services/lunares.webp",
     destacado: true,
   },
   {
@@ -200,6 +216,21 @@ export function departamentoNombre(slug: string): string {
 
 export function categoriaNombre(slug: string): string {
   return getCategoria(slug)?.nombre ?? slug;
+}
+
+export function getAutor(slug: string): Autor | null {
+  return autores.find((a) => a.slug === slug) ?? null;
+}
+
+/** Resuelve el autor por su nombre (como aparece en `post.autor`). */
+export function getAutorPorNombre(nombre: string): Autor | null {
+  return autores.find((a) => a.nombre === nombre) ?? null;
+}
+
+export function postsByAutor(slug: string): BlogPost[] {
+  const autor = getAutor(slug);
+  if (!autor) return [];
+  return getAllPostsSorted().filter((p) => p.autor === autor.nombre);
 }
 
 export function postsByDepartamento(slug: string): BlogPost[] {

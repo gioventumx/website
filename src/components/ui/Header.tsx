@@ -29,7 +29,11 @@ export function Header() {
   const pathname = usePathname();
   const vertical = getVertical(pathname);
   const pillItems = vertical
-    ? vertical.anchors.map((a) => ({ label: a.label, href: `#${a.id}`, anchor: true }))
+    ? vertical.anchors.map((a) =>
+        a.href
+          ? { label: a.label, href: a.href, anchor: false } // enlace a página (hub)
+          : { label: a.label, href: `#${a.id}`, anchor: true } // ancla a sección
+      )
     : site.nav.map((n) => ({ label: n.label, href: n.href, anchor: false }));
   // En verticales, las opciones de vertical se agregan al overlay del toggle.
   const overlayList = vertical
