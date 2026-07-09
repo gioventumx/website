@@ -33,8 +33,10 @@ export function BeneficiosGrid() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-bg px-6 py-[clamp(60px,8vw,100px)] md:px-10">
-      <div className="container-x">
+    <section ref={sectionRef} className="bg-bg px-4 py-[clamp(48px,7vw,90px)] md:px-6">
+      {/* Fondo estilo tarjeta (mismo patrón que la sección Tecnología del Home):
+          panel blanco redondeado que flota sobre el fondo claro, casi full-width. */}
+      <div className="rounded-block bg-white p-[clamp(1.75rem,5vw,4.5rem)] shadow-card">
         <div className="mx-auto mb-11 max-w-[720px] text-center">
           <span className="eyebrow">{b.eyebrow}</span>
           <h2 className="mt-3 font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
@@ -43,12 +45,12 @@ export function BeneficiosGrid() {
         </div>
 
         {/* beneficios 4 → 2 → 1 */}
-        <div className="grid grid-cols-1 gap-6 min-[560px]:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 min-[560px]:grid-cols-2 lg:grid-cols-4">
           {b.items.map((item, i) => (
             <article
               key={item.slug}
               className={[
-                "flex flex-col overflow-hidden rounded-card border border-line bg-white transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none",
+                "flex flex-col overflow-hidden rounded-card border border-line bg-white shadow-card transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none",
                 visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
               ].join(" ")}
               style={{ transitionDelay: visible ? `${i * 80}ms` : "0ms" } as CSSProperties}

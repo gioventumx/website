@@ -48,7 +48,6 @@ export default async function EsteticaPage({
         head={estetica.tratamientos.head}
         items={estetica.tratamientos.items}
         service="Medicina Estética"
-        eyebrow="Tratamiento"
         id="servicios"
       />
 
@@ -77,9 +76,9 @@ export default async function EsteticaPage({
       <CrossSell
         title="¿No encuentras lo que buscas?"
         body="En Gioventù también somos especialistas en dermatología y wellness. Descubre la especialidad que necesitas."
-        defaultImage="/medicina-estetica.webp"
+        defaultImage="/rejuvenecimiento-facial-card.webp"
         verticals={[
-          { label: "Dermatología", href: "/dermatologia/", image: "/dermatologia.webp" },
+          { label: "Dermatología", href: "/dermatologia/", image: "/dermacta.webp" },
           { label: "Wellness Spa", href: "/wellness/", image: "/wellness-cta.webp" },
         ]}
       />

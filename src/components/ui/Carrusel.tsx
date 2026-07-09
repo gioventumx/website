@@ -17,8 +17,8 @@ type Props = {
   head: { titleTop: string; titleAccent: string; body: string };
   items: CarruselItem[];
   service: ServiceOption;
-  /** eyebrow del label + id de ancla de la sección */
-  eyebrow: string;
+  /** eyebrow encima del nombre en cada tarjeta (opcional; si se omite, no se muestra) */
+  eyebrow?: string;
   id: string;
 };
 
@@ -128,7 +128,7 @@ export function Carrusel({ head, items, service, eyebrow, id }: Props) {
 
       <div
         ref={trackRef}
-        className="flex cursor-grab select-none overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex cursor-grab select-none overflow-x-auto py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {loop.map((it, i) => (
           <Card key={`${it.id}-${i}`} item={it} eyebrow={eyebrow} onBook={book} aria={i < items.length} />
@@ -145,7 +145,7 @@ function Card({
   aria,
 }: {
   item: CarruselItem;
-  eyebrow: string;
+  eyebrow?: string;
   onBook: () => void;
   aria: boolean;
 }) {
@@ -165,7 +165,7 @@ function Card({
         as="image"
         src={item.image}
         overlay="none"
-        className="relative flex min-h-[400px] flex-col justify-end overflow-hidden rounded-card p-5 shadow-card"
+        className="relative flex min-h-[400px] flex-col justify-end overflow-hidden rounded-card p-5 shadow-card transition duration-500 ease-out group-hover:-translate-y-2 group-hover:shadow-xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
       >
         <div
           aria-hidden
@@ -178,9 +178,11 @@ function Card({
           ↗
         </span>
         <div className="relative text-ink">
-          <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-ink/60">
-            {eyebrow}
-          </span>
+          {eyebrow && (
+            <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-ink/60">
+              {eyebrow}
+            </span>
+          )}
           <h3 className="mt-1 font-accent text-[1.7rem] leading-[1.1]">{item.label}</h3>
         </div>
       </MediaSurface>

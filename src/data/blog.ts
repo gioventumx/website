@@ -171,7 +171,7 @@ export const posts: BlogPost[] = [
     autor: "Andrea Ríos",
     fecha: "2026-04-14",
     tiempoLectura: 6,
-    imagen: undefined,
+    imagen: "/blog-thumbs/manchas-melasma.webp",
   },
   {
     slug: "que-es-celulitis",
