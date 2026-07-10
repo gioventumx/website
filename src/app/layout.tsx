@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 import { dmSans, playfair } from "./fonts";
 import { Header } from "@/components/ui/Header";
@@ -61,6 +62,7 @@ export default function RootLayout({
           <Footer />
           <WhatsAppFab />
         </BookingProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
