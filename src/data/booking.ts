@@ -7,9 +7,39 @@ export type ServiceOption =
   | "Dermatología"
   | "Medicina Estética"
   | "Wellness Spa"
+  | "Faciales"
+  | "Masajes"
+  | "Depilación Láser"
   | "Otro";
 
 export type BranchKey = "antigua" | "cuspide";
+
+// Servicio inferido por LANDING (pathname → servicio). Cualquier apertura del modal
+// en esa ruta preselecciona el servicio y salta el paso 1. El Home y el hub /wellness/
+// NO están aquí a propósito: sí preguntan el servicio.
+export const landingServices: Record<string, ServiceOption> = {
+  "/dermatologia/": "Dermatología",
+  "/estetica/": "Medicina Estética",
+  "/wellness/faciales/": "Faciales",
+  "/wellness/masajes/": "Masajes",
+  "/depilacion-laser/": "Depilación Láser",
+};
+
+/** Servicio de la landing actual (normaliza trailing slash). Null = pregunta servicio. */
+export function getLandingService(pathname: string): ServiceOption | null {
+  const p = pathname.endsWith("/") ? pathname : `${pathname}/`;
+  return landingServices[p] ?? null;
+}
+
+/**
+ * Lee y valida ?suc= de un query string. Robusto al orden y a otros parámetros
+ * (gclid, utm_*): usa URLSearchParams. Normaliza a minúsculas y valida contra la
+ * whitelist; cualquier valor inválido/ausente → null (no rompe nada).
+ */
+export function parseBranch(search: string): BranchKey | null {
+  const raw = new URLSearchParams(search).get("suc")?.trim().toLowerCase();
+  return raw === "antigua" || raw === "cuspide" ? raw : null;
+}
 
 export type BookingStep = 1 | 2 | 3 | "success";
 
@@ -18,6 +48,10 @@ export type BookingData = {
   /** Texto libre cuando service === "Otro" */
   serviceOther: string;
   branch: BranchKey | null;
+  /** Tratamiento específico (ej. "Melasma") cuando se abre desde una tarjeta. El
+   *  servicio sigue siendo la categoría; el tratamiento es el detalle. Vacío si se
+   *  abrió desde un CTA genérico. */
+  treatment: string;
   name: string;
   phone: string;
   /** Origen de campaña (ej. ?suc= de la landing) para medición del lead. */
@@ -28,6 +62,7 @@ export const emptyBooking: BookingData = {
   service: null,
   serviceOther: "",
   branch: null,
+  treatment: "",
   name: "",
   phone: "",
   source: "",
@@ -79,12 +114,38 @@ export const bookingBranches: Record<BranchKey, BranchConfig> = {
 export function buildWhatsAppUrl(data: BookingData): string | null {
   if (!data.branch) return null;
   const branch = bookingBranches[data.branch];
-  const text =
-    `Hola, me interesa agendar una cita. ` +
-    `Servicio: ${serviceLabel(data)}. ` +
-    `Sucursal: ${branch.name}. ` +
-    `Nombre: ${data.name}. ` +
-    `Teléfono: ${data.phone}.` +
-    (data.source ? ` Origen: ${data.source}.` : "");
+  // NO incluye el origen de campaña: es atribución interna (la paciente vería
+  // "Origen: dermatologia:antigua" en su chat). El `source` va solo al evento de
+  // conversión / dataLayer (ver fireBookingConversion). `Servicio:` y `Tratamiento:`
+  // son líneas condicionales: el servicio es la categoría, el tratamiento el detalle.
+  const text = [
+    "Hola, me interesa agendar una cita.",
+    data.service ? `Servicio: ${serviceLabel(data)}.` : null,
+    data.treatment ? `Tratamiento: ${data.treatment}.` : null,
+    `Sucursal: ${branch.name}.`,
+    `Nombre: ${data.name}.`,
+    `Teléfono: ${data.phone}.`,
+  ]
+    .filter(Boolean)
+    .join(" ");
   return `https://wa.me/${branch.wa}?text=${encodeURIComponent(text)}`;
+}
+
+/**
+ * Evento de conversión del lead. Se dispara al ENVIAR (cuando abrimos WhatsApp con los
+ * datos completos) — la única acción que la web puede observar; no sabemos si el
+ * usuario manda el mensaje en WhatsApp. Empuja a dataLayer para GTM/GA4.
+ * TODO: conectar el ID/conversión real de Ads cuando esté disponible.
+ */
+export function fireBookingConversion(data: BookingData): void {
+  if (typeof window === "undefined") return;
+  const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
+  w.dataLayer = w.dataLayer ?? [];
+  w.dataLayer.push({
+    event: "booking_whatsapp",
+    service: serviceLabel(data),
+    treatment: data.treatment || "",
+    branch: data.branch ?? "",
+    source: data.source || "",
+  });
 }

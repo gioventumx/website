@@ -29,7 +29,8 @@ type Props = {
 export function Carrusel({ head, items, service, eyebrow, id }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const { openBooking } = useBooking();
-  const book = () => openBooking({ service });
+  // El servicio lo infiere la ruta; cada tarjeta pasa su nombre como `treatment`.
+  const book = (treatment: string) => openBooking({ service, treatment });
 
   const loop = [...items, ...items];
 
@@ -146,13 +147,13 @@ function Card({
 }: {
   item: CarruselItem;
   eyebrow?: string;
-  onBook: () => void;
+  onBook: (treatment: string) => void;
   aria: boolean;
 }) {
   return (
     <button
       type="button"
-      onClick={onBook}
+      onClick={() => onBook(item.label)}
       data-slug={item.slug}
       aria-hidden={aria ? undefined : true}
       tabIndex={aria ? undefined : -1}

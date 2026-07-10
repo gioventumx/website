@@ -101,7 +101,12 @@ export function Footer() {
 
         {/* Divisor + fila inferior */}
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3.5 border-t border-white/10 pt-6 text-[0.78rem] text-[#807da0]">
-          <span>{site.footer.legal}</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>{site.footer.legal}</span>
+            <Link href="/aviso-de-privacidad/" className="transition-colors hover:text-white">
+              Aviso de privacidad
+            </Link>
+          </div>
           <a
             href="https://scndal.com"
             target="_blank"

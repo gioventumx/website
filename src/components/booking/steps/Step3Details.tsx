@@ -6,7 +6,8 @@ export function Step3Details() {
   const { data, setField, submit } = useBooking();
 
   const nameValid = data.name.trim().length > 0;
-  const phoneValid = /^\d{7,}$/.test(data.phone);
+  // Exactamente 10 dígitos (el onChange ya deja solo números y el input topa en 10).
+  const phoneValid = /^\d{10}$/.test(data.phone);
   const valid = nameValid && phoneValid;
 
   const onSubmit = (e: React.FormEvent) => {
@@ -36,8 +37,9 @@ export function Step3Details() {
           <input
             type="tel"
             inputMode="numeric"
+            maxLength={10}
             value={data.phone}
-            onChange={(e) => setField("phone", e.target.value.replace(/\D/g, ""))}
+            onChange={(e) => setField("phone", e.target.value.replace(/\D/g, "").slice(0, 10))}
             placeholder="10 dígitos"
             className="rounded-full border border-line bg-white px-5 py-2.5 text-center text-[0.95rem] text-ink outline-none transition-colors placeholder:text-muted/70 focus:border-brand"
           />
@@ -49,7 +51,7 @@ export function Step3Details() {
         disabled={!valid}
         className="btn btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Enviar
+        Agendar por WhatsApp
       </button>
     </form>
   );

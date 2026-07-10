@@ -60,8 +60,9 @@ const mobileMinH: Record<Size, string> = {
 export function PadecimientosGrid() {
   const p = padecimientos;
   const { openBooking } = useBooking();
-  // Todas las piezas y el CTA del bento abren el modal con Dermatología preseleccionada.
-  const bookDerma = () => openBooking({ service: "Dermatología" });
+  // El servicio (Dermatología) lo infiere la ruta. Las piezas de tratamiento pasan su
+  // nombre como `treatment`; el CTA del bento abre genérico (sin tratamiento).
+  const book = (treatment?: string) => openBooking(treatment ? { treatment } : undefined);
 
   return (
     <section id="tratamientos" className="scroll-mt-[96px] bg-bg px-4 py-[clamp(40px,5vw,64px)] md:px-8">
@@ -74,14 +75,14 @@ export function PadecimientosGrid() {
 
       <div className="bento-grid">
         {bentoLayout.map((piece) => (
-          <Piece key={piece.id} piece={piece} onBook={bookDerma} />
+          <Piece key={piece.id} piece={piece} onBook={book} />
         ))}
       </div>
     </section>
   );
 }
 
-function Piece({ piece, onBook }: { piece: BentoPos; onBook: () => void }) {
+function Piece({ piece, onBook }: { piece: BentoPos; onBook: (treatment?: string) => void }) {
   // Posición EXACTA: valores concretos inline (no dependen del compilador).
   const style = { gridColumn: piece.col, gridRow: piece.row } as CSSProperties;
 
@@ -91,7 +92,7 @@ function Piece({ piece, onBook }: { piece: BentoPos; onBook: () => void }) {
       <div style={style}>
         <button
           type="button"
-          onClick={onBook}
+          onClick={() => onBook()}
           className={`group flex h-full w-full flex-col items-center justify-center gap-3 rounded-card bg-brand p-5 text-center shadow-card md:p-6 ${mobileMinH.grande} lg:min-h-0`}
         >
           <h3 className="font-accent text-[clamp(1.3rem,1.9vw,1.95rem)] italic leading-[1.14] text-white">
@@ -136,7 +137,7 @@ function Piece({ piece, onBook }: { piece: BentoPos; onBook: () => void }) {
             <Link href={`/dermatologia/${piece.slug}/`}> a su página. */}
         <button
           type="button"
-          onClick={onBook}
+          onClick={() => onBook(piece.label)}
           data-slug={piece.slug}
           aria-label={`Agendar: ${piece.label}`}
           className="absolute inset-0 z-[1] rounded-card"

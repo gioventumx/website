@@ -7,11 +7,15 @@ import { Step3Details } from "./steps/Step3Details";
 import { SuccessView } from "./steps/SuccessView";
 
 export function BookingModal() {
-  const { open, step, close, back, serviceLocked } = useBooking();
+  const { open, step, close, back, serviceLocked, branchLocked } = useBooking();
 
-  // En el paso 2, si el servicio vino preseleccionado no hay paso 1 al que volver,
-  // así que ocultamos "Atrás". En el paso 3 siempre se puede volver a la sucursal.
-  const showBack = step === 3 || (step === 2 && !serviceLocked);
+  // Ocultamos "Atrás" solo cuando el paso previo realmente se saltó:
+  //  · Paso 2 con servicio bloqueado (no hubo paso 1).
+  //  · Paso 3 solo si servicio Y sucursal vinieron bloqueados (se abrió directo en
+  //    datos). Si únicamente la sucursal vino de ?suc= (Home/hub), el paso 1 sí se
+  //    mostró, así que "Atrás" vuelve a servicio.
+  const showBack =
+    (step === 2 && !serviceLocked) || (step === 3 && !(serviceLocked && branchLocked));
 
   return (
     <div
