@@ -24,8 +24,7 @@ export const depilacion = {
     titleAccent: "sin fecha de caducidad.",
     body: "Dile adiós al vello no deseado con la tecnología láser más avanzada. Resultados visibles desde la primera sesión.",
     cta: "Agenda ahora",
-    // TODO: imagen/video de fondo real del hero (sesión de depilación láser). Vacío = placeholder.
-    image: "",
+    image: "/depilacion-laser-card.webp",
   },
 
   features: [

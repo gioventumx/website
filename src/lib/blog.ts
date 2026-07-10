@@ -22,6 +22,8 @@ export type PostFrontmatter = {
   dateModified?: string;
   /** Preguntas frecuentes → FAQPage. Solo se emite si hay al menos una. */
   faq?: PostFaq[];
+  /** "pendiente" = contenido médico sin validar por un profesional (marcador interno). */
+  reviewStatus?: string;
 };
 
 /** Un encabezado del cuerpo para la tabla de contenidos. */
