@@ -13,15 +13,16 @@ import { BookingNudge } from "@/components/home/BookingNudge";
 import { estetica } from "@/data/estetica";
 import { faqEstetica } from "@/data/faq-estetica";
 import type { BranchKey } from "@/data/booking";
+import { pageMetadata } from "@/lib/seo";
 
 // Canonical SIEMPRE a la URL limpia /estetica/ (mismo slug que el WordPress actual,
 // trailingSlash activo). El dominio absoluto sale de metadataBase (layout).
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Medicina Estética y Rejuvenecimiento Facial | Gioventù",
   description:
     "Rejuvenecimiento facial con rellenos dérmicos, toxina botulínica y bioestimuladores de colágeno. Medicina estética indicada por médicos, con tecnología de grado clínico. Agenda tu valoración.",
-  alternates: { canonical: "/estetica/" },
-};
+  path: "/estetica/",
+});
 
 function normalizeSuc(raw?: string | string[]): BranchKey | null {
   const v = Array.isArray(raw) ? raw[0] : raw;

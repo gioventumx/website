@@ -34,12 +34,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  const postEntries: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: `${SITE}/blog/${p.slug}/`,
-    lastModified: p.fecha,
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
+  // Excluye borradores (cuerpo placeholder) — no deben indexarse aún.
+  const postEntries: MetadataRoute.Sitemap = posts
+    .filter((p) => !p.draft)
+    .map((p) => ({
+      url: `${SITE}/blog/${p.slug}/`,
+      lastModified: p.fecha,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    }));
 
   // Nota: las ETIQUETAS no se incluyen — no tienen ruta indexable (a propósito).
   return [...staticEntries, ...departamentoEntries, ...categoriaEntries, ...postEntries];

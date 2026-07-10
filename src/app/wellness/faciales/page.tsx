@@ -13,15 +13,16 @@ import { faciales } from "@/data/faciales";
 import { faqFaciales } from "@/data/faq-faciales";
 import { testimoniosFaciales } from "@/data/testimonios-faciales";
 import type { BranchKey } from "@/data/booking";
+import { pageMetadata } from "@/lib/seo";
 
 // Canonical estático a la URL limpia (no cambia con ?suc=). Metadata neutral de
 // sucursal (la página cambia con ?suc=): menciona ambas plazas, sin contradecir.
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Limpieza Facial Profunda y Estética Facial | Gioventù Wellness Spa",
   description:
-    "Limpieza facial y estética facial en Gioventù Wellness Spa: hidratación, microdermoabrasión y rejuvenecimiento facial, con el respaldo de una clínica dermatológica. Agenda en Plaza Antigua o Plaza Cúspide.",
-  alternates: { canonical: "/wellness/faciales/" },
-};
+    "Limpieza facial y estética facial en Gioventù Wellness Spa: hidratación, microdermoabrasión, hidrofacial y rejuvenecimiento facial, con el respaldo de una clínica dermatológica. Agenda en Plaza Antigua o Plaza Cúspide.",
+  path: "/wellness/faciales/",
+});
 
 function normalizeSuc(raw?: string | string[]): BranchKey | null {
   const v = Array.isArray(raw) ? raw[0] : raw;
@@ -77,7 +78,7 @@ export default async function FacialesPage({
         body="Relaja el cuerpo con un masaje, o resuelve un padecimiento de piel con nuestros dermatólogos."
         defaultImage="/faciales-hero.webp"
         verticals={[
-          { label: "Masajes", href: "/wellness/masajes/", image: "" },
+          { label: "Masajes", href: "/wellness/masajes/", image: "/masajes-hero.webp" },
           { label: "Dermatología", href: "/dermatologia/", image: "/dermacta.webp" },
         ]}
       />

@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Breadcrumb, type Crumb } from "@/components/blog/Breadcrumb";
+import { pageMetadata } from "@/lib/seo";
 
 // noindex MIENTRAS sea borrador en revisión. Quitar `robots` y añadir la ruta al
 // sitemap cuando la clínica valide legalmente el contenido.
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Aviso de Privacidad | Gioventù",
   description: "Aviso de privacidad de Gioventù.",
-  alternates: { canonical: "/aviso-de-privacidad/" },
-  robots: { index: false, follow: true },
-};
+  path: "/aviso-de-privacidad/",
+  noindex: true,
+});
 
 // Cuerpo del aviso (borrador de la clínica). Se OMITEN a propósito las notas internas
 // del documento: el bloque "BORRADOR — NO PUBLICAR", las notas ⚠️, la tabla

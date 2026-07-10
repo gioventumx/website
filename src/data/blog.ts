@@ -45,6 +45,9 @@ export type BlogPost = {
   imagen?: string;
   /** Marca el artículo destacado del índice. */
   destacado?: boolean;
+  /** Borrador: cuerpo placeholder. Se excluye del sitemap y de todos los listados,
+   *  y su página lleva noindex. La URL sigue existiendo para preview. */
+  draft?: boolean;
 };
 
 // Cabecera del índice / sección del Home.
@@ -172,6 +175,8 @@ export const posts: BlogPost[] = [
     fecha: "2026-04-14",
     tiempoLectura: 6,
     imagen: "/blog-thumbs/manchas-melasma.webp",
+    // No viene del WP y su cuerpo es placeholder → borrador hasta que se escriba.
+    draft: true,
   },
   {
     slug: "que-es-celulitis",
@@ -203,9 +208,10 @@ export function formatFecha(iso: string): string {
   return `${d} ${MESES[m - 1]}, ${y}`;
 }
 
-/** Todos los posts, más recientes primero (ISO se ordena lexicográficamente). */
+/** Posts PUBLICADOS (sin borradores), más recientes primero. Alimenta todos los
+ *  listados. `posts` crudo se conserva para generateStaticParams / getPost (preview). */
 export function getAllPostsSorted(): BlogPost[] {
-  return [...posts].sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
+  return [...posts].filter((p) => !p.draft).sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
 }
 
 export function getPost(slug: string): BlogPost | null {

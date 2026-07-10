@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArchiveListing } from "@/components/blog/ArchiveListing";
 import { categorias, getCategoria, postsByCategoria } from "@/data/blog";
+import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return categorias.map((c) => ({ slug: c.slug }));
@@ -15,11 +16,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const cat = getCategoria(slug);
   if (!cat) return {};
-  return {
+  return pageMetadata({
     title: `${cat.nombre} — Blog | Gioventù`,
     description: `Artículos sobre ${cat.nombre}: causas, señales y tratamientos explicados por el equipo de Gioventù.`,
-    alternates: { canonical: `/blog/categoria/${cat.slug}/` },
-  };
+    path: `/blog/categoria/${cat.slug}/`,
+  });
 }
 
 export default async function BlogCategoriaPage({

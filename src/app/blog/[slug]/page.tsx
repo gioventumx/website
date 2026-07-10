@@ -13,6 +13,7 @@ import {
   categoriaNombre,
 } from "@/data/blog";
 import { getPostContent } from "@/lib/blog";
+import { pageMetadata } from "@/lib/seo";
 
 // Un solo segmento dinámico resuelve DEPARTAMENTO o ARTÍCULO (evita el conflicto de
 // tener /blog/[departamento]/ y /blog/[slug]/ al mismo nivel). Las categorías van
@@ -33,40 +34,37 @@ export async function generateMetadata({
 
   const dep = getDepartamento(slug);
   if (dep) {
-    return {
+    return pageMetadata({
       title: `${dep.nombre} — Blog | Gioventù`,
       description: `Artículos de ${dep.nombre}: guías, señales y tratamientos explicados por el equipo de Gioventù.`,
-      alternates: { canonical: `/blog/${dep.slug}/` },
-    };
+      path: `/blog/${dep.slug}/`,
+    });
   }
 
   const post = getPost(slug);
   if (post) {
     const { data } = getPostContent(post.slug);
+    // Imagen destacada de la nota como og:image (fallback al thumbnail del sitio).
     const image = data.image ?? post.imagen;
-    const imageAlt = data.imageAlt ?? post.titulo;
-    const ogImages = image ? [{ url: image, alt: imageAlt }] : undefined;
-    return {
+    const base = pageMetadata({
       title: `${post.titulo} | Blog Gioventù`,
       description: post.excerpt,
-      // Etiquetas SOLO como keywords (nunca ruta indexable).
+      path: `/blog/${post.slug}/`,
+      image,
+      imageAlt: data.imageAlt ?? post.titulo,
+      type: "article",
       keywords: post.etiquetas,
-      alternates: { canonical: `/blog/${post.slug}/` },
+      noindex: post.draft,
+    });
+    // Campos propios de artículo (el helper no los incluye).
+    return {
+      ...base,
       openGraph: {
+        ...base.openGraph,
         type: "article",
-        title: post.titulo,
-        description: post.excerpt,
-        url: `/blog/${post.slug}/`,
         publishedTime: post.fecha,
         modifiedTime: data.dateModified ?? post.fecha,
         authors: [post.autor],
-        ...(ogImages ? { images: ogImages } : {}),
-      },
-      twitter: {
-        card: image ? "summary_large_image" : "summary",
-        title: post.titulo,
-        description: post.excerpt,
-        ...(image ? { images: [image] } : {}),
       },
     };
   }

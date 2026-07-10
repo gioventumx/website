@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumb, type Crumb } from "@/components/blog/Breadcrumb";
 import { PostCard } from "@/components/blog/PostCard";
 import { autores, getAutor, postsByAutor } from "@/data/blog";
+import { pageMetadata } from "@/lib/seo";
 
 const SITE = "https://gioventu.com.mx";
 
@@ -18,11 +19,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const autor = getAutor(slug);
   if (!autor) return {};
-  return {
+  return pageMetadata({
     title: `${autor.nombre} — Autora | Blog Gioventù`,
     description: autor.bio,
-    alternates: { canonical: `/blog/autor/${autor.slug}/` },
-  };
+    path: `/blog/autor/${autor.slug}/`,
+  });
 }
 
 export default async function AutorPage({ params }: { params: Promise<{ slug: string }> }) {

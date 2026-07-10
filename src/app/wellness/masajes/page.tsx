@@ -14,15 +14,16 @@ import { masajes } from "@/data/masajes";
 import { faqMasajes } from "@/data/faq-masajes";
 import { testimoniosMasajes } from "@/data/testimonios-masajes";
 import type { BranchKey } from "@/data/booking";
+import { pageMetadata } from "@/lib/seo";
 
 // Canonical estático a la URL limpia (no cambia con ?suc=). Metadata neutral de
 // sucursal (la página cambia con ?suc=).
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Masajes Corporales y de Spa | Gioventù Wellness Spa",
   description:
     "Masajes corporales y de spa en Gioventù Wellness Spa: masajes relajantes, drenaje linfático y masaje descontracturante, con masajistas profesionales. Agenda en Plaza Antigua o Plaza Cúspide.",
-  alternates: { canonical: "/wellness/masajes/" },
-};
+  path: "/wellness/masajes/",
+});
 
 function normalizeSuc(raw?: string | string[]): BranchKey | null {
   const v = Array.isArray(raw) ? raw[0] : raw;

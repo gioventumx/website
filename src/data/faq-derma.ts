@@ -1,44 +1,39 @@
-// FAQ propias de la página /dermatologia/. Por ahora son las mismas del Home
-// (placeholder); se cambiarán por preguntas específicas de dermatología. Viven en
-// su propio archivo para editarlas sin afectar las del Home (data/faq.ts).
+// FAQ de la página /dermatologia/. Respuestas reales → el componente FAQ emite el
+// schema FAQPage (JSON-LD).
 
 import type { FaqItem } from "./faq";
 
 export const faqDerma: FaqItem[] = [
   {
-    q: "¿Cómo agendo una cita?",
-    a: "Puedes agendar directo desde el botón Agendar cita de esta página o por WhatsApp. Eliges el área que te interesa y tu sucursal, y nuestro equipo confirma tu horario.",
+    q: "¿Cómo sé si un lunar es peligroso?",
+    a: "Fíjate en cinco señales: asimetría, bordes irregulares, más de un color, un diámetro mayor a seis milímetros, y cualquier cambio en su forma, tamaño o color con el tiempo. Un lunar que cambia, sangra o da comezón merece una revisión. Si algo te preocupa, no esperes: la valoración con un dermatólogo certificado toma unos minutos.",
   },
   {
-    q: "¿Qué servicios ofrecen en Gioventù?",
-    a: "Somos un centro integral con tres áreas: dermatología (la salud de tu piel), medicina estética (realzar y rejuvenecer tu apariencia) y wellness (masajes y faciales). Tienes las tres en un mismo lugar, y te orientamos hacia la que necesitas.",
+    q: "¿Cuándo debo revisarme por cáncer de piel?",
+    a: "Si tienes muchos lunares, antecedentes familiares, piel clara o has tenido quemaduras solares fuertes, conviene una revisión anual. Y siempre que notes un lunar nuevo, uno que cambió, o una lesión que no cicatriza. Detectado a tiempo, el cáncer de piel tiene un pronóstico muy favorable.",
   },
   {
-    q: "¿Dónde están ubicadas sus sucursales?",
-    a: "Tenemos dos: Gioventù Plaza Antigua y Gioventù Plaza Cúspide, ambas en el Estado de México.",
+    q: "¿Por qué salen las verrugas y se contagian?",
+    a: "Las verrugas son causadas por el virus del papiloma humano y sí pueden contagiarse, por contacto directo o por superficies compartidas. No las cortes ni las trates en casa: puedes extenderlas o infectar la zona. Su eliminación en Gioventù empieza desde $999.",
   },
   {
-    q: "¿Cuánto dura un tratamiento?",
-    a: "Depende del procedimiento: la mayoría toma entre 30 y 90 minutos. En tu valoración inicial te damos el tiempo estimado de tu tratamiento específico.",
+    q: "¿Se pueden quitar las manchas de la cara?",
+    a: "Sí, pero depende de qué las causó. El melasma, las manchas por sol y las que deja el acné responden a tratamientos distintos. Por eso empezamos por identificar el origen y el tipo de mancha antes de indicar cualquier procedimiento. Sin diagnóstico, un tratamiento puede empeorarlas.",
   },
   {
-    q: "¿Los tratamientos tienen tiempo de recuperación?",
-    a: "La mayoría de nuestros tratamientos son mínimamente invasivos y te permiten retomar tu día. Si alguno requiere cuidados especiales, te lo indicamos antes de empezar.",
+    q: "¿Cuánto cuesta una consulta dermatológica?",
+    a: "La consulta dermatológica cuesta $1,250 e incluye la valoración con un dermatólogo certificado. Los tratamientos se cotizan aparte, según lo que tu piel necesite: la eliminación de verrugas empieza desde $999 y la extracción de lunares desde $1,900.",
   },
   {
-    q: "¿Sus tratamientos son seguros?",
-    a: "Sí. Contamos con dermatólogos y médicos especializados, tecnología de grado médico y protocolos personalizados para cada tipo de piel.",
+    q: "¿La extracción de un lunar deja cicatriz?",
+    a: "Toda extracción deja una marca, pero su tamaño y visibilidad dependen de la técnica, de la zona y de cómo cicatriza tu piel. Trabajamos para que sea lo más discreta posible, y te explicamos qué esperar antes del procedimiento. Nunca se retira un lunar sin valorarlo primero.",
   },
   {
-    q: "¿En cuánto tiempo veré resultados?",
-    a: "Varía según el tratamiento. Algunos muestran mejoras desde la primera sesión y otros son progresivos. En tu valoración te explicamos qué esperar en tu caso.",
+    q: "¿Los tratamientos dermatológicos duelen?",
+    a: "La mayoría se realiza con anestesia local, así que sientes presión pero no dolor. Después puede haber molestia leve durante unos días. Tu dermatólogo te explica qué esperar en cada procedimiento antes de empezar.",
   },
   {
-    q: "¿Cuánto cuesta un tratamiento?",
-    a: "El precio depende de tu caso, y no podemos darte una cifra exacta sin valorarte primero: cada piel y cada tratamiento son distintos. Por eso el primer paso siempre es una valoración, donde el especialista evalúa tu situación y te da un plan con costos claros.",
-  },
-  {
-    q: "Quiero un tratamiento específico, ¿me lo hacen directo?",
-    a: "En muchos casos sí, pero algunos procedimientos requieren una valoración previa. Por ejemplo, antes de retirar un lunar, el dermatólogo necesita determinar si es benigno. Cuando aplica, esta revisión cuida tu salud y asegura que el tratamiento sea el adecuado para ti.",
+    q: "¿Necesito cita para una consulta dermatológica?",
+    a: "Sí, atendemos por cita. Puedes agendar por WhatsApp o desde esta página, en Plaza Antigua o Plaza Cúspide.",
   },
 ];

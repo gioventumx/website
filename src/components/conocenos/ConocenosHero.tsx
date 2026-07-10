@@ -13,6 +13,7 @@ export function ConocenosHero() {
     <section className="px-4 pb-4 md:px-6 md:pb-6">
       <MediaSurface
         as="image"
+        priority
         src={h.image}
         overlay="ink"
         label={h.image ? undefined : "imagen / video de fondo (TODO)"}

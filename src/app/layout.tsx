@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { pageMetadata, SITE_URL } from "@/lib/seo";
 import { dmSans, playfair } from "./fonts";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
@@ -10,12 +11,15 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   // Dominio definitivo de producción. Base para los canonical absolutos (ej. /dermatologia/).
-  metadataBase: new URL("https://gioventu.com.mx"),
-  title: "Gioventù — Centro Dermatológico y Estético",
-  description:
-    "Centro dermatológico y estético en Lomas Verdes. Ciencia y tecnología de vanguardia para una piel radiante.",
-  alternates: { canonical: "/" },
+  metadataBase: new URL(SITE_URL),
   icons: { icon: "/favicon-gioventu.webp" },
+  // Home (hereda del layout) + defaults de OG/Twitter para todo el sitio.
+  ...pageMetadata({
+    title: "Gioventù — Centro Dermatológico y Estético",
+    description:
+      "Centro dermatológico y estético en Lomas Verdes. Ciencia y tecnología de vanguardia para una piel radiante.",
+    path: "/",
+  }),
 };
 
 // Contenedor de Google Tag Manager. GA4, Google Ads y Clarity NO se instalan en el

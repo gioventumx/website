@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { ConocenosHero } from "@/components/conocenos/ConocenosHero";
 import { MediaSurface } from "@/components/ui/MediaSurface";
 import { CrossSell } from "@/components/ui/CrossSell";
@@ -6,12 +7,12 @@ import { Blog } from "@/components/home/Blog";
 import { conocenos } from "@/data/conocenos";
 
 // Slug heredado de WP (/conocenos/) — no cambiar.
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Conócenos | Gioventù Dermatología y Estética",
   description:
     "Centro de dermatología, medicina estética y wellness con más de 10 años de experiencia, especialistas certificados y dos sucursales en Estado de México.",
-  alternates: { canonical: "/conocenos/" },
-};
+  path: "/conocenos/",
+});
 
 export default function ConocenosPage() {
   const historia = conocenos.historia;

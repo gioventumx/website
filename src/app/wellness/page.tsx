@@ -5,16 +5,17 @@ import { WellnessIntro } from "@/components/wellness/WellnessIntro";
 import { ClosingCTA } from "@/components/home/ClosingCTA";
 import { Blog } from "@/components/home/Blog";
 import { wellness } from "@/data/wellness";
+import { pageMetadata } from "@/lib/seo";
 
 // Slug heredado de WP (/wellness/) — no cambiar. Metadata neutral de hub: usa
 // "wellness spa", "bienestar", "faciales" y "masajes" de forma natural, sin optimizar
 // para faciales/masajes (esas keywords son de las páginas hijas).
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Wellness Spa | Gioventù Dermatología y Estética",
   description:
     "El wellness spa de Gioventù: bienestar dentro de una clínica dermatológica. Faciales y masajes con protocolos definidos, en un ambiente pensado para desconectarte.",
-  alternates: { canonical: "/wellness/" },
-};
+  path: "/wellness/",
+});
 
 // Hub de Wellness: hero → dos tarjetas de acceso → intro → CTA banner → blog.
 export default function WellnessPage() {

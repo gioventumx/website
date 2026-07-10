@@ -7,16 +7,17 @@ import { FeaturesGrid } from "@/components/depilacion/FeaturesGrid";
 import { ZonasGrid } from "@/components/depilacion/ZonasGrid";
 import { Testimonios } from "@/components/depilacion/Testimonios";
 import { depilacion } from "@/data/depilacion";
+import { pageMetadata } from "@/lib/seo";
 
 // Canonical SIEMPRE a la URL limpia /depilacion-laser/ (migración SEO desde el
 // WordPress actual). trailingSlash está activo globalmente (next.config).
 // El dominio absoluto sale de metadataBase (layout).
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Depilación Láser en Lomas Verdes | Gioventù",
   description:
     "Depilación láser en Lomas Verdes con tecnología de láser diodo de grado médico: elimina el vello de forma segura, sin dolor y con resultados definitivos. Piernas, brazos, axilas, bikini y rostro. Agenda con 10% de descuento en tu primera sesión.",
-  alternates: { canonical: "/depilacion-laser/" },
-};
+  path: "/depilacion-laser/",
+});
 
 export default function DepilacionLaserPage() {
   const banner = depilacion.banner;

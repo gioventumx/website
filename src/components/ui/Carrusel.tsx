@@ -43,10 +43,12 @@ export function Carrusel({ head, items, service, eyebrow, id }: Props) {
 
     let raf = 0;
     let paused = false;
-    let dragging = false;
+    let pressed = false; // botón del mouse abajo (aún no sabemos si es click o arrastre)
+    let dragging = false; // arrastre real en curso (ya superó el umbral)
     let moved = false;
     let startX = 0;
     let startScroll = 0;
+    let pointerId = -1;
 
     const half = () => el.scrollWidth / 2;
     const wrap = () => {
@@ -68,27 +70,38 @@ export function Carrusel({ head, items, service, eyebrow, id }: Props) {
     const onEnter = () => (paused = true);
     const onLeave = () => (paused = false);
 
+    // NO capturamos el puntero al presionar: la captura re-dirige el evento `click`
+    // fuera de la tarjeta y el modal no abriría. Solo empezamos a arrastrar (y a
+    // capturar) cuando el cursor se mueve más allá del umbral. Un click puro nunca
+    // captura → su `onClick` siempre dispara.
     const onDown = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
-      dragging = true;
+      pressed = true;
       moved = false;
       startX = e.clientX;
       startScroll = el.scrollLeft;
-      el.setPointerCapture(e.pointerId);
-      el.style.cursor = "grabbing";
+      pointerId = e.pointerId;
     };
     const onMove = (e: PointerEvent) => {
-      if (!dragging) return;
+      if (!pressed) return;
       const dx = e.clientX - startX;
-      if (Math.abs(dx) > 3) moved = true;
+      if (!dragging) {
+        if (Math.abs(dx) <= 4) return; // sigue siendo un click potencial
+        dragging = true;
+        moved = true;
+        el.setPointerCapture?.(pointerId); // captura SOLO al iniciar el arrastre real
+        el.style.cursor = "grabbing";
+      }
       el.scrollLeft = startScroll - dx;
       wrap();
     };
-    const onUp = (e: PointerEvent) => {
-      if (!dragging) return;
+    const onUp = () => {
+      if (dragging) {
+        el.releasePointerCapture?.(pointerId);
+        el.style.cursor = "";
+      }
+      pressed = false;
       dragging = false;
-      el.releasePointerCapture?.(e.pointerId);
-      el.style.cursor = "";
     };
     const onClick = (e: MouseEvent) => {
       if (moved) {

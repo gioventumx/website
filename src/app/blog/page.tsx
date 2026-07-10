@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { BlogFilters } from "@/components/blog/BlogFilters";
 import { FeaturedPost } from "@/components/blog/FeaturedPost";
 import { PostCard } from "@/components/blog/PostCard";
 import { blogMeta, featuredPost, getAllPostsSorted } from "@/data/blog";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Blog — Crónicas de tu piel | Gioventù",
   description:
     "Tratamientos que sí funcionan, señales que no debes ignorar y todo lo que necesitas saber para cuidar tu piel. Dermatología, medicina estética y wellness por Gioventù.",
-  alternates: { canonical: "/blog/" },
-};
+  path: "/blog/",
+});
 
 export default function BlogIndexPage() {
   const featured = featuredPost();

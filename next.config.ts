@@ -34,6 +34,8 @@ const nextConfig: NextConfig = {
       { source: "/estetica/depilacion-laser/", destination: "/depilacion-laser/", permanent: true },
       { source: "/estetica/relleno-de-labios/", destination: "/estetica/", permanent: true },
       { source: "/elemento/co2-laser-fraccionado/", destination: "/estetica/", permanent: true },
+      // El servicio se mudó de Estética a Faciales.
+      { source: "/estetica/hollywood-peel/", destination: "/wellness/faciales/", permanent: true },
     ];
   },
 };
