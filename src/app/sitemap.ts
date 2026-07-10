@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { posts, departamentos, categorias } from "@/data/blog";
+import { posts, departamentos, categorias, postsByCategoria } from "@/data/blog";
 
 // Dominio de producción (igual que metadataBase del layout). Trailing slash
 // consistente con next.config (trailingSlash: true).
@@ -28,11 +28,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const categoriaEntries: MetadataRoute.Sitemap = categorias.map((c) => ({
-    url: `${SITE}/blog/categoria/${c.slug}/`,
-    changeFrequency: "weekly",
-    priority: 0.5,
-  }));
+  // Solo categorías CON posts publicados (postsByCategoria ya excluye borradores):
+  // una categoría vacía no se indexa hasta que tenga contenido.
+  const categoriaEntries: MetadataRoute.Sitemap = categorias
+    .filter((c) => postsByCategoria(c.slug).length > 0)
+    .map((c) => ({
+      url: `${SITE}/blog/categoria/${c.slug}/`,
+      changeFrequency: "weekly",
+      priority: 0.5,
+    }));
 
   // Excluye borradores (cuerpo placeholder) — no deben indexarse aún.
   const postEntries: MetadataRoute.Sitemap = posts

@@ -6,6 +6,7 @@ import { DepilacionHero } from "@/components/depilacion/DepilacionHero";
 import { FeaturesGrid } from "@/components/depilacion/FeaturesGrid";
 import { ZonasGrid } from "@/components/depilacion/ZonasGrid";
 import { Testimonios } from "@/components/depilacion/Testimonios";
+import { CrossSell } from "@/components/ui/CrossSell";
 import { depilacion } from "@/data/depilacion";
 import { pageMetadata } from "@/lib/seo";
 
@@ -64,6 +65,17 @@ export default function DepilacionLaserPage() {
         eyebrow={faq.eyebrow}
         titleTop={faq.titleTop}
         titleAccent={faq.titleAccent}
+      />
+
+      {/* Cross-sell: ofrece otras verticales afines (imagen cambia por hover) */}
+      <CrossSell
+        title="¿Buscas algo más?"
+        body="En Gioventù también hacemos medicina estética y faciales. Descubre la especialidad que necesitas."
+        defaultImage="/depilacion-laser-card.webp"
+        verticals={[
+          { label: "Medicina Estética", href: "/estetica/", image: "/medicina-estetica-cta.webp" },
+          { label: "Faciales", href: "/wellness/faciales/", image: "/faciales-hero.webp" },
+        ]}
       />
 
       {/* 7) CTA DE CIERRE — bloque redondeado media+overlay (patrón ClosingCTA) */}

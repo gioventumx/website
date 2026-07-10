@@ -67,6 +67,7 @@ export const site = {
         { label: "Dermatología", href: "/dermatologia/" },
         { label: "Estética", href: "/estetica/" },
         { label: "Wellness", href: "/wellness/" },
+        { label: "Depilación Láser", href: "/depilacion-laser/" },
         { label: "Blog", href: "/blog/" },
       ] satisfies FooterLink[],
     },

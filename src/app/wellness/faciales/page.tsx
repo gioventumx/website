@@ -75,11 +75,11 @@ export default async function FacialesPage({
       {/* Cross-sell: masajes (wellness) o dermatología */}
       <CrossSell
         title="¿Buscas algo más?"
-        body="Relaja el cuerpo con un masaje, o resuelve un padecimiento de piel con nuestros dermatólogos."
+        body="Rejuvenece tu rostro con medicina estética o elimina el vello con depilación láser. Descubre nuestras otras especialidades."
         defaultImage="/faciales-hero.webp"
         verticals={[
-          { label: "Masajes", href: "/wellness/masajes/", image: "/masajes-hero.webp" },
-          { label: "Dermatología", href: "/dermatologia/", image: "/dermacta.webp" },
+          { label: "Medicina Estética", href: "/estetica/", image: "/medicina-estetica-cta.webp" },
+          { label: "Depilación Láser", href: "/depilacion-laser/", image: "/depilacion-laser-card.webp" },
         ]}
       />
 

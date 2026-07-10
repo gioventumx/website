@@ -76,11 +76,11 @@ export default async function EsteticaPage({
       {/* Cross-sell: ofrece las otras dos verticales (imagen cambia por hover) */}
       <CrossSell
         title="¿No encuentras lo que buscas?"
-        body="En Gioventù también somos especialistas en dermatología y wellness. Descubre la especialidad que necesitas."
+        body="Cuida tu piel con un facial profesional o dile adiós al vello con depilación láser. Descubre nuestras otras especialidades."
         defaultImage="/rejuvenecimiento-facial-card.webp"
         verticals={[
-          { label: "Dermatología", href: "/dermatologia/", image: "/dermacta.webp" },
-          { label: "Wellness Spa", href: "/wellness/", image: "/wellness-cta.webp" },
+          { label: "Faciales", href: "/wellness/faciales/", image: "/faciales-hero.webp" },
+          { label: "Depilación Láser", href: "/depilacion-laser/", image: "/depilacion-laser-card.webp" },
         ]}
       />
 

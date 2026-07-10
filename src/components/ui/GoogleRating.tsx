@@ -16,7 +16,10 @@ const RATINGS: Record<string, Rating> = {
   antigua: { value: "4.8", text: "en Google · 83 reseñas" },
   cuspide: { value: "4.6", text: "en Google · 103 reseñas" },
 };
-const DEFAULT: Rating = { value: "4.8", text: "en Google" };
+// Sin ?suc= mostramos Antigua (la mejor calificada) CON su conteo, para que el rating
+// visible coincida con el AggregateRating del schema (ratingValue 4.8 · reviewCount 83)
+// y Google no invalide el rich result.
+const DEFAULT: Rating = RATINGS.antigua;
 
 function useBranchRating(): Rating {
   const [rating, setRating] = useState<Rating>(DEFAULT);

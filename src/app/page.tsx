@@ -19,7 +19,7 @@ export default function Home() {
       <Testimonials />
       <Destacados />
       <FAQ />
-      <ClosingCTA />
+      <ClosingCTA image="/nosotros-hero.webp" />
       <Blog />
       <BookingNudge />
     </>

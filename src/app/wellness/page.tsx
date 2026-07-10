@@ -3,6 +3,7 @@ import { VerticalHero } from "@/components/ui/VerticalHero";
 import { Destacados } from "@/components/home/Destacados";
 import { WellnessIntro } from "@/components/wellness/WellnessIntro";
 import { ClosingCTA } from "@/components/home/ClosingCTA";
+import { CrossSell } from "@/components/ui/CrossSell";
 import { Blog } from "@/components/home/Blog";
 import { wellness } from "@/data/wellness";
 import { pageMetadata } from "@/lib/seo";
@@ -33,6 +34,17 @@ export default function WellnessPage() {
         titleTop="Tu pausa"
         titleAccent="empieza aquí"
         body="Agenda tu facial o tu masaje en Plaza Antigua o Plaza Cúspide."
+      />
+
+      {/* Cross-sell: ofrece las otras verticales (imagen cambia por hover) */}
+      <CrossSell
+        title="¿Buscas algo más?"
+        body="En Gioventù también somos especialistas en dermatología y medicina estética. Descubre la especialidad que necesitas."
+        defaultImage="/dermatologia.webp"
+        verticals={[
+          { label: "Dermatología", href: "/dermatologia/", image: "/dermacta.webp" },
+          { label: "Medicina Estética", href: "/estetica/", image: "/medicina-estetica-cta.webp" },
+        ]}
       />
 
       {/* Blog — filtrado al departamento Wellness, como en las páginas internas */}

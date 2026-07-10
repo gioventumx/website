@@ -20,6 +20,8 @@ export async function generateMetadata({
     title: `${cat.nombre} — Blog | Gioventù`,
     description: `Artículos sobre ${cat.nombre}: causas, señales y tratamientos explicados por el equipo de Gioventù.`,
     path: `/blog/categoria/${cat.slug}/`,
+    // Sin posts publicados → noindex (categoría vacía no se indexa).
+    noindex: postsByCategoria(cat.slug).length === 0,
   });
 }
 
