@@ -9,7 +9,7 @@ export function ServiceCard({ service }: { service: Service }) {
         as="image"
         src={service.image}
         overlay="none"
-        className="relative flex min-h-[400px] flex-col justify-end overflow-hidden rounded-card p-5 shadow-card transition duration-[1200ms] ease-out group-hover:-translate-y-6 group-hover:shadow-xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
+        className="relative flex min-h-[280px] flex-col justify-end overflow-hidden rounded-card p-5 shadow-card transition duration-[1200ms] ease-out group-hover:-translate-y-6 group-hover:shadow-xl motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 md:min-h-[400px]"
       >
         {/* Degradado blanco SOLO detrás del texto (abajo) para asegurar lectura */}
         <div

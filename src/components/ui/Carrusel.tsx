@@ -22,11 +22,37 @@ type Props = {
   id: string;
 };
 
-// Carrusel horizontal de servicios: tarjetas con el mismo formato visual que las
-// cards de servicios del Home. Auto-desplazamiento lento y continuo (derecha→
-// izquierda) vía scroll, y ARRASTRE con el mouse además del swipe táctil. Se pausa
-// al hover; loop sin costura duplicando las tarjetas. Cada tarjeta abre el modal.
+// Carrusel horizontal de servicios: sección con cabecera + riel de tarjetas. El riel
+// (CarruselTrack) es reutilizable por sí solo (ej. el bento de dermatología lo usa en
+// móvil con otra cabecera).
 export function Carrusel({ head, items, service, eyebrow, id }: Props) {
+  return (
+    <section id={id} className="md:scroll-mt-[96px] bg-bg py-[clamp(40px,5vw,64px)]">
+      <div className="container-x mb-8 max-w-[680px] text-center">
+        <h2 className="mx-auto font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
+          {head.titleTop} <span className="font-accent text-brand">{head.titleAccent}</span>
+        </h2>
+        <p className="mt-4 text-muted">{head.body}</p>
+      </div>
+
+      <CarruselTrack items={items} service={service} eyebrow={eyebrow} />
+    </section>
+  );
+}
+
+// Riel reutilizable (SIN sección ni cabecera): tarjetas con auto-desplazamiento lento
+// (derecha→izquierda), ARRASTRE con mouse (desktop) + swipe táctil nativo (móvil, vía
+// overflow-x-auto), pausa al hover y loop sin costura duplicando las tarjetas. Cada
+// tarjeta abre el modal con su nombre como `treatment`.
+export function CarruselTrack({
+  items,
+  service,
+  eyebrow,
+}: {
+  items: CarruselItem[];
+  service: ServiceOption;
+  eyebrow?: string;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const { openBooking } = useBooking();
   // El servicio lo infiere la ruta; cada tarjeta pasa su nombre como `treatment`.
@@ -132,23 +158,14 @@ export function Carrusel({ head, items, service, eyebrow, id }: Props) {
   }, []);
 
   return (
-    <section id={id} className="md:scroll-mt-[96px] bg-bg py-[clamp(40px,5vw,64px)]">
-      <div className="container-x mb-8 max-w-[680px] text-center">
-        <h2 className="mx-auto font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
-          {head.titleTop} <span className="font-accent text-brand">{head.titleAccent}</span>
-        </h2>
-        <p className="mt-4 text-muted">{head.body}</p>
-      </div>
-
-      <div
-        ref={trackRef}
-        className="flex cursor-grab select-none overflow-x-auto py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {loop.map((it, i) => (
-          <Card key={`${it.id}-${i}`} item={it} eyebrow={eyebrow} onBook={book} aria={i < items.length} />
-        ))}
-      </div>
-    </section>
+    <div
+      ref={trackRef}
+      className="flex cursor-grab select-none overflow-x-auto py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {loop.map((it, i) => (
+        <Card key={`${it.id}-${i}`} item={it} eyebrow={eyebrow} onBook={book} aria={i < items.length} />
+      ))}
+    </div>
   );
 }
 
@@ -172,7 +189,9 @@ function Card({
       tabIndex={aria ? undefined : -1}
       aria-label={aria ? `Agendar: ${item.label}` : undefined}
       className="group mr-5 block w-[290px] shrink-0 text-left"
-      style={{ touchAction: "pan-y" }}
+      // touch-action: auto (default) → el swipe HORIZONTAL scrollea el carrusel
+      // (overflow-x-auto) y el VERTICAL scrollea la página. `pan-y` bloqueaba el
+      // horizontal en móvil. Solo afecta input táctil; en desktop el drag es por mouse.
       draggable={false}
     >
       <MediaSurface

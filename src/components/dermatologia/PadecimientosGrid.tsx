@@ -2,8 +2,20 @@
 
 import type { CSSProperties } from "react";
 import { MediaSurface } from "@/components/ui/MediaSurface";
+import { CarruselTrack, type CarruselItem } from "@/components/ui/Carrusel";
 import { useBooking } from "@/components/booking/BookingProvider";
 import { padecimientos, bentoLayout, type BentoPos } from "@/data/padecimientos";
+
+// Todos los tratamientos (piezas kind:"treatment" del bento) → items del carrusel móvil.
+const carruselItems: CarruselItem[] = bentoLayout
+  .filter((piece) => piece.kind === "treatment")
+  .map((piece) => ({
+    id: piece.slug ?? piece.id,
+    slug: piece.slug ?? piece.id,
+    label: piece.label ?? "",
+    description: piece.description ?? "",
+    image: piece.image,
+  }));
 
 // ────────────────────────────────────────────────────────────────────────────
 // BENTO — composición manual (posiciones EXACTAS por style inline).
@@ -73,7 +85,14 @@ export function PadecimientosGrid() {
         <p className="mt-4 text-muted">{p.body}</p>
       </div>
 
-      <div className="bento-grid">
+      {/* MÓVIL: carrusel con TODOS los tratamientos (mismo riel que Medicina Estética),
+          full-bleed (-mx-4 contrarresta el px-4 de la sección). */}
+      <div className="-mx-4 md:hidden">
+        <CarruselTrack items={carruselItems} service="Dermatología" />
+      </div>
+
+      {/* DESKTOP: bento grid — igual que hoy (max-md:hidden solo oculta <768). */}
+      <div className="bento-grid max-md:hidden">
         {bentoLayout.map((piece) => (
           <Piece key={piece.id} piece={piece} onBook={book} />
         ))}
