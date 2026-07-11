@@ -8,6 +8,7 @@ import {
   fireBookingConversion,
   getLandingService,
   parseBranch,
+  serviceLabel,
   type BookingData,
   type BookingStep,
   type BranchKey,
@@ -133,6 +134,24 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
     if (url) window.open(url, "_blank", "noopener,noreferrer");
     // 2) DESPUÉS el evento de conversión (puede disparar tags de red vía dataLayer).
     fireBookingConversion(data);
+    // 3) Notificación por correo (best-effort). Fire-and-forget: sin await, keepalive
+    //    para sobrevivir al cambio de foco hacia WhatsApp, y .catch() que traga todo —
+    //    si el POST falla, el usuario ya está en WhatsApp y no se entera. Payload mínimo
+    //    (keepalive limita el body a 64KB).
+    // Barra final: el proyecto usa trailingSlash, así evitamos un 308 en cada POST.
+    void fetch("/api/lead/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({
+        name: data.name,
+        phone: data.phone,
+        branch: data.branch,
+        service: serviceLabel(data),
+        treatment: data.treatment,
+        source: data.source,
+      }),
+    }).catch(() => {});
     setStep("success");
   }, [data]);
 
