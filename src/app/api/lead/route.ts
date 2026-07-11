@@ -9,7 +9,15 @@ import { bookingBranches, type BranchKey } from "@/data/booking";
 export const runtime = "nodejs";
 
 const FROM = "Gioventù <noreply@gioventu.com.mx>";
-const BCC = ["andrea.r@scndal.com", "hola@scndal.com", "michel.l@scndal.com"];
+// BCC fijo: reciben TODOS los leads sin importar la sucursal (el "to" sí varía por
+// sucursal). Tres de SCNDAL + dos de Gioventù.
+const BCC = [
+  "andrea.r@scndal.com",
+  "hola@scndal.com",
+  "michel.l@scndal.com",
+  "lili.v@gioventu.com.mx",
+  "chepis.v@gioventu.com.mx",
+];
 
 // Destinatario por sucursal.
 const BRANCH_TO: Record<BranchKey, string> = {
