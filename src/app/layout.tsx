@@ -1,14 +1,21 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 import { dmSans, playfair } from "./fonts";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
+import { BottomNav } from "@/components/ui/BottomNav";
+import { MobileNavProvider } from "@/components/ui/MobileNavProvider";
 import { BookingProvider } from "@/components/booking/BookingProvider";
 import { WhatsAppFab } from "@/components/booking/WhatsAppFab";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
+
+// viewport-fit=cover: imprescindible para que env(safe-area-inset-*) sea > 0 en iPhone
+// (sin esto la barra inferior quedaría bajo la home indicator). El resto de defaults de
+// Next se conservan.
+export const viewport: Viewport = { viewportFit: "cover" };
 
 export const metadata: Metadata = {
   // Dominio definitivo de producción. Base para los canonical absolutos (ej. /dermatologia/).
@@ -34,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${dmSans.variable} ${playfair.variable} h-full`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col max-md:pb-[calc(var(--bottomnav-h)_+_2_*_var(--bottomnav-gap)_+_env(safe-area-inset-bottom))]">
         {/* GTM (noscript) — al inicio del body */}
         <noscript>
           <iframe
@@ -57,10 +64,13 @@ export default function RootLayout({
 
         <SmoothScroll />
         <BookingProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <WhatsAppFab />
+          <MobileNavProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <BottomNav />
+            <WhatsAppFab />
+          </MobileNavProvider>
         </BookingProvider>
         <SpeedInsights />
       </body>

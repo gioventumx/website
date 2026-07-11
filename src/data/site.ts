@@ -14,6 +14,7 @@ export const site = {
 
   branches: [
     {
+      key: "cuspide",
       name: "Cúspide",
       phone: "55 5349 2712",
       whatsapp: "55 4058 3256",
@@ -32,6 +33,7 @@ export const site = {
       geo: { lat: 19.514679, lng: -99.265757 },
     },
     {
+      key: "antigua",
       name: "Antigua",
       phone: "55 5308 2028",
       whatsapp: "55 6149 6600",

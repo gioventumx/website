@@ -9,13 +9,13 @@ const components: Components = {
   h2: ({ children, id }) => (
     <h2
       id={id}
-      className="mt-8 mb-3 scroll-mt-24 font-sans text-[clamp(1.4rem,2.6vw,1.8rem)] font-medium leading-[1.2] text-brand"
+      className="mt-8 mb-3 md:scroll-mt-24 font-sans text-[clamp(1.4rem,2.6vw,1.8rem)] font-medium leading-[1.2] text-brand"
     >
       {children}
     </h2>
   ),
   h3: ({ children, id }) => (
-    <h3 id={id} className="mt-6 mb-2 scroll-mt-24 font-sans text-[1.2rem] font-medium text-ink">
+    <h3 id={id} className="mt-6 mb-2 md:scroll-mt-24 font-sans text-[1.2rem] font-medium text-ink">
       {children}
     </h3>
   ),

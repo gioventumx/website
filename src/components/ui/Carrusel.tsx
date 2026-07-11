@@ -132,7 +132,7 @@ export function Carrusel({ head, items, service, eyebrow, id }: Props) {
   }, []);
 
   return (
-    <section id={id} className="scroll-mt-[96px] bg-bg py-[clamp(40px,5vw,64px)]">
+    <section id={id} className="md:scroll-mt-[96px] bg-bg py-[clamp(40px,5vw,64px)]">
       <div className="container-x mb-8 max-w-[680px] text-center">
         <h2 className="mx-auto font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
           {head.titleTop} <span className="font-accent text-brand">{head.titleAccent}</span>

@@ -36,6 +36,13 @@
   --section-y: clamp(60px, 8vw, 96px);
   --container: 1180px;
   --gutter: 24px;
+  /* Barra inferior móvil (pill flotante). Fuente única, SIN safe-area horneada:
+     · --bottomnav-h  = alto del pill.
+     · --bottomnav-gap = separación flotante de los bordes.
+     El safe-area se suma aparte. Footprint del nav = h + gap + safe-area; la reserva
+     del body (layout) = h + 2*gap + safe-area (un gap extra sobre el pill). */
+  --bottomnav-h: 3.5rem;
+  --bottomnav-gap: 0.75rem;
 }
 
 /* ============================================================

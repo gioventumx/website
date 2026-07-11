@@ -3,6 +3,11 @@
 // queda listo para conectar después el envío por correo (Resend) + evento de
 // conversión sin rehacer el formulario.
 
+// BranchKey vive en types.ts (fuente única del tipo); se re-exporta aquí para no
+// romper los múltiples `import { BranchKey } from "@/data/booking"` existentes.
+import type { BranchKey } from "./types";
+export type { BranchKey };
+
 export type ServiceOption =
   | "Dermatología"
   | "Medicina Estética"
@@ -11,8 +16,6 @@ export type ServiceOption =
   | "Masajes"
   | "Depilación Láser"
   | "Otro";
-
-export type BranchKey = "antigua" | "cuspide";
 
 // Servicio inferido por LANDING (pathname → servicio). Cualquier apertura del modal
 // en esa ruta preselecciona el servicio y salta el paso 1. El Home y el hub /wellness/
@@ -148,4 +151,17 @@ export function fireBookingConversion(data: BookingData): void {
     branch: data.branch ?? "",
     source: data.source || "",
   });
+}
+
+/**
+ * Evento de LLAMADA (bottom nav móvil). SEPARADO de booking_whatsapp: es su propio
+ * evento con su propio source. Debe empujarse SÍNCRONO en el handler del clic, ANTES
+ * de disparar el `tel:` (o justo tras elegir sucursal, antes de marcar). NO crea la
+ * conversión de Ads: solo emite el evento; la conversión se configura en GTM/Ads.
+ */
+export function fireCallConversion(branch: BranchKey, source = "bottomnav-telefono"): void {
+  if (typeof window === "undefined") return;
+  const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
+  w.dataLayer = w.dataLayer ?? [];
+  w.dataLayer.push({ event: "booking_call", branch, source });
 }

@@ -31,7 +31,7 @@ export function WhatsAppFab() {
       type="button"
       aria-label="Agendar por WhatsApp"
       onClick={() => openBooking({ source: `${pageKey(pathname)}:whatsapp-flotante` })}
-      className={`fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 motion-reduce:transition-none ${
+      className={`fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 motion-reduce:transition-none max-md:hidden ${
         open ? "pointer-events-none translate-y-3 opacity-0" : "opacity-100"
       }`}
     >

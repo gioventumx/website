@@ -24,7 +24,7 @@ export const home = {
 
   hero: {
     video: "/GIO-web.mp4",
-    eyebrow: "Centro dermatológico y estético · Lomas Verdes",
+    eyebrow: "Centro dermatológico y estético",
     titleTop: "Bienestar y tecnología",
     titleAccent: "para una piel radiante",
     body: "Dermatología, medicina estética y wellness en un mismo lugar. Dermatólogos y médicos especializados combinan ciencia y tecnología de vanguardia para cuidar tu piel.",

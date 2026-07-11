@@ -65,7 +65,7 @@ export function PadecimientosGrid() {
   const book = (treatment?: string) => openBooking(treatment ? { treatment } : undefined);
 
   return (
-    <section id="tratamientos" className="scroll-mt-[96px] bg-bg px-4 py-[clamp(40px,5vw,64px)] md:px-8">
+    <section id="tratamientos" className="md:scroll-mt-[96px] bg-bg px-4 py-[clamp(40px,5vw,64px)] md:px-8">
       <div className="mx-auto mb-8 max-w-[680px] text-center">
         <h2 className="font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.14] tracking-[-0.01em] text-ink">
           {p.titleTop} <span className="font-accent text-brand">{p.titleAccent}</span>

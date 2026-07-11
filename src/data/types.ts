@@ -2,7 +2,13 @@ export type NavItem = { label: string; href: string };
 export type CTA = { label: string; href: string };
 export type OpeningHours = { days: string[]; opens: string; closes: string };
 
+/** Clave interna de sucursal (booking, ?suc=, CRM). Fuente única del tipo. */
+export type BranchKey = "antigua" | "cuspide";
+
 export type Branch = {
+  /** Clave interna (mapea con BranchKey de booking/?suc=). Fuente única tipada
+   *  para derivar cosas por sucursal (ej. el tel: del bottom nav) sin match por name. */
+  key: BranchKey;
   name: string;
   /** Teléfono principal (header). */
   phone: string;

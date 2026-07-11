@@ -48,7 +48,7 @@ export function FAQ({
       : null;
 
   return (
-    <section id={id} className={`bg-bg px-4 py-12 md:px-6 md:py-16 ${id ? "scroll-mt-[96px]" : ""}`}>
+    <section id={id} className={`bg-bg px-4 py-12 md:px-6 md:py-16 ${id ? "md:scroll-mt-[96px]" : ""}`}>
       {faqSchema && (
         <script
           type="application/ld+json"

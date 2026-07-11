@@ -1,9 +1,7 @@
 "use client";
 
-import { bookingBranches, type BranchKey } from "@/data/booking";
+import { BranchChoice } from "@/components/booking/BranchChoice";
 import { useBooking } from "../BookingProvider";
-
-const order: BranchKey[] = ["antigua", "cuspide"];
 
 export function Step2Branch() {
   const { selectBranch, data } = useBooking();
@@ -15,33 +13,10 @@ export function Step2Branch() {
         Pasa el cursor para ver la ubicación exacta.
       </p>
 
-      <div className="mt-6 flex flex-col gap-4">
-        {order.map((key) => {
-          const branch = bookingBranches[key];
-          const active = data.branch === key;
-          return (
-            <div key={key} className="group">
-              <button
-                type="button"
-                onClick={() => selectBranch(key)}
-                aria-pressed={active}
-                className={`w-full rounded-card border p-5 text-center transition-colors focus-visible:border-brand ${
-                  active
-                    ? "border-brand bg-brand-tint"
-                    : "border-line bg-white/60 hover:border-brand"
-                }`}
-              >
-                <span className="text-lg font-medium text-ink">{branch.name}</span>
-              </button>
-              {/* Dirección revelada al hover / focus */}
-              <div className="grid grid-rows-[0fr] transition-all duration-300 group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]">
-                <p className="overflow-hidden px-5 text-[0.85rem] text-muted opacity-0 transition-opacity duration-300 group-hover:mt-2 group-hover:opacity-100 group-focus-within:mt-2 group-focus-within:opacity-100">
-                  {branch.address}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+      {/* Selector presentacional compartido. La lógica (selectBranch → avance de paso)
+          se queda AQUÍ, sin cambios: onSelect es exactamente el selectBranch de antes. */}
+      <div className="mt-6">
+        <BranchChoice onSelect={selectBranch} activeKey={data.branch} />
       </div>
     </div>
   );

@@ -75,7 +75,7 @@ export function ResultsRain({
     <section
       ref={sectionRef}
       id={id}
-      className={`relative overflow-hidden scroll-mt-[96px] bg-bg px-6 md:px-10 ${
+      className={`relative overflow-hidden md:scroll-mt-[96px] bg-bg px-6 md:px-10 ${
         physics ? pitPb : "pb-[clamp(56px,8vw,96px)]"
       } pt-[clamp(56px,8vw,96px)]`}
     >

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Oculta el indicador flotante de Next (la "N" en la esquina) en desarrollo local.
+  // Solo afecta a `next dev`; no cambia nada en producción.
+  devIndicators: false,
+
   // Preserva las URLs con barra final heredadas de WordPress (ej. /dermatologia/)
   // para conservar el posicionamiento durante la migración SEO.
   // /dermatologia  -> 308 -> /dermatologia/

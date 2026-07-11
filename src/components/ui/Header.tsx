@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookingButton } from "@/components/booking/BookingButton";
 import { useBooking } from "@/components/booking/BookingProvider";
+import { useMobileNav } from "@/components/ui/MobileNavProvider";
 import { lockLenis, unlockLenis } from "@/lib/lenis";
 import { site } from "@/data/site";
 import { getVertical } from "@/data/verticals";
@@ -19,9 +20,14 @@ const telHref = (n: string) => `tel:${n.replace(/\s/g, "")}`;
 const waHref = (n: string) => `https://wa.me/52${n.replace(/\D/g, "")}`;
 
 export function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  // Estado del drawer compartido con el bottom nav (móvil). Fuente única de verdad.
+  const { menuOpen, openMenu, closeMenu } = useMobileNav();
   const [sucursalesOpen, setSucursalesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // El glass en scroll es SOLO de desktop. La clase `.glass` (globals, @layer components)
+  // no genera variante `md:` en Tailwind v4, así que en vez de `md:glass` gateamos con
+  // este flag y dejamos `glass` sin prefijo → nunca aparece en móvil.
+  const [isDesktop, setIsDesktop] = useState(false);
   const { openBooking } = useBooking();
 
   // Vertical (ej. /dermatologia/): el header muestra índice de anclas y las opciones
@@ -49,6 +55,15 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // ¿Desktop? (mismo breakpoint que `md:` de Tailwind). Solo ahí aplica el glass en scroll.
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   // Bloquea el scroll del body (y el smooth scroll) mientras haya overlay/modal abierto
   useEffect(() => {
     if (!(menuOpen || sucursalesOpen)) return;
@@ -65,60 +80,84 @@ export function Header() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       if (sucursalesOpen) setSucursalesOpen(false);
-      else if (menuOpen) setMenuOpen(false);
+      else if (menuOpen) closeMenu();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [menuOpen, sucursalesOpen]);
+  }, [menuOpen, sucursalesOpen, closeMenu]);
 
   const closeAll = () => {
     setSucursalesOpen(false);
-    setMenuOpen(false);
+    closeMenu();
+  };
+
+  // Ancla desde el drawer (móvil): cerrar el drawer primero restaura el scroll del body
+  // (hoy `overflow:hidden` con el menú abierto) y libera Lenis; esperamos dos frames a
+  // que ese cleanup corra antes de hacer scroll, si no la sección no se movería. En móvil
+  // Lenis está apagado, así que usamos scroll nativo; con scroll-mt-0 la sección queda
+  // pegada arriba, sin hueco.
+  const goToAnchor = (id: string) => {
+    closeAll();
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        document
+          .getElementById(id)
+          ?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      })
+    );
   };
 
   return (
     <>
-      {/* Outer sticky de altura constante (74px) → sin saltos de layout. El gap
-          SUPERIOR en scroll se logra con el offset `top` del sticky (NO transform),
-          para no romper el backdrop-filter del glass del inner. */}
+      {/* DESKTOP (md+): sticky de altura constante (74px) → sin saltos de layout. El gap
+          SUPERIOR en scroll se logra con el offset `top` del sticky (NO transform), para
+          no romper el backdrop-filter del glass del inner.
+          MÓVIL (max-md): header en flujo normal (static), sin fijarse ni offset. */}
       <header
-        className={`sticky z-50 transition-[top] duration-300 ease-out ${
-          scrolled ? "top-3 md:top-5" : "top-0"
+        className={`z-50 md:sticky md:transition-[top] md:duration-300 md:ease-out ${
+          scrolled ? "md:top-5" : "md:top-0"
         }`}
       >
-        {/* Inner: reposo = barra bg-bg a ancho completo (idéntico a ahora).
-            Scroll = tarjeta glass insetada (mx). Blur INTENSIFICADO para diagnóstico. */}
+        {/* Inner. MÓVIL: siempre barra bg-bg a ancho completo, sin glass (el parche
+            del sticky no aplica sin sticky). DESKTOP: reposo = bg-bg; scroll = tarjeta
+            glass insetada. Ramas mutuamente excluyentes; `glass` (sin prefijo) solo se
+            activa con deskScrolled → nunca en móvil. bg-white/70 (utility) gana sobre el
+            fondo de .glass, idéntico a hoy. */}
         <div
           className={`flex h-[74px] items-center justify-between transition-all duration-300 ease-out ${
-            scrolled
-              ? "glass mx-3 bg-white/90 px-5 backdrop-blur-[24px] md:mx-5 md:bg-white/70 md:px-8"
+            scrolled && isDesktop
+              ? "glass mx-5 bg-white/70 px-8 backdrop-blur-[24px]"
               : "bg-bg px-6 md:px-10"
           }`}
         >
-          {/* IZQUIERDA — toggle + logo, pegados al extremo */}
+          {/* IZQUIERDA — toggle + logo. En móvil el toggle y el divisor se ocultan
+              (viven en el bottom nav); queda SOLO el logo. Desktop: igual que hoy. */}
           <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
               aria-label="Abrir menú"
               aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(true)}
-              className="flex flex-col gap-[5px]"
+              onClick={openMenu}
+              className="flex flex-col gap-[5px] max-md:hidden"
             >
               <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
               <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
               <span className="h-[2.5px] w-6 rounded-sm bg-brand" />
             </button>
 
-            <span aria-hidden className="h-6 w-px bg-line" />
+            <span aria-hidden className="h-6 w-px bg-line max-md:hidden" />
 
             <Link href="/">
+              {/* Móvil un poco más grande (h-[18px]); desktop EXACTO como hoy (md:h-5). */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={site.brand.logo} alt={site.brand.name} className="h-4 w-auto md:h-5" />
+              <img src={site.brand.logo} alt={site.brand.name} className="h-[18px] w-auto md:h-5" />
             </Link>
           </div>
 
-          {/* DERECHA — pastilla de menú glass + CTA, pegados al extremo */}
-          <div className="flex items-center gap-6 lg:gap-8">
+          {/* DERECHA — pastilla de menú glass + CTA. Todo el grupo se oculta en móvil
+              (el CTA vive en el bottom nav). Desktop: igual que hoy. */}
+          <div className="flex items-center gap-6 max-md:hidden lg:gap-8">
             <nav className="relative max-[900px]:hidden">
               {/* Fondo píldora glass como CAPA aparte: solo se DESVANECE (opacity) al
                   hacer sticky, sin morphear forma/borde (evita el artefacto de "línea").
@@ -164,6 +203,22 @@ export function Header() {
               {site.cta.label}
             </BookingButton>
           </div>
+
+          {/* ☰ SOLO móvil — a la derecha (el grupo derecho de desktop está oculto en
+              max-md). Círculo con fondo de marca + barras blancas. Llama al MISMO
+              openMenu() del MobileNavProvider; el drawer y su estado no cambian. Oculto
+              en desktop (allá el toggle vive en el grupo izq, sin cambios). */}
+          <button
+            type="button"
+            aria-label="Abrir menú"
+            aria-expanded={menuOpen}
+            onClick={openMenu}
+            className="flex h-11 w-11 flex-col items-center justify-center gap-[5px] rounded-full bg-brand md:hidden"
+          >
+            <span className="h-[2.5px] w-6 rounded-sm bg-white" />
+            <span className="h-[2.5px] w-6 rounded-sm bg-white" />
+            <span className="h-[2.5px] w-6 rounded-sm bg-white" />
+          </button>
         </div>
       </header>
 
@@ -190,7 +245,7 @@ export function Header() {
           <button
             type="button"
             aria-label="Cerrar menú"
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
             className="relative h-7 w-7"
           >
             <span className="absolute left-0 top-1/2 h-[3px] w-7 -translate-y-1/2 rotate-45 rounded-sm bg-white" />
@@ -200,6 +255,38 @@ export function Header() {
 
         {/* Contenido anclado abajo: opciones (izquierda) + contacto (derecha) */}
         <div className="flex flex-1 flex-col justify-end gap-10 px-6 pb-12 md:flex-row md:items-end md:justify-between md:px-10">
+          {/* Índice de anclas de la vertical. Solo móvil: en desktop estas anclas ya
+              viven en el pill nav del header, así que aquí van con md:hidden para no
+              tocar el drawer de desktop. */}
+          {vertical && (
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 md:hidden">
+              {vertical.anchors.map((a) =>
+                a.href ? (
+                  <Link
+                    key={a.label}
+                    href={a.href}
+                    onClick={closeAll}
+                    className="text-[0.8rem] font-semibold uppercase tracking-[0.16em] text-white/60 transition-colors hover:text-brand-tint"
+                  >
+                    {a.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={a.label}
+                    href={`#${a.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goToAnchor(a.id!);
+                    }}
+                    className="text-[0.8rem] font-semibold uppercase tracking-[0.16em] text-white/60 transition-colors hover:text-brand-tint"
+                  >
+                    {a.label}
+                  </a>
+                )
+              )}
+            </nav>
+          )}
+
           {/* Opciones / páginas, esquina inferior izquierda */}
           <nav className="flex flex-col items-start gap-3">
             {overlayList.map((item) =>

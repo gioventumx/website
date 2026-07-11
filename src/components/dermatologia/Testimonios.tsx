@@ -9,7 +9,7 @@ export function Testimonios() {
   const t = home.testimonials;
 
   return (
-    <section id="testimonios" className="scroll-mt-[96px] bg-bg pb-[clamp(30px,4vw,48px)] pt-[clamp(40px,5vw,64px)]">
+    <section id="testimonios" className="md:scroll-mt-[96px] bg-bg pb-[clamp(30px,4vw,48px)] pt-[clamp(40px,5vw,64px)]">
       <div className="container-x">
         {/* Encabezado centrado: título + apoyo + score Google (vertical) */}
         <div className="mx-auto mb-10 max-w-[640px] text-center md:mb-12">
