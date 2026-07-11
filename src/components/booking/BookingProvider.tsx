@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   emptyBooking,
@@ -56,6 +56,16 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<BookingData>(emptyBooking);
   const [serviceLocked, setServiceLocked] = useState(false);
   const [branchLocked, setBranchLocked] = useState(false);
+
+  // gclid: atribución de Google Ads que se captura UNA vez al montar (el provider vive
+  // en el layout raíz → monta en la URL de aterrizaje del anuncio). Va en un ref, no en
+  // el estado: se escribe una sola vez, no se edita ni se renderiza, y así sobrevive a la
+  // navegación dentro del SPA (donde el ?gclid= desaparece de la URL) sin causar renders.
+  // Ausente (orgánico/directo) → queda "".
+  const gclidRef = useRef("");
+  useEffect(() => {
+    gclidRef.current = new URLSearchParams(window.location.search).get("gclid") ?? "";
+  }, []);
 
   // Reinicia el formulario pero CONSERVA el origen de campaña (source).
   //  · Servicio: se infiere por RUTA (tiene prioridad); si la ruta no tiene servicio
@@ -150,6 +160,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
         service: serviceLabel(data),
         treatment: data.treatment,
         source: data.source,
+        gclid: gclidRef.current,
       }),
     }).catch(() => {});
     setStep("success");

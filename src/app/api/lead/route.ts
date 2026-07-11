@@ -17,6 +17,14 @@ const BRANCH_TO: Record<BranchKey, string> = {
   cuspide: "cuspide@gioventu.com.mx",
 };
 
+// Etiqueta de sucursal para el CRM: contrato acordado ("Antigua"/"Cúspide", con acento
+// y mayúscula), NO la key interna. El mapeo se hace aquí (servidor) para no depender de
+// lo que mande el cliente.
+const BRANCH_CRM_LABEL: Record<BranchKey, "Antigua" | "Cúspide"> = {
+  antigua: "Antigua",
+  cuspide: "Cúspide",
+};
+
 // Rate limit en memoria por IP (ventana deslizante). Suficiente para el volumen de un
 // endpoint interno de un centro; efectivo por instancia de función (Fluid Compute
 // comparte memoria entre requests concurrentes de la misma instancia, no globalmente).
@@ -47,7 +55,10 @@ type LeadPayload = {
   service?: unknown;
   treatment?: unknown;
   source?: unknown;
+  gclid?: unknown;
 };
+
+type SendResult = { ok: boolean; error?: string };
 
 function esc(s: string): string {
   return s
@@ -80,6 +91,9 @@ export async function POST(req: NextRequest) {
   const treatment =
     typeof body.treatment === "string" ? body.treatment.trim() : "";
   const source = typeof body.source === "string" ? body.source.trim() : "";
+  // gclid es OPCIONAL: solo llega desde anuncios. Nunca operamos sobre él sin la guarda
+  // de tipo; ausente → "" (nunca undefined, para mandarlo siempre como string al CRM).
+  const gclid = typeof body.gclid === "string" ? body.gclid.trim() : "";
 
   const isBranch = branch === "antigua" || branch === "cuspide";
   if (!name || !service || !isBranch || phone.length !== 10) {
@@ -87,12 +101,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "validation" }, { status: 400 });
   }
   const branchKey = branch as BranchKey;
-
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("lead: RESEND_API_KEY ausente");
-    return NextResponse.json({ error: "config" }, { status: 502 });
-  }
 
   const branchName = bookingBranches[branchKey].name;
   const when = new Intl.DateTimeFormat("es-MX", {
@@ -141,27 +149,89 @@ export async function POST(req: NextRequest) {
       </table>
     </div>`;
 
-  try {
-    const resend = new Resend(apiKey);
-    const { error } = await resend.emails.send({
-      from: FROM,
-      to: BRANCH_TO[branchKey],
-      bcc: BCC,
-      subject,
-      html,
-    });
-    if (error) {
-      // Log SIN PII: solo el motivo de Resend, nunca nombre ni teléfono.
-      console.error("lead: fallo de Resend", error.name, error.message);
-      return NextResponse.json({ error: "send_failed" }, { status: 502 });
+  // Envío por correo (Resend). Autocontenido y SIN throw: siempre devuelve SendResult,
+  // para que un fallo aquí no impida el envío al CRM.
+  const sendEmail = async (): Promise<SendResult> => {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error("lead: RESEND_API_KEY ausente");
+      return { ok: false, error: "config" };
     }
-  } catch (e) {
-    console.error(
-      "lead: excepción al enviar",
-      e instanceof Error ? e.message : "desconocido"
-    );
-    return NextResponse.json({ error: "send_failed" }, { status: 502 });
-  }
+    try {
+      const resend = new Resend(apiKey);
+      const { error } = await resend.emails.send({
+        from: FROM,
+        to: BRANCH_TO[branchKey],
+        bcc: BCC,
+        subject,
+        html,
+      });
+      if (error) {
+        // Log SIN PII: solo el motivo de Resend, nunca nombre ni teléfono.
+        console.error("lead: fallo de Resend", error.name, error.message);
+        return { ok: false, error: "resend" };
+      }
+      return { ok: true };
+    } catch (e) {
+      console.error(
+        "lead: excepción en Resend",
+        e instanceof Error ? e.message : "desconocido"
+      );
+      return { ok: false, error: "resend_threw" };
+    }
+  };
 
-  return NextResponse.json({ ok: true });
+  // Envío al CRM de SCNDAL (webhook). Autocontenido y SIN throw. El body usa las keys
+  // EXACTAS del contrato con el CRM (no cambiar). tratamiento/gclid van como "" si faltan
+  // (nunca omitidos). telefono: 10 dígitos crudos, sin +52 (el CRM normaliza de su lado).
+  const sendCrm = async (): Promise<SendResult> => {
+    const url = process.env.CRM_WEBHOOK_URL;
+    if (!url) {
+      console.error("lead: CRM_WEBHOOK_URL ausente");
+      return { ok: false, error: "config" };
+    }
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: name,
+          telefono: phone,
+          servicio: service,
+          tratamiento: treatment,
+          sucursal: BRANCH_CRM_LABEL[branchKey],
+          gclid,
+        }),
+      });
+      if (!res.ok) {
+        console.error("lead: CRM respondió con status", res.status);
+        return { ok: false, error: `crm_${res.status}` };
+      }
+      return { ok: true };
+    } catch (e) {
+      console.error(
+        "lead: excepción en CRM",
+        e instanceof Error ? e.message : "desconocido"
+      );
+      return { ok: false, error: "crm_threw" };
+    }
+  };
+
+  // allSettled (NO all): correo y CRM arrancan a la vez, ninguno bloquea al otro, y
+  // ESPERAMOS a que AMBOS se asienten antes del return. Crítico en serverless: si la
+  // función retornara antes, Vercel podría matar el POST al CRM a medias y el lead no
+  // llegaría sin error visible. allSettled tolera que uno falle sin abortar al otro.
+  const [emailR, crmR] = await Promise.allSettled([sendEmail(), sendCrm()]);
+  const norm = (r: PromiseSettledResult<SendResult>): SendResult =>
+    r.status === "fulfilled" ? r.value : { ok: false, error: "threw" };
+  const email = norm(emailR);
+  const crm = norm(crmR);
+
+  // Best-effort: el cliente ignora la respuesta (WhatsApp ya se abrió). El status real
+  // (502 si algo falló) sirve para que los logs de Vercel marquen el problema.
+  const status = email.ok && crm.ok ? 200 : 502;
+  return NextResponse.json(
+    { email: email.ok ? "ok" : email.error, crm: crm.ok ? "ok" : crm.error },
+    { status }
+  );
 }

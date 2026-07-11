@@ -27,6 +27,9 @@ export function ResultsRain({
     const section = sectionRef.current;
     if (!section) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Móvil (abajo de md): los chips están ocultos (hidden md:flex), así que no
+    // arrancamos la física ni el observer — nada que simular ni pit que reservar.
+    if (!window.matchMedia("(min-width: 768px)").matches) return;
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -107,7 +110,9 @@ export function ResultsRain({
         className={
           physics
             ? "pointer-events-none absolute inset-0 z-[2]"
-            : "relative z-[1] mt-10 flex flex-wrap justify-center gap-3.5 px-6"
+            : // Chips ocultos en móvil (hidden); a partir de md se muestran (fila
+              // estática o, tras el scroll, overlay de física).
+              "relative z-[1] mt-10 hidden md:flex flex-wrap justify-center gap-3.5 px-6"
         }
       >
         {chips.map((chip, i) => (

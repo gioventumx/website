@@ -57,7 +57,8 @@ export function VerticalHero({ hero, service }: { hero: VerticalHeroData; servic
           </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0">
+        {/* Features ancladas al fondo en md+; en móvil fluyen debajo del texto. */}
+        <div className="md:absolute md:inset-x-0 md:bottom-0">
           <HeroFeatures features={hero.features} />
         </div>
       </MediaSurface>

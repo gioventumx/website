@@ -71,8 +71,9 @@ export function DermHero() {
           </div>
         </div>
 
-        {/* Features ancladas al fondo del hero, fuera del flujo (igual que el Home). */}
-        <div className="absolute inset-x-0 bottom-0">
+        {/* Features ancladas al fondo del hero en md+ (igual que el Home); en móvil
+            fluyen debajo del texto para no encimarse. */}
+        <div className="md:absolute md:inset-x-0 md:bottom-0">
           <HeroFeatures features={h.features} />
         </div>
       </MediaSurface>

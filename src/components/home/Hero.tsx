@@ -42,9 +42,10 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Features ancladas al fondo del hero, fuera del flujo, para que el
-            bloque de texto pueda centrarse en el eje vertical completo. */}
-        <div className="absolute inset-x-0 bottom-0">
+        {/* Features ancladas al fondo del hero (md+), fuera del flujo, para que el
+            bloque de texto pueda centrarse en el eje vertical completo. En móvil
+            fluyen en el documento (debajo del texto) para no encimarse. */}
+        <div className="md:absolute md:inset-x-0 md:bottom-0">
           <HeroFeatures />
         </div>
       </MediaSurface>

@@ -91,12 +91,12 @@ export function Header() {
         <div
           className={`flex h-[74px] items-center justify-between transition-all duration-300 ease-out ${
             scrolled
-              ? "glass mx-3 bg-white/70 px-5 backdrop-blur-[24px] md:mx-5 md:px-8"
+              ? "glass mx-3 bg-white/90 px-5 backdrop-blur-[24px] md:mx-5 md:bg-white/70 md:px-8"
               : "bg-bg px-6 md:px-10"
           }`}
         >
           {/* IZQUIERDA — toggle + logo, pegados al extremo */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
               aria-label="Abrir menú"
@@ -113,7 +113,7 @@ export function Header() {
 
             <Link href="/">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={site.brand.logo} alt={site.brand.name} className="h-5 w-auto" />
+              <img src={site.brand.logo} alt={site.brand.name} className="h-4 w-auto md:h-5" />
             </Link>
           </div>
 
@@ -157,7 +157,10 @@ export function Header() {
               </ul>
             </nav>
 
-            <BookingButton variant="primary" className="hover:translate-y-0">
+            <BookingButton
+              variant="primary"
+              className="whitespace-nowrap hover:translate-y-0 max-md:text-[0.85rem]"
+            >
               {site.cta.label}
             </BookingButton>
           </div>
