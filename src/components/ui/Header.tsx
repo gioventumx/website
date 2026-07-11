@@ -253,47 +253,47 @@ export function Header() {
           </button>
         </div>
 
-        {/* Contenido. MÓVIL: top-align (compacto arriba, sin el hueco azul). DESKTOP:
-            fila anclada abajo (md:items-end/justify-between) — sin cambios. */}
-        <div className="flex flex-1 flex-col justify-start gap-10 px-6 pb-12 max-md:pt-8 md:flex-row md:items-end md:justify-between md:px-10">
-          {/* Índice de anclas de la vertical — SOLO móvil (md:hidden; en desktop viven
-              en el pill nav). Lista grande = contenido primario del drawer móvil en
-              páginas con anclas. Respeta cada item de vertical.anchors:
-              · con `href` (hub, ej. /wellness/faciales/) → <Link> + closeAll (navega)
-              · con `id` (sección) → goToAnchor (cierra + scroll nativo, max-md:scroll-mt-0) */}
-          {vertical && (
-            <nav className="flex flex-col items-start gap-3 md:hidden">
-              {vertical.anchors.map((a) =>
-                a.href ? (
-                  <Link
-                    key={a.label}
-                    href={a.href}
-                    onClick={closeAll}
-                    className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
-                  >
-                    {a.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={a.label}
-                    href={`#${a.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goToAnchor(a.id!);
-                    }}
-                    className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
-                  >
-                    {a.label}
-                  </a>
-                )
-              )}
-            </nav>
-          )}
+        {/* Contenido. MÓVIL: centrado verticalmente, sin el hueco azul. DESKTOP:
+            fila anclada abajo (md:items-end/justify-between) — SIN cambios. */}
+        <div className="flex flex-1 flex-col justify-center gap-10 px-6 pb-12 md:flex-row md:items-end md:justify-between md:px-10">
+          {/* Nav PRIMARIO del drawer — SOLO móvil (md:hidden). Renderiza `pillItems`, la
+              MISMA fuente que el pill del header: en páginas con anclas = las anclas de la
+              sección; en el resto (Home, etc.) = los verticales de servicio (site.nav).
+              Respeta cada item:
+              · anchor (#id) → goToAnchor (cierra + scroll nativo, max-md:scroll-mt-0)
+              · link (hub /wellness/faciales/ o vertical /dermatologia/) → <Link> + closeAll
+              En desktop este bloque no existe (md:hidden); allá manda overlayList. */}
+          <nav className="flex flex-col items-start gap-3 md:hidden">
+            {pillItems.map((item) =>
+              item.anchor ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goToAnchor(item.href.slice(1));
+                  }}
+                  className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={closeAll}
+                  className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
+          </nav>
 
-          {/* Opciones / páginas (verticales). En páginas CON anclas se oculta en móvil
-              (max-md:hidden) — allí manda el bloque de anclas; en desktop SIEMPRE visible
-              (max-md: no aplica ≥768) y en móvil sin-anclas también. */}
-          <nav className={`flex flex-col items-start gap-3 ${vertical ? "max-md:hidden" : ""}`}>
+          {/* Opciones / páginas (overlayList) — bloque de DESKTOP: siempre max-md:hidden
+              (en móvil manda el nav primario de arriba). En desktop SIEMPRE visible
+              (max-md: no aplica ≥768), con el mismo contenido de hoy por página. */}
+          <nav className="flex flex-col items-start gap-3 max-md:hidden">
             {overlayList.map((item) =>
               item.type === "modal" ? (
                 <button
@@ -317,8 +317,9 @@ export function Header() {
             )}
           </nav>
 
-          {/* Contáctanos, columna derecha */}
-          <div className="flex flex-col items-start gap-3 md:items-end md:text-right">
+          {/* Contáctanos, columna derecha — SOLO desktop (en móvil el CTA vive en el
+              bottom nav; el drawer móvil no lo repite). max-md:hidden. */}
+          <div className="flex flex-col items-start gap-3 max-md:hidden md:items-end md:text-right">
             <span className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-white/60">
               Contáctanos
             </span>
