@@ -253,20 +253,23 @@ export function Header() {
           </button>
         </div>
 
-        {/* Contenido anclado abajo: opciones (izquierda) + contacto (derecha) */}
-        <div className="flex flex-1 flex-col justify-end gap-10 px-6 pb-12 md:flex-row md:items-end md:justify-between md:px-10">
-          {/* Índice de anclas de la vertical. Solo móvil: en desktop estas anclas ya
-              viven en el pill nav del header, así que aquí van con md:hidden para no
-              tocar el drawer de desktop. */}
+        {/* Contenido. MÓVIL: top-align (compacto arriba, sin el hueco azul). DESKTOP:
+            fila anclada abajo (md:items-end/justify-between) — sin cambios. */}
+        <div className="flex flex-1 flex-col justify-start gap-10 px-6 pb-12 max-md:pt-8 md:flex-row md:items-end md:justify-between md:px-10">
+          {/* Índice de anclas de la vertical — SOLO móvil (md:hidden; en desktop viven
+              en el pill nav). Lista grande = contenido primario del drawer móvil en
+              páginas con anclas. Respeta cada item de vertical.anchors:
+              · con `href` (hub, ej. /wellness/faciales/) → <Link> + closeAll (navega)
+              · con `id` (sección) → goToAnchor (cierra + scroll nativo, max-md:scroll-mt-0) */}
           {vertical && (
-            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 md:hidden">
+            <nav className="flex flex-col items-start gap-3 md:hidden">
               {vertical.anchors.map((a) =>
                 a.href ? (
                   <Link
                     key={a.label}
                     href={a.href}
                     onClick={closeAll}
-                    className="text-[0.8rem] font-semibold uppercase tracking-[0.16em] text-white/60 transition-colors hover:text-brand-tint"
+                    className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
                   >
                     {a.label}
                   </Link>
@@ -278,7 +281,7 @@ export function Header() {
                       e.preventDefault();
                       goToAnchor(a.id!);
                     }}
-                    className="text-[0.8rem] font-semibold uppercase tracking-[0.16em] text-white/60 transition-colors hover:text-brand-tint"
+                    className="font-sans text-[clamp(2rem,5vw,3.6rem)] font-light leading-[1.05] tracking-[-0.01em] text-white transition-colors hover:text-brand-tint"
                   >
                     {a.label}
                   </a>
@@ -287,8 +290,10 @@ export function Header() {
             </nav>
           )}
 
-          {/* Opciones / páginas, esquina inferior izquierda */}
-          <nav className="flex flex-col items-start gap-3">
+          {/* Opciones / páginas (verticales). En páginas CON anclas se oculta en móvil
+              (max-md:hidden) — allí manda el bloque de anclas; en desktop SIEMPRE visible
+              (max-md: no aplica ≥768) y en móvil sin-anclas también. */}
+          <nav className={`flex flex-col items-start gap-3 ${vertical ? "max-md:hidden" : ""}`}>
             {overlayList.map((item) =>
               item.type === "modal" ? (
                 <button
