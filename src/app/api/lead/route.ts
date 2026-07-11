@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
   let body: LeadPayload;
   try {
     body = (await req.json()) as LeadPayload;
+    console.log("BODY RECIBIDO DEL MODAL:", JSON.stringify(body));
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
@@ -191,6 +192,17 @@ export async function POST(req: NextRequest) {
       return { ok: false, error: "config" };
     }
     try {
+      console.log(
+        "BODY AL CRM:",
+        JSON.stringify({
+          nombre: name,
+          telefono: phone,
+          servicio: service,
+          tratamiento: treatment,
+          sucursal: BRANCH_CRM_LABEL[branchKey],
+          gclid,
+        })
+      );
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
