@@ -68,16 +68,9 @@ export function ArticleView({
           </h1>
           <p className="mt-4 max-w-[720px] text-[1.05rem] text-ink-soft">{post.excerpt}</p>
           <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.85rem] text-muted">
-            {autor ? (
-              <Link
-                href={`/blog/autor/${autor.slug}/`}
-                className="font-semibold text-ink underline-offset-2 hover:text-brand hover:underline"
-              >
-                {autor.nombre}
-              </Link>
-            ) : (
-              <span className="font-semibold text-ink">{post.autor}</span>
-            )}
+            {/* Nombre del autor en texto plano (sin enlace): la página de autor es
+                noindex, así que no la enlazamos internamente. */}
+            <span className="font-semibold text-ink">{autor?.nombre ?? post.autor}</span>
             <span aria-hidden>·</span>
             <time dateTime={post.fecha}>{formatFecha(post.fecha)}</time>
             <span aria-hidden>·</span>

@@ -23,6 +23,9 @@ export async function generateMetadata({
     title: `${autor.nombre} — Autora | Blog Gioventù`,
     description: autor.bio,
     path: `/blog/autor/${autor.slug}/`,
+    // La página existe (self-canonical) pero se mantiene fuera del índice: archivo de
+    // autor con contenido delgado. También se quitó el enlace del byline (ArticleView).
+    noindex: true,
   });
 }
 

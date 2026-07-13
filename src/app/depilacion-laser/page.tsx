@@ -16,7 +16,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Depilación Láser en Lomas Verdes | Gioventù",
   description:
-    "Depilación láser en Lomas Verdes con tecnología de láser diodo de grado médico: elimina el vello de forma segura, sin dolor y con resultados definitivos. Piernas, brazos, axilas, bikini y rostro. Agenda con 10% de descuento en tu primera sesión.",
+    "Depilación láser definitiva con tecnología de grado médico. Resultados desde la primera sesión en Naucalpan y Atizapán. Agenda tu primera sesión.",
   path: "/depilacion-laser/",
 });
 

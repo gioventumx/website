@@ -20,7 +20,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Medicina Estética y Rejuvenecimiento Facial | Gioventù",
   description:
-    "Rejuvenecimiento facial con rellenos dérmicos, toxina botulínica y bioestimuladores de colágeno. Medicina estética indicada por médicos, con tecnología de grado clínico. Agenda tu valoración.",
+    "Medicina estética en Naucalpan y Atizapán. Rellenos dérmicos, toxina botulínica, bioestimuladores y CO2 fraccionado. Agenda tu valoración.",
   path: "/estetica/",
 });
 

@@ -21,7 +21,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Masajes Corporales y de Spa | Gioventù Wellness Spa",
   description:
-    "Masajes corporales y de spa en Gioventù Wellness Spa: masajes relajantes, drenaje linfático y masaje descontracturante, con masajistas profesionales. Agenda en Plaza Antigua o Plaza Cúspide.",
+    "Masajes terapéuticos y relajantes en Naucalpan y Atizapán. Drenaje linfático, descontracturante, reductivo y más. Agenda tu sesión.",
   path: "/wellness/masajes/",
 });
 

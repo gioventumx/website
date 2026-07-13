@@ -18,9 +18,9 @@ import { pageMetadata } from "@/lib/seo";
 // Canonical estático a la URL limpia (no cambia con ?suc=). Metadata neutral de
 // sucursal (la página cambia con ?suc=): menciona ambas plazas, sin contradecir.
 export const metadata: Metadata = pageMetadata({
-  title: "Limpieza Facial Profunda y Estética Facial | Gioventù Wellness Spa",
+  title: "Faciales y Limpieza Facial Profunda | Gioventù",
   description:
-    "Limpieza facial y estética facial en Gioventù Wellness Spa: hidratación, microdermoabrasión, hidrofacial y rejuvenecimiento facial, con el respaldo de una clínica dermatológica. Agenda en Plaza Antigua o Plaza Cúspide.",
+    "Faciales profesionales: limpieza profunda, hidrofacial, Hollywood Peel y más. Cosmetólogas certificadas en Naucalpan y Atizapán. Agenda tu facial.",
   path: "/wellness/faciales/",
 });
 

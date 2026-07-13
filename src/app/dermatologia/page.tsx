@@ -19,7 +19,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Dermatología en Lomas Verdes y Zona Esmeralda | Gioventù",
   description:
-    "Centro dermatológico en Lomas Verdes y Zona Esmeralda. Médicos dermatólogos certificados y tecnología de punta para tratar tu piel: lunares, cicatrices, dermatitis, acné y más. Agenda tu valoración.",
+    "Dermatólogos certificados en Naucalpan y Atizapán. Tratamiento de lunares, verrugas, manchas, acné y más. Agenda tu consulta dermatológica.",
   path: "/dermatologia/",
 });
 
