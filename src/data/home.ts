@@ -38,14 +38,6 @@ export const home = {
     { title: "Equipo especializado", description: "Cosmiatras, dermatólogos y médicos", icon: "team" },
   ] satisfies Feature[],
 
-  intro: {
-    eyebrow: "Quiénes somos",
-    titleTop: "Centro estético en Lomas Verdes",
-    titleAccent: "y Zona Esmeralda",
-    body: "En Gioventù te ayudamos a resaltar lo mejor de ti y de tu piel. Nuestro equipo de especialistas utiliza la última tecnología, productos y tratamientos personalizados de medicina estética y dermatología para resolver diversos padecimientos y brindar soluciones estéticas.",
-    cta: { label: "Agendar en WhatsApp", href: "#" } as CTA,
-  },
-
   services: {
     titleTop: "Tres especialidades, un mismo lugar",
     titleAccent: "Todo lo que tu piel necesita",

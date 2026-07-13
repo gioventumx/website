@@ -96,8 +96,3 @@ export function getPostContent(slug: string): PostContent {
     headings: extractHeadings(body),
   };
 }
-
-/** Compat: solo el cuerpo Markdown (sin frontmatter). */
-export function getPostBody(slug: string): string {
-  return getPostContent(slug).body;
-}

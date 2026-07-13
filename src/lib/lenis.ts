@@ -8,10 +8,6 @@ export function setLenis(l: Lenis | null) {
   instance = l;
 }
 
-export function getLenis() {
-  return instance;
-}
-
 /** Pausa el smooth scroll (para modales). Usa contador por si hay varios abiertos. */
 export function lockLenis() {
   lockCount += 1;
