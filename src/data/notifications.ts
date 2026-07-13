@@ -25,6 +25,12 @@ export const notifications: Record<string, NotifConfig> = {
     source: "dermatologia:notificacion",
     service: "Dermatología",
   },
+  "/depilacion-laser/": {
+    title: "Disponibilidad limitada esta semana",
+    body: "Nuestros especialistas atienden por cita. Reserva tu sesión de depilación láser.",
+    source: "depilacion:notificacion",
+    service: "Depilación Láser",
+  },
   "/estetica/": {
     title: "Disponibilidad limitada esta semana",
     body: "Nuestros especialistas atienden por cita. Reserva tu valoración.",

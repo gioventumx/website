@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { BookingButton } from "@/components/booking/BookingButton";
-import { MediaSurface } from "@/components/ui/MediaSurface";
+import { ClosingCTA } from "@/components/home/ClosingCTA";
 import { FAQ } from "@/components/home/FAQ";
 import { DepilacionHero } from "@/components/depilacion/DepilacionHero";
 import { FeaturesGrid } from "@/components/depilacion/FeaturesGrid";
 import { ZonasGrid } from "@/components/depilacion/ZonasGrid";
 import { Testimonios } from "@/components/depilacion/Testimonios";
 import { CrossSell } from "@/components/ui/CrossSell";
+import { RelatedBlog } from "@/components/blog/RelatedBlog";
+import { BookingNudge } from "@/components/home/BookingNudge";
 import { depilacion } from "@/data/depilacion";
 import { pageMetadata } from "@/lib/seo";
 
@@ -22,7 +23,6 @@ export const metadata: Metadata = pageMetadata({
 
 export default function DepilacionLaserPage() {
   const banner = depilacion.banner;
-  const closing = depilacion.closing;
   const faq = depilacion.faq;
 
   return (
@@ -33,25 +33,17 @@ export default function DepilacionLaserPage() {
       {/* 2) FEATURES */}
       <FeaturesGrid />
 
-      {/* 3) BANNER DESCUENTO — bloque redondeado media+overlay (patrón ClosingCTA) */}
-      <section className="px-4 pb-4 md:px-6 md:pb-6">
-        <MediaSurface
-          as="image"
-          src={banner.image}
-          overlay="ink"
-          label={banner.image ? undefined : "imagen de fondo (TODO)"}
-          className="rounded-block text-center"
-        >
-          <div className="container-x max-w-[640px] py-[clamp(48px,6vw,72px)]">
-            <h2 className="font-sans text-[clamp(1.8rem,3.4vw,2.5rem)] font-light leading-[1.18] text-white">
-              {banner.titleTop}
-              <span className="font-accent block text-brand-tint">{banner.titleAccent}</span>
-            </h2>
-            <p className="mx-auto mb-6 mt-3.5 max-w-[420px] text-brand-tint">{banner.body}</p>
-            <BookingButton variant="light">{banner.cta}</BookingButton>
-          </div>
-        </MediaSurface>
-      </section>
+      {/* 3) BANNER DESCUENTO — componente compartido ClosingCTA en formato compact
+          (igual que el banner medio de derma/faciales). */}
+      <ClosingCTA
+        compact
+        service="Depilación Láser"
+        image={banner.image}
+        titleTop={banner.titleTop}
+        titleAccent={banner.titleAccent}
+        body={banner.body}
+        ctaLabel={banner.cta}
+      />
 
       {/* 4) ZONAS */}
       <ZonasGrid />
@@ -78,25 +70,14 @@ export default function DepilacionLaserPage() {
         ]}
       />
 
-      {/* 7) CTA DE CIERRE — bloque redondeado media+overlay (patrón ClosingCTA) */}
-      <section className="px-4 pb-4 md:px-6 md:pb-6">
-        <MediaSurface
-          as="image"
-          src={closing.image}
-          overlay="ink"
-          label={closing.image ? undefined : "imagen (TODO)"}
-          className="rounded-block text-center"
-        >
-          <div className="container-x max-w-[640px] py-[clamp(52px,6vw,80px)]">
-            <h2 className="font-sans text-[clamp(1.9rem,3.6vw,2.6rem)] font-light leading-[1.18] text-white">
-              {closing.titleTop}
-              <span className="font-accent block text-brand-tint">{closing.titleAccent}</span>
-            </h2>
-            <p className="mx-auto mb-7 mt-3.5 max-w-[420px] text-brand-tint">{closing.body}</p>
-            <BookingButton variant="light">{closing.cta}</BookingButton>
-          </div>
-        </MediaSurface>
-      </section>
+      {/* 7) BLOG RELACIONADO — componente reutilizable (se usará también en las 14
+          páginas de tratamiento de dermatología). Sin posts propios de depilación aún,
+          se rellena con lo más reciente. */}
+      <RelatedBlog categoria="depilacion" />
+
+      {/* Notificación flotante de social proof (reaparece al scrollear) — igual que
+          derma/faciales. Copy vía getNotification(pathname). */}
+      <BookingNudge />
     </>
   );
 }

@@ -9,6 +9,7 @@ import { home } from "@/data/home";
  * `service` (opcional) preselecciona el servicio del modal.
  * `image` (opcional) sobreescribe la imagen de fondo por página.
  * `compact` = formato BANNER: mucho menos alto, contenido en fila (texto + botón).
+ * `ctaLabel` (opcional) sobreescribe el texto del botón (default: home.band.cta.label).
  */
 export function ClosingCTA({
   service,
@@ -17,6 +18,7 @@ export function ClosingCTA({
   body,
   titleTop,
   titleAccent,
+  ctaLabel,
 }: {
   service?: ServiceOption;
   image?: string;
@@ -24,12 +26,14 @@ export function ClosingCTA({
   body?: string;
   titleTop?: string;
   titleAccent?: string;
+  ctaLabel?: string;
 } = {}) {
   const b = home.band;
   const bg = image ?? b.image;
   const bodyText = body ?? b.body;
   const top = titleTop ?? b.titleTop;
   const accent = titleAccent ?? b.titleAccent;
+  const label = ctaLabel ?? b.cta.label;
 
   // ── BANNER (compact): bajo, en fila en desktop ──
   if (compact) {
@@ -52,7 +56,7 @@ export function ClosingCTA({
               <p className="mt-2 max-w-[460px] text-[0.95rem] text-brand-tint">{bodyText}</p>
             </div>
             <BookingButton variant="light" service={service} className="shrink-0">
-              {b.cta.label}
+              {label}
             </BookingButton>
           </div>
         </MediaSurface>
@@ -79,7 +83,7 @@ export function ClosingCTA({
           </h2>
           <p className="mx-auto mb-7 mt-[18px] max-w-[420px] text-brand-tint">{bodyText}</p>
           <BookingButton variant="light" service={service}>
-            {b.cta.label}
+            {label}
           </BookingButton>
         </div>
       </MediaSurface>

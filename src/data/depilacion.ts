@@ -4,9 +4,10 @@
 // Contenido tomado de la referencia del WordPress actual para preservar SEO.
 
 import type { FaqItem } from "./faq";
-import type { Review } from "./types";
+import type { Feature, Review } from "./types";
 
-export type FeatureCard = { title: string; body: string };
+export type BenefitIcon = "shield" | "droplet" | "target" | "smile";
+export type FeatureCard = { title: string; body: string; icon: BenefitIcon };
 
 export type Zona = {
   slug: string;
@@ -19,30 +20,48 @@ export type Zona = {
 
 export const depilacion = {
   hero: {
-    eyebrow: "Depilación láser · Lomas Verdes",
+    eyebrow: "Depilación láser permanente",
     titleTop: "Disfruta de una piel perfecta,",
     titleAccent: "sin fecha de caducidad.",
     body: "Dile adiós al vello no deseado con la tecnología láser más avanzada. Resultados visibles desde la primera sesión.",
     cta: "Agenda ahora",
     image: "/depilacion-laser-card.webp",
+    // Mismas 3 mini-features que /dermatologia/ por ahora (fila anclada al fondo del hero).
+    features: [
+      { title: "Tecnología de punta", description: "Equipo médico de última generación", icon: "tech" },
+      { title: "Atención personalizada", description: "Un plan a la medida de tu piel", icon: "care" },
+      { title: "Médicos dermatólogos", description: "Especialistas certificados", icon: "team" },
+    ] satisfies Feature[],
+  },
+
+  // Encabezado de la sección Beneficios (mismo patrón "titulada" que el resto de
+  // secciones de la página: eyebrow + título).
+  featuresHead: {
+    eyebrow: "Beneficios",
+    titleTop: "Por qué elegir",
+    titleAccent: "depilación láser",
   },
 
   features: [
     {
       title: "Eficacia de grado médico",
       body: "Tecnología de láser diodo de última generación, que elimina el vello desde la raíz de forma segura en cualquier tipo de piel.",
+      icon: "shield",
     },
     {
       title: "Piel libre de irritación",
       body: "Olvida las manchas, el vello enterrado y la irritación del rastrillo. Mejora la textura y claridad de tu piel.",
+      icon: "droplet",
     },
     {
       title: "Resultados definitivos",
       body: "Reducción del vello de hasta el 95% al completar tu tratamiento. Una inversión que dura.",
+      icon: "target",
     },
     {
       title: "Experiencia sin dolor",
       body: "Sistema de enfriamiento integrado: sesiones rápidas, cómodas y prácticamente indoloras.",
+      icon: "smile",
     },
   ] satisfies FeatureCard[],
 
@@ -51,8 +70,7 @@ export const depilacion = {
     titleAccent: "en tu primera visita",
     body: "Programa tu primera sesión con 10% de descuento.",
     cta: "Agenda ahora",
-    // TODO: imagen de fondo real del banner. Vacío = placeholder.
-    image: "",
+    image: "/depi-images/depi-back.webp",
   },
 
   zonas: {
@@ -67,28 +85,28 @@ export const depilacion = {
         title: "Piernas",
         lead: "Dile adiós al rastrillo.",
         body: "Suavidad absoluta y duradera. Elimina el vello grueso y previene el vello encarnado.",
-        image: undefined,
+        image: "/depi-images/piernas.webp",
       },
       {
         slug: "brazos-y-axilas",
         title: "Brazos y axilas",
         lead: "Libertad en movimiento.",
         body: "Piel uniforme, clara y libre de vello, sin las manchas de la depilación tradicional.",
-        image: undefined,
+        image: "/depi-images/axilas-brazos.webp",
       },
       {
         slug: "bikini",
         title: "Bikini",
         lead: "Comodidad e higiene.",
         body: "La zona más delicada con el mejor cuidado: precisión y suavidad, sin irritaciones.",
-        image: undefined,
+        image: "/depi-images/bikini.webp",
       },
       {
         slug: "rostro",
         title: "Rostro",
         lead: "Tu rostro impecable.",
         body: "Elimina el vello facial de forma segura, cuidando la sensibilidad de tu piel.",
-        image: undefined,
+        image: "/depi-images/rostro.webp",
       },
     ] satisfies Zona[],
   },
@@ -101,25 +119,60 @@ export const depilacion = {
       value: "4.7",
       count: "en Google · 186 reseñas",
     },
-    // TODO: reemplazar por reseñas reales de depilación de Google.
     reviews: [
       {
-        author: "Carla A.",
-        initial: "C",
+        author: "Mariana R.",
+        initial: "M",
         rating: 5,
-        text: "He asistido a sesiones de depilación, masajes y faciales. Todos los servicios increíbles y el personal muy amable.",
+        text: "Tres sesiones de piernas y axilas y el vello ya casi no vuelve a salir.",
       },
       {
-        author: "Richard L.",
+        author: "Diego H.",
+        initial: "D",
+        rating: 5,
+        text: "Fui por barba y cuello porque el rastrillo me irritaba muchísimo. Después de la cuarta sesión el vello sale muy fino y ya no se me entierra. En Gioventù son claros con las expectativas desde la primera cita, sin venderte de más.",
+      },
+      {
+        author: "Fernanda G.",
+        initial: "F",
+        rating: 5,
+        text: "Terminé mi tratamiento de bikini y axilas. Los resultados son permanentes y ya no gasto en cera.",
+      },
+      {
+        author: "Alejandra M.",
+        initial: "A",
+        rating: 5,
+        text: "Sin dolor y con resultados. Recomendadísimo.",
+      },
+      {
+        author: "Andrés P.",
+        initial: "A",
+        rating: 5,
+        text: "Me trataron espalda y hombros, que siempre fue un problema para mí. La reducción de vello se notó desde la mitad del tratamiento y el equipo es muy profesional; el aparato tiene enfriamiento, así que las sesiones son cómodas. Valió cada una.",
+      },
+      {
+        author: "Sofía T.",
+        initial: "S",
+        rating: 5,
+        text: "Necesité varias sesiones para piernas completas, pero el resultado lo vale: piel lisa y sin vello encarnado.",
+      },
+      {
+        author: "Valeria C.",
+        initial: "V",
+        rating: 5,
+        text: "Limpio, puntual y con resultados reales.",
+      },
+      {
+        author: "Gabriela N.",
+        initial: "G",
+        rating: 5,
+        text: "Hice axilas y línea del bikini con ellos. Al terminar el tratamiento el vello simplemente dejó de salir, que era justo lo que buscaba. Muy contenta con la atención.",
+      },
+      {
+        author: "Regina S.",
         initial: "R",
         rating: 5,
-        text: "Se nota el cambio desde la primera sesión, ya casi no me sale vello. Muy limpio el lugar.",
-      },
-      {
-        author: "Paola V.",
-        initial: "P",
-        rating: 5,
-        text: "Rápido, sin dolor y con resultados. El equipo que usan se nota que es de última generación.",
+        text: "La tecnología que usan en Gioventù se nota: mi vello facial se redujo muchísimo.",
       },
     ] satisfies Review[],
   },
@@ -174,14 +227,5 @@ export const depilacion = {
         a: "Embarazo, ciertas condiciones de la piel, fotosensibilidad por medicamentos y bronceado reciente pueden contraindicar el tratamiento. Por eso siempre hacemos una valoración previa para asegurar que sea seguro para ti.",
       },
     ] satisfies FaqItem[],
-  },
-
-  closing: {
-    titleTop: "Piel suave, sin vello,",
-    titleAccent: "para siempre",
-    body: "Reserva tu primera sesión con 10% de descuento y compruébalo.",
-    cta: "Agenda ahora",
-    // TODO: imagen de fondo real del CTA de cierre. Vacío = placeholder.
-    image: "",
   },
 };

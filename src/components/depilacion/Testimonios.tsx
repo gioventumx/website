@@ -21,7 +21,9 @@ export function Testimonios() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        {/* Masonry por columnas (mismo patrón que TestimoniosMasonry de faciales/masajes);
+            ReviewCard ya trae break-inside-avoid + mb-5. */}
+        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
           {t.reviews.map((review) => (
             <ReviewCard key={review.author} review={review} />
           ))}
