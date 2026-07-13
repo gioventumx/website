@@ -117,7 +117,17 @@ export async function POST(req: NextRequest) {
     timeZone: "America/Mexico_City",
   }).format(new Date());
 
-  const subject = `Nuevo lead — ${service} — ${branchName}`;
+  // Wellness Spa genérico (sin faciales/masajes por ruta): versión corta para que
+  // recepción lo distinga desde la bandeja sin abrir el correo.
+  const serviceSubject =
+    service === "Wellness Spa" ? "Wellness (Faciales o Masajes)" : service;
+  const subject = `Nuevo lead — ${serviceSubject} — ${branchName}`;
+  // Solo para el correo: si el lead es "Wellness Spa" sin subservicio (viene de faciales
+  // o masajes por ruta cuando sí se sabe), dejamos claro que no se especificó cuál.
+  const serviceDisplay =
+    service === "Wellness Spa"
+      ? `${esc(service)} (Faciales o Masajes — no especificado)`
+      : esc(service);
   const html = `
     <div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#1a1a1a;line-height:1.55;max-width:560px">
       <p style="background:#fff6e6;border:1px solid #f0d089;border-radius:8px;padding:12px 14px;margin:0 0 18px">
@@ -134,16 +144,10 @@ export async function POST(req: NextRequest) {
             &nbsp;·&nbsp;
             <a href="https://wa.me/52${phone}">WhatsApp</a>
           </td></tr>
-          <tr><td style="padding:6px 10px 6px 0;color:#666">Servicio</td><td style="padding:6px 0">${esc(
-            service
-          )}</td></tr>
-          ${
-            treatment
-              ? `<tr><td style="padding:6px 10px 6px 0;color:#666">Tratamiento</td><td style="padding:6px 0">${esc(
-                  treatment
-                )}</td></tr>`
-              : ""
-          }
+          <tr><td style="padding:6px 10px 6px 0;color:#666">Servicio</td><td style="padding:6px 0">${serviceDisplay}</td></tr>
+          <tr><td style="padding:6px 10px 6px 0;color:#666">Tratamiento</td><td style="padding:6px 0">${
+            treatment ? esc(treatment) : "No Especificado"
+          }</td></tr>
           <tr><td style="padding:6px 10px 6px 0;color:#666">Sucursal</td><td style="padding:6px 0">${esc(
             branchName
           )}</td></tr>

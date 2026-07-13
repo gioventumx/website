@@ -41,10 +41,6 @@ export function Header() {
           : { label: a.label, href: `#${a.id}`, anchor: true } // ancla a sección
       )
     : site.nav.map((n) => ({ label: n.label, href: n.href, anchor: false }));
-  // En verticales, las opciones de vertical se agregan al overlay del toggle.
-  const overlayList = vertical
-    ? [...site.nav.map((n) => ({ label: n.label, type: "link" as const, href: n.href })), ...overlayItems]
-    : overlayItems;
 
   // Hairline inferior solo al scrollear (para no pesar sobre el hero en el top).
   // Con Lenis en modo raíz, window.scrollY se actualiza y el evento scroll dispara.
@@ -262,7 +258,7 @@ export function Header() {
               Respeta cada item:
               · anchor (#id) → goToAnchor (cierra + scroll nativo, max-md:scroll-mt-0)
               · link (hub /wellness/faciales/ o vertical /dermatologia/) → <Link> + closeAll
-              En desktop este bloque no existe (md:hidden); allá manda overlayList. */}
+              En desktop este bloque no existe (md:hidden); allá manda overlayItems. */}
           <nav className="flex flex-col items-start gap-3 md:hidden">
             {pillItems.map((item) =>
               item.anchor ? (
@@ -290,11 +286,13 @@ export function Header() {
             )}
           </nav>
 
-          {/* Opciones / páginas (overlayList) — bloque de DESKTOP: siempre max-md:hidden
+          {/* Opciones / páginas (overlayItems) — bloque de DESKTOP: siempre max-md:hidden
               (en móvil manda el nav primario de arriba). En desktop SIEMPRE visible
-              (max-md: no aplica ≥768), con el mismo contenido de hoy por página. */}
+              (max-md: no aplica ≥768). Solo Sucursales/Nosotros/Blog: las verticales NO
+              van aquí en desktop (ya viven en el nav horizontal del header); en móvil sí
+              aparecen, vía el nav primario `pillItems` de arriba. */}
           <nav className="flex flex-col items-start gap-3 max-md:hidden">
-            {overlayList.map((item) =>
+            {overlayItems.map((item) =>
               item.type === "modal" ? (
                 <button
                   key={item.label}

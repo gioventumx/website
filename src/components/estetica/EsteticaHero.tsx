@@ -27,7 +27,15 @@ export function EsteticaHero() {
             <span className="eyebrow on-dark">{h.eyebrow}</span>
 
             <h1 className="mt-[18px] font-sans text-[clamp(2.4rem,5.2vw,4rem)] font-light leading-[0.95] tracking-[-0.015em]">
-              {h.titleTop}
+              {/* Móvil: quiebre controlado en 3 líneas — "La mejor" / "versión de ti" /
+                  accent. El <br> solo aparece en max-md; en desktop se oculta y el título
+                  fluye normal (con el espacio de {" "}). "versión de ti" en nowrap para que
+                  no se parta "ti" a otra línea. */}
+              {h.titleTop.split(" ").slice(0, 2).join(" ")}
+              <br className="hidden max-md:block" />{" "}
+              <span className="max-md:whitespace-nowrap">
+                {h.titleTop.split(" ").slice(2).join(" ")}
+              </span>
               <span className="font-accent block text-[1.04em] text-brand-tint">{h.titleAccent}</span>
             </h1>
 

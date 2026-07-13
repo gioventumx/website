@@ -91,11 +91,15 @@ export function PadecimientosGrid() {
         <CarruselTrack items={carruselItems} service="Dermatología" />
       </div>
 
-      {/* DESKTOP: bento grid — igual que hoy (max-md:hidden solo oculta <768). */}
-      <div className="bento-grid max-md:hidden">
-        {bentoLayout.map((piece) => (
-          <Piece key={piece.id} piece={piece} onBook={book} />
-        ))}
+      {/* DESKTOP: bento grid — igual que hoy. El wrapper lleva max-md:hidden (NO la clase
+          .bento-grid): .bento-grid define `display:flex` FUERA de @layer y ganaría sobre
+          el `display:none` de la utilidad, así que ocultamos el wrapper, no el grid. */}
+      <div className="max-md:hidden">
+        <div className="bento-grid">
+          {bentoLayout.map((piece) => (
+            <Piece key={piece.id} piece={piece} onBook={book} />
+          ))}
+        </div>
       </div>
     </section>
   );
