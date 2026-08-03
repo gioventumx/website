@@ -8,6 +8,8 @@
 import type { BranchKey } from "./types";
 export type { BranchKey };
 
+import { normalizePhoneMX } from "@/lib/phone";
+
 export type ServiceOption =
   | "Dermatología"
   | "Medicina Estética"
@@ -138,19 +140,32 @@ export function buildWhatsAppUrl(data: BookingData): string | null {
  * Evento de conversión del lead. Se dispara al ENVIAR (cuando abrimos WhatsApp con los
  * datos completos) — la única acción que la web puede observar; no sabemos si el
  * usuario manda el mensaje en WhatsApp. Empuja a dataLayer para GTM/GA4.
- * TODO: conectar el ID/conversión real de Ads cuando esté disponible.
+ *
+ * `user_data.phone_number` alimenta las Conversiones Avanzadas de Ads (la etiqueta de
+ * GTM apunta a ESA ruta anidada: no renombrar ni aplanar). Va en claro, sin hash: Google
+ * normaliza y hashea del lado del cliente/servidor antes de que el dato salga. Es
+ * ADITIVO y opcional — si el teléfono no normaliza, se omite la propiedad y el evento se
+ * dispara igual; jamás debe bloquear ni retrasar un lead.
  */
 export function fireBookingConversion(data: BookingData): void {
   if (typeof window === "undefined") return;
   const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
   w.dataLayer = w.dataLayer ?? [];
-  w.dataLayer.push({
+  const phone = normalizePhoneMX(data.phone);
+  const payload = {
     event: "booking_whatsapp",
     service: serviceLabel(data),
     treatment: data.treatment || "",
     branch: data.branch ?? "",
     source: data.source || "",
-  });
+    ...(phone ? { user_data: { phone_number: phone } } : {}),
+  };
+  w.dataLayer.push(payload);
+  // Verificación en local del formato E.164. `process.env.NODE_ENV` lo inlinea el build,
+  // así que esta rama se elimina del bundle de producción (dead code).
+  if (process.env.NODE_ENV === "development") {
+    console.log("[booking_whatsapp] dataLayer push:", payload);
+  }
 }
 
 /**
