@@ -39,6 +39,15 @@ export default async function FacialesPage({
   // seguimos registrando en el flujo de agendamiento para medición.
   const branch = normalizeSuc(suc);
 
+  // Hollywood Peel no se ofrece en Plaza Cúspide: con ?suc=cuspide su tarjeta se
+  // oculta del carrusel. Cualquier otra entrada (antigua, orgánico, sin ?suc=) ve el
+  // catálogo completo. El carrusel es un riel horizontal, así que quitar una pieza no
+  // deja hueco de layout.
+  const bento =
+    branch === "cuspide"
+      ? faciales.bento.filter((f) => f.slug !== "hollywood-peel")
+      : faciales.bento;
+
   return (
     <>
       {/* Inyecta el origen (suc) en el flujo de agendamiento para medición */}
@@ -49,7 +58,7 @@ export default async function FacialesPage({
       {/* Carrusel de faciales — justo debajo del hero */}
       <Carrusel
         head={faciales.bentoHead}
-        items={faciales.bento}
+        items={bento}
         service="Wellness Spa"
         eyebrow="Facial"
         id="faciales"
