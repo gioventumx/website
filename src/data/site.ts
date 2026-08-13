@@ -38,7 +38,7 @@ export const site = {
       phone: "55 5308 2028",
       whatsapp: "55 6149 6600",
       address:
-        "Av. Dr. Jiménez Cantú Lote A-2-5, Oficina Torre 2, 212, Hacienda de Valle Escondido, 52938, Estado de México",
+        "Plaza Antigua 1 - Av. Dr. Jiménez Cantú Lote A-2-5, Oficina Torre 2, 212, Hacienda de Valle Escondido, 52938, Estado de México",
       locality: "Atizapán de Zaragoza",
       postalCode: "52938",
       mapsUrl: "https://maps.app.goo.gl/nWJNj8796ijjmGjJ8",

@@ -102,7 +102,7 @@ export const bookingBranches: Record<BranchKey, BranchConfig> = {
   antigua: {
     name: "Gioventù Plaza Antigua",
     address:
-      "Plaza Antigua 1, Av. Dr. Jiménez Cantú 212, Hacienda de Valle Escondido, 52938, Estado de México.",
+      "Plaza Antigua 1 - Av. Dr. Jiménez Cantú Lote A-2-5, Oficina Torre 2, 212, Hacienda de Valle Escondido, 52938, Estado de México",
     hours: "Lun–Vie 10:30–19:30 · Sáb 10:30–15:30",
     wa: "525561496600",
   },
