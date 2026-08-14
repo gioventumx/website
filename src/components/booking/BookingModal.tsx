@@ -29,10 +29,14 @@ export function BookingModal() {
     >
       <div className="absolute inset-0 bg-black/50" />
 
+      {/* max-h + overflow-y-auto: en pantallas bajas (iPhone SE con el paso 1 en "Otro")
+          el contenido supera el viewport y, al estar centrado, se recortaba arriba Y
+          abajo a la vez — el botón quedaba fuera de vista. Ahora scrollea.
+          `data-lenis-prevent` ya estaba puesto justo para este caso. */}
       <div
         onClick={(e) => e.stopPropagation()}
         data-lenis-prevent
-        className="relative w-full max-w-lg rounded-block bg-white p-8 text-center shadow-2xl md:p-11"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-block bg-white p-8 text-center shadow-2xl md:p-11"
       >
         {/* Atrás y Cerrar en absoluto (esquinas): no ocupan flujo, así el contenido
             no se empuja hacia abajo y queda centrado en el modal. */}
@@ -62,6 +66,19 @@ export function BookingModal() {
         {step === 2 && <Step2Branch />}
         {step === 3 && <Step3Details />}
         {step === "success" && <SuccessView />}
+
+        {/* Permanente: fuera del flujo de pasos, así se ve en los 4 (incluido
+            SuccessView) sin depender de `step`. */}
+        <p className="mt-6 text-center font-sans text-[0.75rem] font-light leading-relaxed text-muted">
+          Si eres distribuidor o proveedor, por favor contáctanos por{" "}
+          <a
+            href="mailto:lili.v@gioventu.com.mx"
+            className="text-brand underline underline-offset-2"
+          >
+            este medio
+          </a>
+          .
+        </p>
       </div>
     </div>
   );
