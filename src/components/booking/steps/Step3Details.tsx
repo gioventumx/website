@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useBooking } from "../BookingProvider";
 
 export function Step3Details() {
@@ -53,6 +54,24 @@ export function Step3Details() {
       >
         Agendar por WhatsApp
       </button>
+
+      {/* Consentimiento TÁCITO (datos de contacto). Sin checkbox a propósito: los datos
+          sensibles de salud se recaban en consulta con formato firmado aparte.
+          target="_blank" para no navegar fuera del modal y perder lo ya capturado. */}
+      <p className="mt-3 text-center font-sans text-[0.75rem] font-light leading-relaxed text-muted">
+        Al enviar aceptas nuestro{" "}
+        <Link
+          href="/aviso-de-privacidad/"
+          target="_blank"
+          rel="noopener noreferrer"
+          prefetch={false}
+          className="whitespace-nowrap text-brand no-underline hover:underline hover:underline-offset-2"
+        >
+          aviso de privacidad
+          <span className="sr-only"> (se abre en una pestaña nueva)</span>
+        </Link>
+        .
+      </p>
     </form>
   );
 }

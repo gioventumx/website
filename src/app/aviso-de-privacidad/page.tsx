@@ -20,7 +20,7 @@ export const metadata: Metadata = pageMetadata({
 const cuerpo = `
 ## 1. Identidad y domicilio del responsable
 
-**[NOMBRE COMPLETO DEL TITULAR]**, persona física con actividad empresarial, con Registro Federal de Contribuyentes **[RFC]**, quien opera comercialmente bajo la denominación **Gioventù**, es responsable del tratamiento de sus datos personales.
+**JOSÉ EDUARDO RETA VALENCIA**, persona física con actividad empresarial, con Registro Federal de Contribuyentes **REVE971116GG4**, quien opera comercialmente bajo la denominación **Gioventù**, es responsable del tratamiento de sus datos personales.
 
 **Domicilio para efectos del presente aviso:**
 Av. Dr. Jiménez Cantú, Lote A-2-5, Oficina Torre 2, 212, Hacienda de Valle Escondido, C.P. 52938, Atizapán de Zaragoza, Estado de México.
@@ -222,11 +222,14 @@ export default function AvisoPrivacidadPage() {
     <div className="container-x pb-20">
       <Breadcrumb items={crumbs} className="pt-6" />
 
-      {/* Aviso visible de borrador (no es un CTA): borde + fondo tenue */}
-      <aside className="mt-6 max-w-[760px] rounded-block border border-line bg-brand-tint/30 p-5 text-[0.9rem] leading-relaxed text-ink-soft">
-        <strong className="text-ink">BORRADOR EN REVISIÓN</strong> — Este documento se encuentra
-        pendiente de validación legal y no constituye el aviso de privacidad vigente de Gioventù.
-      </aside>
+      {/*
+        BORRADOR — NO PUBLICAR SIN REVISIÓN LEGAL.
+        El banner de borrador se retiró de la vista pública: la página ya recibe tráfico
+        desde el formulario de reserva y un paciente no debe leer "no publicar" en un
+        documento legal. El contenido sigue pendiente de validación por la clínica —
+        ver los campos [ENTRE CORCHETES] en `cuerpo` y el `noindex: true` de la metadata,
+        que se mantiene hasta que legal valide el texto.
+      */}
 
       <header className="mt-8 max-w-[760px]">
         <h1 className="font-sans text-[clamp(2rem,4vw,2.8rem)] font-light leading-[1.1] tracking-[-0.01em] text-ink">
