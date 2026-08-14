@@ -15,8 +15,8 @@ export const metadata: Metadata = pageMetadata({
 
 // Cuerpo del aviso (borrador de la clínica). Se OMITEN a propósito las notas internas
 // del documento: el bloque "BORRADOR — NO PUBLICAR", las notas ⚠️, la tabla
-// "Pendientes para la clínica" y la firma de cierre. Los campos [entre corchetes] se
-// conservan visibles para que la clínica los complete.
+// "Pendientes para la clínica" y la firma de cierre. Los campos [entre corchetes] que
+// quedaban visibles se resolvieron (ver comentario del componente, más abajo).
 const cuerpo = `
 ## 1. Identidad y domicilio del responsable
 
@@ -50,7 +50,6 @@ Al acudir a consulta o recibir tratamiento, recabamos:
 - Padecimientos dermatológicos y estéticos
 - Alergias, medicamentos y tratamientos previos
 - Fotografías clínicas del área a tratar
-- **[OTROS DATOS DE SALUD QUE LA CLÍNICA RECABE — completar]**
 
 ### 2.3 Datos recabados automáticamente en el sitio web
 
@@ -84,7 +83,7 @@ Necesarias para la relación jurídica con usted:
 - Invitarle a eventos y campañas de la clínica
 - Realizar encuestas de satisfacción
 - Elaborar estadísticas internas y estudios de mercado
-- Publicar fotografías de resultados **[SOLO CON CONSENTIMIENTO ESPECÍFICO Y POR ESCRITO — confirmar si aplica]**
+- Publicar fotografías de resultados, únicamente con su consentimiento específico y otorgado por escrito
 
 **Para manifestar su negativa a las finalidades secundarias**, envíe un correo a hola@gioventu.com.mx indicando su nombre y la finalidad a la que se opone. Contará con cinco días hábiles a partir de que se le dé a conocer el presente aviso.
 
@@ -94,10 +93,9 @@ Sus datos personales pueden ser transferidos a:
 
 | Destinatario | Finalidad | ¿Requiere su consentimiento? |
 |---|---|---|
-| **[NOMBRE DEL CRM]** | Gestión de citas y seguimiento de pacientes | Sí |
+| Plataforma de CRM y agendamiento | Gestión de citas y seguimiento de pacientes | Sí |
 | Autoridades sanitarias y judiciales | Cumplimiento de obligaciones legales | No (Art. 37 LFPDPPP) |
-| **[LABORATORIOS, SI APLICA]** | Estudios y análisis derivados de su tratamiento | Sí |
-| **[OTROS TERCEROS — completar]** | **[FINALIDAD]** | **[SÍ/NO]** |
+| Laboratorios y servicios de diagnóstico externos | Estudios y análisis derivados de su tratamiento | Sí |
 
 Salvo las excepciones previstas en el artículo 37 de la LFPDPPP, toda transferencia requiere su consentimiento.
 
@@ -146,19 +144,17 @@ El derecho de cancelación no procede sobre el expediente clínico durante el pl
 
 - **Expediente clínico:** mínimo 5 años a partir de la última atención, conforme a la NOM-004-SSA3-2012.
 - **Datos de contacto y marketing:** hasta que usted solicite su cancelación.
-- **Datos de navegación:** conforme a los plazos de cada proveedor **[verificar retención de GA4 y Clarity]**.
+- **Datos de navegación:** conforme a los plazos de retención que fija cada proveedor.
 
 ## 9. Medidas de seguridad
 
 Gioventù ha implementado medidas de seguridad administrativas, técnicas y físicas para proteger sus datos personales contra daño, pérdida, alteración, destrucción, uso, acceso o tratamiento no autorizado.
 
-**[DESCRIBIR MEDIDAS CONCRETAS: control de accesos, cifrado, respaldos, capacitación del personal, convenios de confidencialidad — completar]**
-
 ## 10. Cambios al aviso de privacidad
 
 Nos reservamos el derecho de modificar el presente aviso. Cualquier cambio será publicado en **https://gioventu.com.mx/aviso-de-privacidad/** y, cuando corresponda, comunicado por correo electrónico.
 
-**Última actualización:** [FECHA]
+**Última actualización:** 9 de junio de 2026
 
 ## 11. Autoridad en materia de protección de datos
 
@@ -226,9 +222,13 @@ export default function AvisoPrivacidadPage() {
         BORRADOR — NO PUBLICAR SIN REVISIÓN LEGAL.
         El banner de borrador se retiró de la vista pública: la página ya recibe tráfico
         desde el formulario de reserva y un paciente no debe leer "no publicar" en un
-        documento legal. El contenido sigue pendiente de validación por la clínica —
-        ver los campos [ENTRE CORCHETES] en `cuerpo` y el `noindex: true` de la metadata,
-        que se mantiene hasta que legal valide el texto.
+        documento legal. Ya no quedan campos [ENTRE CORCHETES] en `cuerpo`, pero el texto
+        SIGUE pendiente de validación legal: se mantiene el `noindex: true` de la metadata
+        y la ruta fuera del sitemap hasta que legal lo apruebe.
+
+        PENDIENTE DE CONFIRMAR con la clínica (se redactaron en genérico al quitar los
+        placeholders): el nombre real del CRM y si aplican laboratorios externos (§4), y
+        si §9 debe detallar medidas de seguridad concretas.
       */}
 
       <header className="mt-8 max-w-[760px]">
