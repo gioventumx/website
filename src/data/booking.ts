@@ -30,10 +30,18 @@ export const landingServices: Record<string, ServiceOption> = {
   "/depilacion-laser/": "Depilación Láser",
 };
 
-/** Servicio de la landing actual (normaliza trailing slash). Null = pregunta servicio. */
+/** Servicio de la landing actual (normaliza trailing slash). Null = pregunta servicio.
+ *  Match exacto primero; si no, el PREFIJO más específico de `landingServices` (ej.
+ *  "/dermatologia/dermatitis/" hereda "/dermatologia/" sin tener que listar cada
+ *  slug de servicio a mano). El hub /wellness/ no tiene prefijo propio a propósito:
+ *  sigue preguntando el servicio. */
 export function getLandingService(pathname: string): ServiceOption | null {
   const p = pathname.endsWith("/") ? pathname : `${pathname}/`;
-  return landingServices[p] ?? null;
+  if (landingServices[p]) return landingServices[p];
+  const prefix = Object.keys(landingServices)
+    .filter((key) => p.startsWith(key))
+    .sort((a, b) => b.length - a.length)[0];
+  return prefix ? landingServices[prefix] : null;
 }
 
 /**

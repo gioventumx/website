@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { posts, departamentos, categorias, postsByCategoria } from "@/data/blog";
+import { servicios } from "@/data/servicios";
 
 // Dominio de producción (igual que metadataBase del layout). Trailing slash
 // consistente con next.config (trailingSlash: true).
@@ -48,6 +49,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     }));
 
+  // Páginas de servicio: excluye borradores, igual que el blog (`path` ya trae el
+  // prefijo completo por especialidad, no se reconstruye aquí).
+  const servicioEntries: MetadataRoute.Sitemap = servicios
+    .filter((s) => !s.draft)
+    .map((s) => ({
+      url: `${SITE}${s.path}`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    }));
+
   // Nota: las ETIQUETAS no se incluyen — no tienen ruta indexable (a propósito).
-  return [...staticEntries, ...departamentoEntries, ...categoriaEntries, ...postEntries];
+  return [
+    ...staticEntries,
+    ...departamentoEntries,
+    ...categoriaEntries,
+    ...postEntries,
+    ...servicioEntries,
+  ];
 }

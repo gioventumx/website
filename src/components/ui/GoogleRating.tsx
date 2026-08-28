@@ -30,12 +30,13 @@ function useBranchRating(): Rating {
   return rating;
 }
 
-/** Formato en línea para los heroes (junto a las estrellas, sobre fondo oscuro). */
-export function GoogleRatingInline() {
+/** Formato en línea (junto a las estrellas). `variant="dark"` para heroes sobre
+ *  fondo oscuro (por defecto); `"light"` para bandas sobre fondo claro (bg-bg/surface). */
+export function GoogleRatingInline({ variant = "dark" }: { variant?: "dark" | "light" } = {}) {
   const r = useBranchRating();
   return (
     <span>
-      <b className="text-white">{r.value}</b> {r.text}
+      <b className={variant === "light" ? "text-ink" : "text-white"}>{r.value}</b> {r.text}
     </span>
   );
 }

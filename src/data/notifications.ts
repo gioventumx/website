@@ -57,8 +57,15 @@ export const notifications: Record<string, NotifConfig> = {
   },
 };
 
-/** Config de la ruta actual (normaliza trailing slash). Fallback: Home. */
+/** Config de la ruta actual (normaliza trailing slash). Match exacto primero; si no,
+ *  el PREFIJO más específico ya registrado (ej. una página de servicio bajo
+ *  "/dermatologia/" hereda el copy y el servicio de esa vertical, sin tener que
+ *  registrar cada slug nuevo a mano). Fallback final: Home. */
 export function getNotification(pathname: string): NotifConfig {
   const p = pathname.endsWith("/") ? pathname : `${pathname}/`;
-  return notifications[p] ?? notifications["/"];
+  if (notifications[p]) return notifications[p];
+  const prefix = Object.keys(notifications)
+    .filter((key) => key !== "/" && p.startsWith(key))
+    .sort((a, b) => b.length - a.length)[0];
+  return notifications[prefix] ?? notifications["/"];
 }

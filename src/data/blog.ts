@@ -164,7 +164,7 @@ export const posts: BlogPost[] = [
     imagen: "/blog-thumbs/depilacion-laser-guia.webp",
   },
   {
-    slug: "manchas-melasma",
+    slug: "por-que-me-salen-manchas-en-la-piel",
     titulo: "Manchas y melasma: por qué aparecen y cómo tratarlas",
     excerpt: "Causas del melasma y los tratamientos que sí funcionan.",
     departamento: "dermatologia",

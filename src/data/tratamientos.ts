@@ -1,6 +1,7 @@
 // Sección "lluvia" (ResultsRain): statement de marca + chips de TRATAMIENTOS
-// que caen con física. Cada chip lleva su slug listo para enlazar a su página
-// de servicio más adelante (por ahora NO clickeables, solo interactivos).
+// que caen con física. Cada chip lleva su slug REAL de WordPress (fuente de verdad
+// de la URL), listo para enlazar a su página de servicio más adelante (por ahora
+// NO clickeables, solo interactivos).
 
 import type { StatementSegment } from "./types";
 
@@ -39,13 +40,13 @@ export const tratamientos = {
     { slug: "depilacion-laser", label: "Depilación láser", tint: true },
     { slug: "rosacea", label: "Tratamiento de rosácea" },
     { slug: "melasma-manchas", label: "Melasma y manchas" },
-    { slug: "verrugas", label: "Eliminación de verrugas", tint: true },
+    { slug: "por-que-salen-las-verrugas", label: "Eliminación de verrugas", tint: true },
     { slug: "lunares", label: "Eliminación de lunares" },
-    { slug: "cicatrices", label: "Desvanecimiento de cicatrices" },
+    { slug: "como-eliminar-las-cicatrices", label: "Desvanecimiento de cicatrices" },
     { slug: "rejuvenecimiento-facial", label: "Rejuvenecimiento facial", tint: true },
     { slug: "bioestimuladores-colageno", label: "Bioestimuladores de colágeno" },
-    { slug: "radiofrecuencia", label: "Radiofrecuencia" },
-    { slug: "acne", label: "Tratamiento de acné", tint: true },
+    { slug: "radiofrecuencia-con-venus-legacy", label: "Radiofrecuencia" },
+    { slug: "tratamiento-para-el-acne", label: "Tratamiento de acné", tint: true },
     { slug: "laser-co2", label: "Láser CO2" },
     { slug: "peeling-quimico", label: "Peeling químico" },
     { slug: "faciales", label: "Faciales", tint: true },

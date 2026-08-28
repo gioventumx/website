@@ -25,7 +25,8 @@ export type BentoPos = {
   label?: string;
   /** Descripción corta (1 línea) que aparece al hover / en móvil. */
   description?: string;
-  /** Slug para enlazar a su página después. Por ahora todo abre el modal. */
+  /** Slug real de WordPress (fuente de verdad de la URL) para enlazar a su página
+   *  después. Por ahora todo abre el modal. */
   slug?: string;
   /** TODO: imagen de portada real. Vacío = placeholder. */
   image?: string;
@@ -56,7 +57,7 @@ export const bentoLayout: BentoPos[] = [
     kind: "treatment",
     label: "Acné",
     description: "Control del acné y sus marcas.",
-    slug: "acne",
+    slug: "tratamiento-para-el-acne",
     image: "/derma-services/acne.webp",
   },
   {
@@ -76,7 +77,7 @@ export const bentoLayout: BentoPos[] = [
     kind: "treatment",
     label: "Eliminación de verrugas",
     description: "Retiro seguro de verrugas.",
-    slug: "eliminacion-de-verrugas",
+    slug: "por-que-salen-las-verrugas",
     image: "/derma-services/verrugas.webp",
   },
   {
@@ -133,7 +134,7 @@ export const bentoLayout: BentoPos[] = [
     kind: "treatment",
     label: "Cicatrices",
     description: "Mejoramos su aspecto.",
-    slug: "cicatrices",
+    slug: "como-eliminar-las-cicatrices",
     image: "/derma-services/cicatrices.webp",
   },
   {

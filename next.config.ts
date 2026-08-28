@@ -24,6 +24,9 @@ const nextConfig: NextConfig = {
       { source: "/rosacea-sintomas-causas/", destination: "/blog/rosacea-sintomas-causas/", permanent: true },
       { source: "/tipos-de-depilacion-guia/", destination: "/blog/depilacion-laser-guia/", permanent: true },
       { source: "/por-que-sale-la-celulitis/", destination: "/blog/que-es-celulitis/", permanent: true },
+      // Permalink de WP con prefijo /dermatologia/ (categoría), no /blog/ como el resto.
+      // Slug reservado: no debe usarse para la página de servicio de manchas/melasma.
+      { source: "/dermatologia/por-que-me-salen-manchas-en-la-piel/", destination: "/blog/por-que-me-salen-manchas-en-la-piel/", permanent: true },
 
       // ── Wellness: páginas hijas consolidadas en faciales / masajes ──
       { source: "/wellness/facial-antiacne/", destination: "/wellness/faciales/", permanent: true },

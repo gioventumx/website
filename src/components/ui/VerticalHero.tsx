@@ -21,7 +21,17 @@ export type VerticalHeroData = {
 // Hero reutilizable de vertical (misma estructura que el de Dermatología, pero con
 // EYEBROW en vez de breadcrumb): bloque redondeado + media/overlay + notificación +
 // features al fondo. `service` preselecciona el servicio del modal.
-export function VerticalHero({ hero, service }: { hero: VerticalHeroData; service: ServiceOption }) {
+// `compact` = ~60vh en vez de casi toda la pantalla: para páginas de SERVICIO (hub
+// de vertical sigue con la altura completa, sin pasar la prop).
+export function VerticalHero({
+  hero,
+  service,
+  compact = false,
+}: {
+  hero: VerticalHeroData;
+  service: ServiceOption;
+  compact?: boolean;
+}) {
   return (
     <section className="px-4 pb-4 md:px-6 md:pb-6">
       <MediaSurface
@@ -30,7 +40,9 @@ export function VerticalHero({ hero, service }: { hero: VerticalHeroData; servic
         src={hero.image}
         overlay="ink"
         label={hero.image ? undefined : "imagen / video de fondo (TODO)"}
-        className="flex min-h-[calc(100dvh_-_90px)] flex-col rounded-block md:min-h-[calc(100dvh_-_98px)]"
+        className={`flex flex-col rounded-block ${
+          compact ? "min-h-[60vh]" : "min-h-[calc(100dvh_-_90px)] md:min-h-[calc(100dvh_-_98px)]"
+        }`}
       >
         <HeroNotification />
 
