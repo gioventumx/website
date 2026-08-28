@@ -39,8 +39,12 @@ export function BookingNudge() {
   const visible = scrolled && !open && !atFooter;
 
   return (
+    // [body.lightbox-open_&]:invisible — oculto también mientras hay un
+    // ImageLightbox abierto (ver src/components/ui/ImageLightbox.tsx): sus
+    // animaciones continuas lo promueven a su propia capa y puede pintarse
+    // encima del overlay del lightbox aunque su z-index sea menor.
     <div
-      className={`fixed bottom-5 left-5 z-40 max-[560px]:hidden transition-all duration-500 ease-out motion-reduce:transition-none ${
+      className={`fixed bottom-5 left-5 z-40 max-[560px]:hidden transition-all duration-500 ease-out motion-reduce:transition-none [body.lightbox-open_&]:invisible ${
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-4 opacity-0 motion-reduce:translate-y-0"

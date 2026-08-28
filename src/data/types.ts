@@ -56,3 +56,12 @@ export type Review = {
   rating: number;
   text: string;
 };
+
+/** Caso de éxito (antes/después) intercalado entre las reseñas de Google en /estetica/.
+ *  Sin rating: no hay reseña de Google detrás, así que no se inventan estrellas. */
+export type CasoExito = {
+  paciente: string;
+  tratamiento: string;
+  image: string;
+  alt: string;
+};

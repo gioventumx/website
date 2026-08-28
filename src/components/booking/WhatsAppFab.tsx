@@ -20,7 +20,8 @@ function pageKey(pathname: string): string {
  * por ruta y la preselección de sucursal por ?suc=, y captura nombre y teléfono antes
  * de mandar el mensaje. Inyecta source `<pagina>:whatsapp-flotante`.
  * z-40: debajo del overlay del menú (z-60/70) y del modal (z-80). No choca con el
- * BookingNudge (abajo-izquierda).
+ * BookingNudge (abajo-izquierda). También se oculta con `[body.lightbox-open_&]`
+ * mientras hay un ImageLightbox abierto (ver ese componente).
  */
 export function WhatsAppFab() {
   const pathname = usePathname();
@@ -31,7 +32,7 @@ export function WhatsAppFab() {
       type="button"
       aria-label="Agendar por WhatsApp"
       onClick={() => openBooking({ source: `${pageKey(pathname)}:whatsapp-flotante` })}
-      className={`fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 motion-reduce:transition-none max-md:hidden ${
+      className={`fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 motion-reduce:transition-none max-md:hidden [body.lightbox-open_&]:invisible ${
         open ? "pointer-events-none translate-y-3 opacity-0" : "opacity-100"
       }`}
     >
