@@ -33,6 +33,11 @@ const BRANCH_CRM_LABEL: Record<BranchKey, "Antigua" | "Cúspide"> = {
   cuspide: "Cúspide",
 };
 
+// Endpoint del CRM de SCNDAL. Va como constante y NO como variable de entorno: no es un
+// secreto (el endpoint exige Bearer, ver CRM_WEBHOOK_SECRET abajo) y así hay una sola
+// fuente de verdad, versionada y visible en el diff.
+const CRM_WEBHOOK_URL = "https://api.scndal.com/leads/gioventu?source=website";
+
 // Rate limit en memoria por IP (ventana deslizante). Suficiente para el volumen de un
 // endpoint interno de un centro; efectivo por instancia de función (Fluid Compute
 // comparte memoria entre requests concurrentes de la misma instancia, no globalmente).
@@ -196,16 +201,24 @@ export async function POST(req: NextRequest) {
   // Envío al CRM de SCNDAL (webhook). Autocontenido y SIN throw. El body usa las keys
   // EXACTAS del contrato con el CRM (no cambiar). tratamiento/gclid van como "" si faltan
   // (nunca omitidos). telefono: 10 dígitos crudos, sin +52 (el CRM normaliza de su lado).
+  // El endpoint exige "Authorization: Bearer <CRM_WEBHOOK_SECRET>". La variable NO lleva
+  // prefijo NEXT_PUBLIC_ y solo se lee aquí (route handler, runtime nodejs): el secreto
+  // nunca entra al bundle del cliente.
   const sendCrm = async (): Promise<SendResult> => {
-    const url = process.env.CRM_WEBHOOK_URL;
-    if (!url) {
-      console.error("lead: CRM_WEBHOOK_URL ausente");
-      return { ok: false, error: "config" };
+    const secret = process.env.CRM_WEBHOOK_SECRET;
+    // Si falta el secreto se envía IGUAL, sin la cabecera, y el CRM responde 401. A
+    // propósito: un 401 en los logs es rastreable, un envío que nunca ocurrió no lo es.
+    // No conviertas esto en un return temprano.
+    if (!secret) {
+      console.error("lead: CRM_WEBHOOK_SECRET ausente; se envía sin auth (se espera 401)");
     }
     try {
-      const res = await fetch(url, {
+      const res = await fetch(CRM_WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(secret ? { Authorization: `Bearer ${secret}` } : {}),
+        },
         body: JSON.stringify({
           nombre: name,
           telefono: phone,
