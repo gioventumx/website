@@ -127,6 +127,13 @@ export const estetica = {
         description: "Regenera la piel a nivel celular con polinucleótidos, mejorando hidratación, elasticidad y calidad del tejido.",
         image: "/estetica-services/pdrn.webp",
       },
+      {
+        id: "ultrasonido-focalizado-hifu",
+        slug: "ultrasonido-focalizado-hifu",
+        label: "Ultrasonido Focalizado (HIFU)",
+        description: "Redefine el contorno facial y mejora la flacidez estimulando la producción de colágeno en capas profundas de la piel, sin cirugía ni tiempo de recuperación.",
+        image: "/estetica-services/hifu.webp",
+      },
     ],
   },
 };
