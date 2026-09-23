@@ -15,7 +15,8 @@ faq:
     a: "No. Cada tratamiento tiene una duración distinta y la piel sigue su proceso natural, así que suele requerirse mantenimiento. En tu valoración te orientan sobre qué esperar en tu caso."
   - q: "¿Cuánto cuesta un tratamiento de rejuvenecimiento facial?"
     a: "Depende del procedimiento y de las zonas. En Gioventù, la toxina botulínica va desde $165 por unidad, los rellenos con ácido hialurónico desde $4,800 y los bioestimuladores desde $8,500. El costo exacto se define en la valoración."
-reviewStatus: "pendiente"
+reviewStatus: "revisado"
+reviewedDate: "2026-07-10"
 ---
 
 ¿Alguna vez te has preguntado cómo verse más joven sin pasar por un quirófano? El deseo de mantener una apariencia fresca ha impulsado el desarrollo del **rejuvenecimiento facial**: un conjunto de tratamientos de medicina estética poco invasivos que buscan cuidar la piel más allá de la superficie.

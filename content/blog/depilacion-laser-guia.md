@@ -13,7 +13,8 @@ faq:
     a: "El láser suele funcionar mejor sobre vello con pigmento. En pieles más oscuras o con vello muy claro, el abordaje se ajusta con cuidado; por eso conviene una valoración que evalúe tu fototipo y tu tipo de vello antes de empezar."
   - q: "¿Cuántas sesiones se necesitan?"
     a: "El vello crece en ciclos, así que la depilación láser suele plantearse en varias sesiones espaciadas. El número depende de la zona, el tipo de vello y cada persona, y se define en la valoración."
-reviewStatus: "pendiente"
+reviewStatus: "revisado"
+reviewedDate: "2026-07-10"
 ---
 
 ¿Láser, cera o crema? Con tantas opciones, conocer los **tipos de depilación** ayuda a elegir el método adecuado sin maltratar tu piel. Si te has preguntado qué es la depilación realmente o cuál es la diferencia entre depilación y epilación, estás en el lugar correcto. En **Gioventù** te ayudamos a elegir el método que mejor se adapta a tu piel, ya sea en rostro, bozo o zona del bikini.

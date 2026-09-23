@@ -15,7 +15,8 @@ faq:
     a: "No es recomendable. Intentar eliminarlos con remedios caseros puede causar cicatrices o infecciones y, sobre todo, impide descartar que la lesión requiera estudio. Lo responsable es una valoración profesional antes de cualquier retiro."
   - q: "¿Cómo se retira una verruga o un lunar en la clínica?"
     a: "Depende de cada caso. En Gioventù primero valoramos la lesión y, cuando corresponde, puede retirarse con procedimientos como láser o electrocauterio. La eliminación de verrugas empieza desde $999 y la extracción de lunares desde $1,900. Nunca se retira una lesión sin valorarla antes."
-reviewStatus: "pendiente"
+reviewStatus: "revisado"
+reviewedDate: "2026-07-10"
 ---
 
 ¿Has notado una nueva marca en tu piel y no sabes si es un simple lunar o una verruga? Es una confusión muy común, pero aprender a diferenciarlos importa: no solo por estética, también por tu salud. Unos son acumulaciones de pigmento; las otras suelen tener un origen viral o aparecer por fricción.

@@ -13,7 +13,8 @@ faq:
     a: "No. La celulitis aparece por la estructura del tejido conectivo y otros factores, y puede presentarse en personas delgadas. Bajar de peso puede ayudar en algunos casos, pero no es el único factor."
   - q: "¿Las cremas eliminan la celulitis?"
     a: "Las cremas pueden hidratar y mejorar la textura superficial, pero no actúan sobre la estructura profunda que la origina. Suelen usarse como apoyo, no como solución única."
-reviewStatus: "pendiente"
+reviewStatus: "revisado"
+reviewedDate: "2026-07-10"
 ---
 
 ¿Te has preguntado por qué sale la celulitis? Si has notado alteraciones que simulan la textura de una cáscara de naranja, especialmente en muslos, abdomen o glúteos, no estás sola: es muy común. Antes de hablar de estética, conviene aclarar una duda frecuente: **¿tu celulitis es un tema visual o una emergencia médica?**

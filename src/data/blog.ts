@@ -70,9 +70,49 @@ export const autores: Autor[] = [
     slug: "andrea-rios",
     nombre: "Andrea Ríos",
     rol: "Redactora de salud y bienestar",
-    bio: "Redactora especializada en dermatología y medicina estética. Investiga y traduce el conocimiento del equipo médico de Gioventù a guías claras y accesibles. No sustituye el criterio clínico: los contenidos de salud son revisados por un dermatólogo de la clínica.",
+    bio: "Redactora especializada en dermatología y medicina estética. Investiga y traduce el conocimiento del equipo médico de Gioventù a guías claras y accesibles. No sustituye el criterio clínico: los contenidos de salud son revisados por una dermatóloga de la clínica.",
   },
 ];
+
+// ── E-E-A-T · Revisor médico ────────────────────────────────────────────────
+// Fuente ÚNICA: alimenta la línea visible "Revisado médicamente por…" (ArticleView)
+// y el schema reviewedBy / MedicalWebPage (ArticleJsonLd). Solo se aplica a notas con
+// `reviewStatus: "revisado"` + `reviewedDate` en su frontmatter (ver getMedicalReview).
+// Sin sameAs ni url: no hay perfil público de la revisora (no inventar).
+export type MedicalReviewer = {
+  name: string;
+  jobTitle: string;
+  alumniOf: string;
+  knowsAbout: string[];
+  cedulaProfesional: string;
+  cedulaEspecialidad: string;
+};
+
+export const MEDICAL_REVIEWER: MedicalReviewer | null = {
+  name: "Dra. Eva Araceli Gutiérrez Martínez",
+  jobTitle: "Cirujano Dermatóloga",
+  alumniOf: "Universidad Nacional Autónoma de México",
+  knowsAbout: ["Dermatología", "Dermatología Pediátrica", "Medicina Estética"],
+  cedulaProfesional: "996103",
+  cedulaEspecialidad: "3224437",
+};
+
+/**
+ * Revisión médica de UNA nota. Devuelve revisor + fecha solo si hay revisor
+ * configurado, la nota está marcada `reviewStatus: "revisado"` y trae un
+ * `reviewedDate` ISO válido. Cualquier otro caso (p. ej. "pendiente") → null:
+ * no se muestra la línea ni se emite schema de revisión.
+ */
+export function getMedicalReview(fm: {
+  reviewStatus?: string;
+  reviewedDate?: string;
+}): { reviewer: MedicalReviewer; reviewedDate: string } | null {
+  if (!MEDICAL_REVIEWER || fm.reviewStatus !== "revisado") return null;
+  if (typeof fm.reviewedDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(fm.reviewedDate)) {
+    return null;
+  }
+  return { reviewer: MEDICAL_REVIEWER, reviewedDate: fm.reviewedDate };
+}
 
 export const categorias: Categoria[] = [
   { slug: "lunares", nombre: "Lunares" },

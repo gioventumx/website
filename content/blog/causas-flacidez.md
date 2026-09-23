@@ -13,7 +13,8 @@ faq:
     a: "Con tratamientos que buscan estimular colágeno nuevo, como la tecnología láser reafirmante, y con masajes modeladores y drenaje que favorecen la microcirculación. Lo ideal es combinar buenos hábitos con tratamientos de grado médico y un diagnóstico personalizado."
   - q: "¿A partir de qué edad aparece la flacidez?"
     a: "No hay una edad exacta. La producción de colágeno empieza a disminuir alrededor de los 25 años, pero la rapidez con que se nota depende de la genética, el sol y el estilo de vida de cada persona."
-reviewStatus: "pendiente"
+reviewStatus: "revisado"
+reviewedDate: "2026-07-10"
 ---
 
 ¿Has notado que tu piel perdió su capacidad de «regresar» a su lugar? Esa falta de firmeza, conocida como **laxitud cutánea**, es una de las preocupaciones estéticas más frecuentes. Entender por qué aparece la flacidez es el primer paso para elegir un camino que tenga sentido, en vez de perder tiempo en soluciones superficiales.

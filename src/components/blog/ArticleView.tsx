@@ -11,6 +11,7 @@ import {
   departamentoNombre,
   formatFecha,
   getAutorPorNombre,
+  getMedicalReview,
   relatedPosts,
   type BlogPost,
 } from "@/data/blog";
@@ -50,6 +51,8 @@ export function ArticleView({
   // Imagen destacada: frontmatter (autoritativo) con fallback al campo de listados.
   const image = frontmatter.image ?? post.imagen;
   const imageAlt = frontmatter.imageAlt ?? post.titulo;
+  // Revisión médica de esta nota (misma fuente que el schema reviewedBy/lastReviewed).
+  const review = getMedicalReview(frontmatter);
 
   return (
     <>
@@ -76,6 +79,29 @@ export function ArticleView({
             <span aria-hidden>·</span>
             <span>{post.tiempoLectura} min de lectura</span>
           </div>
+          {/* Revisión médica visible: debe coincidir con reviewedBy/lastReviewed del JSON-LD. */}
+          {review && (
+            <p className="mt-3 flex items-start gap-2 border-t border-line pt-3 text-[0.85rem] text-muted">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+                className="mt-[3px] h-4 w-4 shrink-0 text-brand"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              <span className="min-w-0">
+                Revisado médicamente por{" "}
+                <span className="font-semibold text-ink">{review.reviewer.name}</span>,{" "}
+                {review.reviewer.jobTitle} · Céd. prof. {review.reviewer.cedulaProfesional} ·{" "}
+                <time dateTime={review.reviewedDate} className="whitespace-nowrap">{formatFecha(review.reviewedDate)}</time>
+              </span>
+            </p>
+          )}
         </header>
 
         {/* Cuerpo + aside */}

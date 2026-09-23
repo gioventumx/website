@@ -1,4 +1,10 @@
-import { categoriaNombre, getAutorPorNombre, type BlogPost } from "@/data/blog";
+import {
+  categoriaNombre,
+  getAutorPorNombre,
+  getMedicalReview,
+  type BlogPost,
+  type MedicalReviewer,
+} from "@/data/blog";
 import type { PostFrontmatter } from "@/lib/blog";
 import type { Crumb } from "./Breadcrumb";
 
@@ -6,23 +12,25 @@ import type { Crumb } from "./Breadcrumb";
 //  · BlogPosting (headline, autor Person, imagen ImageObject, wordCount, idioma…)
 //  · BreadcrumbList
 //  · FAQPage        (solo si el frontmatter trae faq con al menos una entrada)
-//  · MedicalWebPage (solo cuando haya REVISOR médico configurado — hoy no)
+//  · MedicalWebPage (solo en notas con revisión médica — ver getMedicalReview)
 const SITE = "https://gioventu.com.mx"; // igual que metadataBase (layout)
 const LANG = "es-MX";
 
-// ── E-E-A-T · Revisor médico ────────────────────────────────────────────────
-// TODO(revisor médico): cuando tengamos NOMBRE + CÉDULA PROFESIONAL de la
-// dermatóloga que revisa el contenido, rellena esta constante. Mientras sea null
-// NO se emite `reviewedBy` ni `MedicalWebPage` (evitamos schema falso en YMYL).
-// Forma esperada:
-//   { name: "Dra. Nombre Apellido", jobTitle: "Dermatóloga",
-//     cedula: "0000000", url: `${SITE}/conocenos/` }
-const MEDICAL_REVIEWER: {
-  name: string;
-  jobTitle: string;
-  cedula: string;
-  url?: string;
-} | null = null;
+// Person de la revisora médica (reviewedBy). Datos de MEDICAL_REVIEWER (data/blog.ts).
+// Sin sameAs/url: no hay perfil público.
+function reviewerPerson(r: MedicalReviewer) {
+  return {
+    "@type": "Person",
+    name: r.name,
+    jobTitle: r.jobTitle,
+    alumniOf: { "@type": "CollegeOrUniversity", name: r.alumniOf },
+    knowsAbout: r.knowsAbout,
+    identifier: [
+      { "@type": "PropertyValue", name: "Cédula profesional", value: r.cedulaProfesional },
+      { "@type": "PropertyValue", name: "Cédula de especialidad", value: r.cedulaEspecialidad },
+    ],
+  };
+}
 
 export function ArticleJsonLd({
   post,
@@ -46,7 +54,8 @@ export function ArticleJsonLd({
     ? { "@type": "Person", name: autor.nombre, url: `${SITE}/blog/autor/${autor.slug}/` }
     : { "@type": "Person", name: post.autor };
 
-  const reviewer = MEDICAL_REVIEWER;
+  // Revisión POR NOTA: null si la nota no está "revisado" (o sin revisor/fecha).
+  const review = getMedicalReview(frontmatter);
 
   const blogPosting = {
     "@context": "https://schema.org",
@@ -75,18 +84,8 @@ export function ArticleJsonLd({
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     keywords: post.etiquetas.join(", "),
     articleSection: categoriaNombre(post.categoriaPrincipal),
-    // reviewedBy se completa solo cuando haya revisor médico configurado.
-    ...(reviewer
-      ? {
-          reviewedBy: {
-            "@type": "Person",
-            name: reviewer.name,
-            jobTitle: reviewer.jobTitle,
-            identifier: reviewer.cedula,
-            ...(reviewer.url ? { url: reviewer.url } : {}),
-          },
-        }
-      : {}),
+    // reviewedBy solo en notas revisadas por el revisor médico.
+    ...(review ? { reviewedBy: reviewerPerson(review.reviewer) } : {}),
   };
 
   const breadcrumbList = {
@@ -116,26 +115,20 @@ export function ArticleJsonLd({
         }
       : null;
 
-  // MedicalWebPage: página de salud REVISADA por un médico. Solo con revisor.
-  const medicalWebPage =
-    reviewer
-      ? {
-          "@context": "https://schema.org",
-          "@type": "MedicalWebPage",
-          inLanguage: LANG,
-          "@id": url,
-          url,
-          name: post.titulo,
-          lastReviewed: dateModified,
-          reviewedBy: {
-            "@type": "Person",
-            name: reviewer.name,
-            jobTitle: reviewer.jobTitle,
-            identifier: reviewer.cedula,
-            ...(reviewer.url ? { url: reviewer.url } : {}),
-          },
-        }
-      : null;
+  // MedicalWebPage: página de salud REVISADA por un médico. Solo en notas revisadas.
+  // lastReviewed = reviewedDate (misma fecha que la línea visible), NO dateModified.
+  const medicalWebPage = review
+    ? {
+        "@context": "https://schema.org",
+        "@type": "MedicalWebPage",
+        inLanguage: LANG,
+        "@id": url,
+        url,
+        name: post.titulo,
+        lastReviewed: review.reviewedDate,
+        reviewedBy: reviewerPerson(review.reviewer),
+      }
+    : null;
 
   const graph = [blogPosting, breadcrumbList, faqPage, medicalWebPage].filter(Boolean);
 

@@ -13,7 +13,8 @@ faq:
     a: "No. La piel sensible reacciona a estímulos, pero la rosácea es una condición específica con enrojecimiento persistente y brotes. Además, su variante papulopustulosa se confunde con acné, aunque su origen y su manejo son distintos. Por eso importa el diagnóstico."
   - q: "¿Puedo tratar la rosácea con remedios caseros?"
     a: "No es recomendable. Muchos remedios o exfoliantes agresivos dañan aún más la barrera de la piel y pueden empeorar los brotes. Lo prudente es una valoración dermatológica antes de aplicar nada."
-reviewStatus: "pendiente"
+reviewStatus: "revisado"
+reviewedDate: "2026-07-10"
 ---
 
 ¿Te preocupa el enrojecimiento persistente en tu rostro? Entender la **rosácea, sus síntomas y causas**, es el primer paso para aliviar las molestias que afectan tu día a día. Se manifiesta como un rubor duradero y vasos sanguíneos visibles en la cara, con brotes que duran semanas y luego ceden temporalmente.

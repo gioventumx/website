@@ -22,8 +22,12 @@ export type PostFrontmatter = {
   dateModified?: string;
   /** Preguntas frecuentes → FAQPage. Solo se emite si hay al menos una. */
   faq?: PostFaq[];
-  /** "pendiente" = contenido médico sin validar por un profesional (marcador interno). */
+  /** "pendiente" = sin validar por un profesional; "revisado" = validado por el
+   *  revisor médico (MEDICAL_REVIEWER) → línea visible + reviewedBy/MedicalWebPage. */
   reviewStatus?: string;
+  /** Fecha real de la revisión médica (ISO YYYY-MM-DD, entre comillas en el YAML).
+   *  Alimenta la fecha visible y `lastReviewed`. Requerida si reviewStatus es "revisado". */
+  reviewedDate?: string;
 };
 
 /** Un encabezado del cuerpo para la tabla de contenidos. */
