@@ -112,14 +112,14 @@ export const bookingBranches: Record<BranchKey, BranchConfig> = {
     address:
       "Plaza Antigua 1 - Av. Dr. Jiménez Cantú Lote A-2-5, Oficina Torre 2, 212, Hacienda de Valle Escondido, 52938, Estado de México",
     hours: "Lun–Vie 10:30–19:30 · Sáb 10:30–15:30",
-    wa: "525561496600",
+    wa: "525568870009",
   },
   cuspide: {
     name: "Gioventù Plaza Cúspide",
     address:
       "Av. Lomas Verdes 1200, Local 53 C, Lomas Verdes, 53125, Estado de México.",
     hours: "Lun–Vie 10:00–19:00 · Sáb 9:00–14:00",
-    wa: "525540583256",
+    wa: "525568870009",
   },
 };
 

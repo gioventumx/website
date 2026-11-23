@@ -12,8 +12,6 @@ export type Branch = {
   name: string;
   /** Teléfono principal (header). */
   phone: string;
-  /** Número de WhatsApp (header). */
-  whatsapp: string;
   /** Dirección completa (footer + schema PostalAddress). */
   address: string;
   /** Municipio/localidad (schema addressLocality). */

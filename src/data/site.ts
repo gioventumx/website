@@ -10,6 +10,9 @@ export const site = {
   ] satisfies NavItem[],
 
   phone: { label: "Llama ahora", display: "55 4052 6837", tel: "5540526837" },
+  // WhatsApp ÚNICO (bandeja de Respond.io) para ambas sucursales. Header/Footer lo
+  // muestran en un solo renglón; anteponen 52, así que va en formato local de 10 dígitos.
+  whatsapp: "55 6887 0009",
   cta: { label: "Agendar cita", href: "#" },
 
   branches: [
@@ -17,7 +20,6 @@ export const site = {
       key: "cuspide",
       name: "Cúspide",
       phone: "55 5349 2712",
-      whatsapp: "55 4058 3256",
       address:
         "Avenida Lomas Verdes 1200, Local 53-C, Lomas Verdes, 53125, Naucalpan, Estado de México",
       locality: "Naucalpan de Juárez",
@@ -36,7 +38,6 @@ export const site = {
       key: "antigua",
       name: "Antigua",
       phone: "55 5308 2028",
-      whatsapp: "55 6149 6600",
       address:
         "Plaza Antigua 1 - Av. Dr. Jiménez Cantú Lote A-2-5, Oficina Torre 2, 212, Hacienda de Valle Escondido, 52938, Estado de México",
       locality: "Atizapán de Zaragoza",

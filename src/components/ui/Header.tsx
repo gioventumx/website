@@ -371,18 +371,20 @@ export function Header() {
                   <a href={telHref(b.phone)} className="text-muted transition-colors hover:text-brand">
                     Tel: {b.phone}
                   </a>
-                  <a
-                    href={waHref(b.whatsapp)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted transition-colors hover:text-brand"
-                  >
-                    WhatsApp: {b.whatsapp}
-                  </a>
                 </div>
               </div>
             ))}
           </div>
+
+          {/* WhatsApp único (Respond.io) para ambas sucursales: un solo renglón. */}
+          <a
+            href={waHref(site.whatsapp)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 block text-[0.9rem] text-muted transition-colors hover:text-brand"
+          >
+            WhatsApp: {site.whatsapp}
+          </a>
         </div>
       </div>
     </>

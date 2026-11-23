@@ -63,20 +63,22 @@ export function Footer() {
                     <a href={tel(b.phone)} className="transition-colors hover:text-white">
                       Tel: {b.phone}
                     </a>
-                    <span className="text-[#807da0]"> · </span>
-                    <a
-                      href={wa(b.whatsapp)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-white"
-                    >
-                      WhatsApp: {b.whatsapp}
-                    </a>
                   </p>
                   <p className="mt-1 text-[0.8rem] text-[#807da0]">{b.hours}</p>
                 </li>
               ))}
             </ul>
+            {/* WhatsApp único (Respond.io) para ambas sucursales: un solo renglón. */}
+            <p className="mt-5 text-[0.84rem]">
+              <a
+                href={wa(site.whatsapp)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-white"
+              >
+                WhatsApp: {site.whatsapp}
+              </a>
+            </p>
           </div>
 
           {/* CTA + redes */}

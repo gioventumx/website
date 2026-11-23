@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { bookingBranches, type BranchKey } from "@/data/booking";
+import { normalizePhoneMX } from "@/lib/phone";
 
 // Notificación de leads por correo (best-effort). El canal REAL del lead es WhatsApp;
 // este correo es una red de seguridad por si el mensaje de WhatsApp no llega. El cliente
@@ -9,21 +10,9 @@ import { bookingBranches, type BranchKey } from "@/data/booking";
 export const runtime = "nodejs";
 
 const FROM = "Gioventù <noreply@gioventu.com.mx>";
-// BCC fijo: reciben TODOS los leads sin importar la sucursal (el "to" sí varía por
-// sucursal). Tres de SCNDAL + dos de Gioventù.
-const BCC = [
-  "andrea.r@scndal.com",
-  "hola@scndal.com",
-  "michel.l@scndal.com",
-  "lili.v@gioventu.com.mx",
-  "chepis.v@gioventu.com.mx",
-];
-
-// Destinatario por sucursal.
-const BRANCH_TO: Record<BranchKey, string> = {
-  antigua: "antigua@gioventu.com.mx",
-  cuspide: "cuspide@gioventu.com.mx",
-};
+// Destinatarios ÚNICOS de la notificación: todos los leads, de ambas sucursales, van a
+// estas dos bandejas en un solo envío (sin CC/BCC). La sucursal se distingue por el ASUNTO.
+const LEAD_RECIPIENTS = ["leads@scndal.com", "leads@gioventu.com.mx"];
 
 // Etiqueta de sucursal para el CRM: contrato acordado ("Antigua"/"Cúspide", con acento
 // y mayúscula), NO la key interna. El mapeo se hace aquí (servidor) para no depender de
@@ -37,6 +26,20 @@ const BRANCH_CRM_LABEL: Record<BranchKey, "Antigua" | "Cúspide"> = {
 // secreto (el endpoint exige Bearer, ver CRM_WEBHOOK_SECRET abajo) y así hay una sola
 // fuente de verdad, versionada y visible en el diff.
 const CRM_WEBHOOK_URL = "https://api.scndal.com/leads/gioventu?source=website";
+
+// Respond.io (bandeja única de WhatsApp): upsert del contacto por teléfono. El identificador
+// va como `phone:+52XXXXXXXXXX` SIN encodeURIComponent (igual que el SDK oficial; en el path
+// el "+" es literal). Respond guarda los contactos de WhatsApp de este workspace como
+// +52 + 10 dígitos (sin el 1), así que el contacto creado aquí y el del chat son el mismo.
+const RESPOND_UPSERT_URL = "https://api.respond.io/v2/contact/create_or_update/phone:";
+const RESPOND_TIMEOUT_MS = 5_000;
+
+// Valor del campo personalizado `sucursal` en Respond: EXACTO y SIN acento (lo lee la IA y
+// las automatizaciones). Distinto a propósito de BRANCH_CRM_LABEL.
+const BRANCH_RESPOND_LABEL: Record<BranchKey, "Antigua" | "Cuspide"> = {
+  antigua: "Antigua",
+  cuspide: "Cuspide",
+};
 
 // Rate limit en memoria por IP (ventana deslizante). Suficiente para el volumen de un
 // endpoint interno de un centro; efectivo por instancia de función (Fluid Compute
@@ -126,7 +129,8 @@ export async function POST(req: NextRequest) {
   // recepción lo distinga desde la bandeja sin abrir el correo.
   const serviceSubject =
     service === "Wellness Spa" ? "Wellness (Faciales o Masajes)" : service;
-  const subject = `Nuevo lead — ${serviceSubject} — ${branchName}`;
+  // La sucursal va PRIMERO en el asunto: ya no se distingue por destinatario.
+  const subject = `Nuevo lead · ${BRANCH_CRM_LABEL[branchKey]} · ${serviceSubject}`;
   // Solo para el correo: si el lead es "Wellness Spa" sin subservicio (viene de faciales
   // o masajes por ruta cuando sí se sabe), dejamos claro que no se especificó cuál.
   const serviceDisplay =
@@ -178,8 +182,7 @@ export async function POST(req: NextRequest) {
       const resend = new Resend(apiKey);
       const { error } = await resend.emails.send({
         from: FROM,
-        to: BRANCH_TO[branchKey],
-        bcc: BCC,
+        to: LEAD_RECIPIENTS,
         subject,
         html,
       });
@@ -242,21 +245,85 @@ export async function POST(req: NextRequest) {
     }
   };
 
-  // allSettled (NO all): correo y CRM arrancan a la vez, ninguno bloquea al otro, y
-  // ESPERAMOS a que AMBOS se asienten antes del return. Crítico en serverless: si la
+  // Upsert del contacto en Respond.io. Autocontenido y SIN throw. Solo identidad + sucursal:
+  // NUNCA servicio, tratamiento, origen ni ningún dato de salud; tampoco toca etapa de ciclo
+  // de vida ni etiquetas. Timeout corto y SIN reintentos (un 429 se registra y ya): el lead
+  // ya llegó por WhatsApp/correo/CRM, Respond es complementario.
+  const sendRespond = async (): Promise<SendResult> => {
+    const token = process.env.RESPOND_IO_API_TOKEN;
+    if (!token) {
+      console.error("lead: RESPOND_IO_API_TOKEN ausente; se omite Respond");
+      return { ok: false, error: "config" };
+    }
+    const e164 = normalizePhoneMX(phone);
+    if (!e164) {
+      console.error("lead: teléfono no normalizable a E.164; se omite Respond");
+      return { ok: false, error: "respond_skipped" };
+    }
+    const sucursal = branchKey ? BRANCH_RESPOND_LABEL[branchKey] : undefined;
+    try {
+      const res = await fetch(`${RESPOND_UPSERT_URL}${e164}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          firstName: name || "Lead web",
+          phone: e164,
+          countryCode: "MX",
+          language: "es",
+          ...(sucursal ? { custom_fields: [{ name: "sucursal", value: sucursal }] } : {}),
+        }),
+        signal: AbortSignal.timeout(RESPOND_TIMEOUT_MS),
+      });
+      if (!res.ok) {
+        // Log SIN PII. En 429 registramos Retry-After solo como diagnóstico: no reintentamos.
+        const retryAfter = res.status === 429 ? res.headers.get("retry-after") : null;
+        console.error(
+          "lead: Respond respondió con status",
+          res.status,
+          ...(retryAfter ? ["retry-after", retryAfter] : [])
+        );
+        return { ok: false, error: `respond_${res.status}` };
+      }
+      return { ok: true };
+    } catch (e) {
+      const timedOut =
+        e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError");
+      console.error(
+        "lead: excepción en Respond",
+        timedOut ? "timeout" : e instanceof Error ? e.message : "desconocido"
+      );
+      return { ok: false, error: timedOut ? "respond_timeout" : "respond_threw" };
+    }
+  };
+
+  // allSettled (NO all): correo, CRM y Respond arrancan a la vez, ninguno bloquea al otro, y
+  // ESPERAMOS a que TODOS se asienten antes del return. Crítico en serverless: si la
   // función retornara antes, Vercel podría matar el POST al CRM a medias y el lead no
   // llegaría sin error visible. allSettled tolera que uno falle sin abortar al otro.
-  const [emailR, crmR] = await Promise.allSettled([sendEmail(), sendCrm()]);
+  const [emailR, crmR, respondR] = await Promise.allSettled([
+    sendEmail(),
+    sendCrm(),
+    sendRespond(),
+  ]);
   const norm = (r: PromiseSettledResult<SendResult>): SendResult =>
     r.status === "fulfilled" ? r.value : { ok: false, error: "threw" };
   const email = norm(emailR);
   const crm = norm(crmR);
+  const respond = norm(respondR);
 
   // Best-effort: el cliente ignora la respuesta (WhatsApp ya se abrió). El status real
-  // (502 si algo falló) sirve para que los logs de Vercel marquen el problema.
+  // (502 si algo falló) sirve para que los logs de Vercel marquen el problema. Respond NO
+  // cuenta para el status (es complementario); va en el JSON solo como diagnóstico.
   const status = email.ok && crm.ok ? 200 : 502;
   return NextResponse.json(
-    { email: email.ok ? "ok" : email.error, crm: crm.ok ? "ok" : crm.error },
+    {
+      email: email.ok ? "ok" : email.error,
+      crm: crm.ok ? "ok" : crm.error,
+      respond: respond.ok ? "ok" : respond.error,
+    },
     { status }
   );
 }
