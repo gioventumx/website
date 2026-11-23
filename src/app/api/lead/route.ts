@@ -41,6 +41,26 @@ const BRANCH_RESPOND_LABEL: Record<BranchKey, "Antigua" | "Cuspide"> = {
   cuspide: "Cuspide",
 };
 
+// Lista blanca del campo personalizado `servicio` (tipo lista) en Respond: valores EXACTOS
+// permitidos. Un valor fuera de lista puede hacer que Respond rechace TODA la llamada, así
+// que lo que no coincida se omite.
+const RESPOND_SERVICES = new Set([
+  "Dermatología",
+  "Medicina Estética",
+  "Wellness Spa",
+  "Faciales",
+  "Masajes",
+  "Depilación Láser",
+  "Otro",
+]);
+
+/** Servicio para Respond: "Otro"/"Otro: <texto>" → "Otro" (NUNCA el texto libre); valor de
+ *  la lista blanca → tal cual; "-", vacío o fuera de lista → null (se omite el campo). */
+function respondService(service: string): string | null {
+  if (service.startsWith("Otro")) return "Otro";
+  return RESPOND_SERVICES.has(service) ? service : null;
+}
+
 // Rate limit en memoria por IP (ventana deslizante). Suficiente para el volumen de un
 // endpoint interno de un centro; efectivo por instancia de función (Fluid Compute
 // comparte memoria entre requests concurrentes de la misma instancia, no globalmente).
@@ -245,8 +265,9 @@ export async function POST(req: NextRequest) {
     }
   };
 
-  // Upsert del contacto en Respond.io. Autocontenido y SIN throw. Solo identidad + sucursal:
-  // NUNCA servicio, tratamiento, origen ni ningún dato de salud; tampoco toca etapa de ciclo
+  // Upsert del contacto en Respond.io. Autocontenido y SIN throw. Solo identidad + sucursal +
+  // categoría de servicio (lista blanca): NUNCA tratamiento, texto libre de "Otro", origen ni
+  // ningún otro dato; tampoco toca etapa de ciclo
   // de vida ni etiquetas. Timeout corto y SIN reintentos (un 429 se registra y ya): el lead
   // ya llegó por WhatsApp/correo/CRM, Respond es complementario.
   const sendRespond = async (): Promise<SendResult> => {
@@ -261,6 +282,11 @@ export async function POST(req: NextRequest) {
       return { ok: false, error: "respond_skipped" };
     }
     const sucursal = branchKey ? BRANCH_RESPOND_LABEL[branchKey] : undefined;
+    const servicio = respondService(service);
+    const customFields = [
+      ...(sucursal ? [{ name: "sucursal", value: sucursal }] : []),
+      ...(servicio ? [{ name: "servicio", value: servicio }] : []),
+    ];
     try {
       const res = await fetch(`${RESPOND_UPSERT_URL}${e164}`, {
         method: "POST",
@@ -273,7 +299,7 @@ export async function POST(req: NextRequest) {
           phone: e164,
           countryCode: "MX",
           language: "es",
-          ...(sucursal ? { custom_fields: [{ name: "sucursal", value: sucursal }] } : {}),
+          ...(customFields.length ? { custom_fields: customFields } : {}),
         }),
         signal: AbortSignal.timeout(RESPOND_TIMEOUT_MS),
       });
