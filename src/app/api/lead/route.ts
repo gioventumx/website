@@ -31,8 +31,68 @@ const CRM_WEBHOOK_URL = "https://api.scndal.com/leads/gioventu?source=website";
 // va como `phone:+52XXXXXXXXXX` SIN encodeURIComponent (igual que el SDK oficial; en el path
 // el "+" es literal). Respond guarda los contactos de WhatsApp de este workspace como
 // +52 + 10 dígitos (sin el 1), así que el contacto creado aquí y el del chat son el mismo.
-const RESPOND_UPSERT_URL = "https://api.respond.io/v2/contact/create_or_update/phone:";
+const RESPOND_API = "https://api.respond.io/v2/contact";
 const RESPOND_TIMEOUT_MS = 5_000;
+// Etiqueta que se agrega a todo contacto que entra por el formulario. Body del endpoint de
+// tags: un ARRAY JSON de nombres (["..."]), no un objeto (SDK oficial: addTags).
+const RESPOND_TAG = "Formulario web";
+// Etapa inicial SOLO si el contacto no tiene ninguna. Body de lifecycle/update: { name }.
+const RESPOND_INITIAL_LIFECYCLE = "Lead Entrante";
+
+type RespondCall = SendResult & { res?: Response };
+
+/** Una llamada a Respond: timeout de 5 s, SIN reintentos (un 429 se registra y ya), nunca
+ *  lanza. Logs SIN PII: solo el paso y el status, jamás la URL (lleva el teléfono). */
+async function respondFetch(
+  step: string,
+  url: string,
+  token: string,
+  method: "GET" | "POST",
+  body?: unknown
+): Promise<RespondCall> {
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+      },
+      ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+      signal: AbortSignal.timeout(RESPOND_TIMEOUT_MS),
+    });
+    if (!res.ok) {
+      const retryAfter = res.status === 429 ? res.headers.get("retry-after") : null;
+      console.error(
+        `lead: Respond (${step}) respondió con status`,
+        res.status,
+        ...(retryAfter ? ["retry-after", retryAfter] : [])
+      );
+      return { ok: false, error: `respond_${step}_${res.status}` };
+    }
+    return { ok: true, res };
+  } catch (e) {
+    const timedOut =
+      e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError");
+    console.error(
+      `lead: excepción en Respond (${step})`,
+      timedOut ? "timeout" : e instanceof Error ? e.message : "desconocido"
+    );
+    return { ok: false, error: timedOut ? `respond_${step}_timeout` : `respond_${step}_threw` };
+  }
+}
+
+/** ¿El contacto ya tiene etapa de ciclo de vida? Defensivo con la forma de la respuesta
+ *  (string o { name }). Ante cualquier duda devuelve true: preferimos NO tocar la etapa. */
+function hasLifecycle(contact: unknown): boolean {
+  if (!contact || typeof contact !== "object") return true;
+  const lc = (contact as { lifecycle?: unknown }).lifecycle;
+  if (lc === null || lc === undefined || lc === "") return false;
+  if (typeof lc === "object") {
+    const n = (lc as { name?: unknown }).name;
+    return !(n === null || n === undefined || n === "");
+  }
+  return true;
+}
 
 // Valor del campo personalizado `sucursal` en Respond: EXACTO y SIN acento (lo lee la IA y
 // las automatizaciones). Distinto a propósito de BRANCH_CRM_LABEL.
@@ -265,12 +325,15 @@ export async function POST(req: NextRequest) {
     }
   };
 
-  // Upsert del contacto en Respond.io. Autocontenido y SIN throw. Solo identidad + sucursal +
-  // categoría de servicio (lista blanca): NUNCA tratamiento, texto libre de "Otro", origen ni
-  // ningún otro dato; tampoco toca etapa de ciclo
-  // de vida ni etiquetas. Timeout corto y SIN reintentos (un 429 se registra y ya): el lead
-  // ya llegó por WhatsApp/correo/CRM, Respond es complementario.
-  const sendRespond = async (): Promise<SendResult> => {
+  // Respond.io. Autocontenido y SIN throw. 3 pasos, en orden:
+  //  1) create_or_update: identidad + sucursal + categoría de servicio (lista blanca). NUNCA
+  //     tratamiento, texto libre de "Otro", origen ni ningún otro dato.
+  //  2) tag "Formulario web" y 3) lifecycle "Lead Entrante" SOLO si no tiene etapa (se lee
+  //     con GET; si el GET falla, NO se toca la etapa). 2 y 3 corren en paralelo y solo si el
+  //     1 salió bien; su fallo no afecta al 1 ni al correo/CRM. Sin reintentos.
+  const sendRespond = async (): Promise<
+    SendResult & { tag?: string; lifecycle?: string }
+  > => {
     const token = process.env.RESPOND_IO_API_TOKEN;
     if (!token) {
       console.error("lead: RESPOND_IO_API_TOKEN ausente; se omite Respond");
@@ -287,42 +350,55 @@ export async function POST(req: NextRequest) {
       ...(sucursal ? [{ name: "sucursal", value: sucursal }] : []),
       ...(servicio ? [{ name: "servicio", value: servicio }] : []),
     ];
-    try {
-      const res = await fetch(`${RESPOND_UPSERT_URL}${e164}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          firstName: name || "Lead web",
-          phone: e164,
-          countryCode: "MX",
-          language: "es",
-          ...(customFields.length ? { custom_fields: customFields } : {}),
-        }),
-        signal: AbortSignal.timeout(RESPOND_TIMEOUT_MS),
-      });
-      if (!res.ok) {
-        // Log SIN PII. En 429 registramos Retry-After solo como diagnóstico: no reintentamos.
-        const retryAfter = res.status === 429 ? res.headers.get("retry-after") : null;
-        console.error(
-          "lead: Respond respondió con status",
-          res.status,
-          ...(retryAfter ? ["retry-after", retryAfter] : [])
-        );
-        return { ok: false, error: `respond_${res.status}` };
+
+    // Identificador `phone:+52…` sin encodeURIComponent (ver RESPOND_API).
+    const contactUrl = `${RESPOND_API}/phone:${e164}`;
+
+    const upsert = await respondFetch(
+      "upsert",
+      `${RESPOND_API}/create_or_update/phone:${e164}`,
+      token,
+      "POST",
+      {
+        firstName: name || "Lead web",
+        phone: e164,
+        countryCode: "MX",
+        language: "es",
+        ...(customFields.length ? { custom_fields: customFields } : {}),
       }
-      return { ok: true };
-    } catch (e) {
-      const timedOut =
-        e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError");
-      console.error(
-        "lead: excepción en Respond",
-        timedOut ? "timeout" : e instanceof Error ? e.message : "desconocido"
-      );
-      return { ok: false, error: timedOut ? "respond_timeout" : "respond_threw" };
-    }
+    );
+    if (!upsert.ok) return { ok: false, error: upsert.error };
+
+    const addTag = async (): Promise<SendResult> =>
+      respondFetch("tag", `${contactUrl}/tag`, token, "POST", [RESPOND_TAG]);
+
+    const setLifecycle = async (): Promise<SendResult & { skipped?: boolean }> => {
+      const got = await respondFetch("get", contactUrl, token, "GET");
+      if (!got.ok || !got.res) return got;
+      let contact: unknown;
+      try {
+        contact = await got.res.json();
+      } catch {
+        console.error("lead: Respond (get) devolvió JSON inválido; no se toca la etapa");
+        return { ok: false, error: "respond_get_json" };
+      }
+      if (hasLifecycle(contact)) return { ok: true, skipped: true };
+      return respondFetch("lifecycle", `${contactUrl}/lifecycle/update`, token, "POST", {
+        name: RESPOND_INITIAL_LIFECYCLE,
+      });
+    };
+
+    const [tagR, lcR] = await Promise.allSettled([addTag(), setLifecycle()]);
+    const tag = tagR.status === "fulfilled" ? tagR.value : { ok: false, error: "threw" };
+    const lc =
+      lcR.status === "fulfilled"
+        ? lcR.value
+        : ({ ok: false, error: "threw" } as SendResult & { skipped?: boolean });
+    return {
+      ok: true,
+      tag: tag.ok ? "ok" : tag.error,
+      lifecycle: lc.ok ? (lc.skipped ? "kept" : "set") : lc.error,
+    };
   };
 
   // allSettled (NO all): correo, CRM y Respond arrancan a la vez, ninguno bloquea al otro, y
@@ -338,7 +414,8 @@ export async function POST(req: NextRequest) {
     r.status === "fulfilled" ? r.value : { ok: false, error: "threw" };
   const email = norm(emailR);
   const crm = norm(crmR);
-  const respond = norm(respondR);
+  const respond =
+    respondR.status === "fulfilled" ? respondR.value : { ok: false, error: "threw" };
 
   // Best-effort: el cliente ignora la respuesta (WhatsApp ya se abrió). El status real
   // (502 si algo falló) sirve para que los logs de Vercel marquen el problema. Respond NO
@@ -349,6 +426,8 @@ export async function POST(req: NextRequest) {
       email: email.ok ? "ok" : email.error,
       crm: crm.ok ? "ok" : crm.error,
       respond: respond.ok ? "ok" : respond.error,
+      ...("tag" in respond ? { respond_tag: respond.tag } : {}),
+      ...("lifecycle" in respond ? { respond_lifecycle: respond.lifecycle } : {}),
     },
     { status }
   );
