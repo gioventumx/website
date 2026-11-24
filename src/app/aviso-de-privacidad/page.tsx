@@ -94,6 +94,7 @@ Sus datos personales pueden ser transferidos a:
 | Destinatario | Finalidad | ¿Requiere su consentimiento? |
 |---|---|---|
 | Plataforma de CRM y agendamiento | Gestión de citas y seguimiento de pacientes | Sí |
+| Respond.io (plataforma de mensajería y atención) | Gestionar conversaciones de WhatsApp y redes sociales, dar seguimiento a solicitudes de cita y asignarlas a la recepción de cada sucursal; incluye una asistente con inteligencia artificial para la primera atención. Datos: nombre, teléfono, sucursal, servicio de interés y contenido de las conversaciones. | Sí |
 | Autoridades sanitarias y judiciales | Cumplimiento de obligaciones legales | No (Art. 37 LFPDPPP) |
 | Laboratorios y servicios de diagnóstico externos | Estudios y análisis derivados de su tratamiento | Sí |
 
@@ -154,7 +155,7 @@ Gioventù ha implementado medidas de seguridad administrativas, técnicas y fís
 
 Nos reservamos el derecho de modificar el presente aviso. Cualquier cambio será publicado en **https://gioventu.com.mx/aviso-de-privacidad/** y, cuando corresponda, comunicado por correo electrónico.
 
-**Última actualización:** 9 de junio de 2026
+**Última actualización:** 23 de noviembre de 2026
 
 ## 11. Autoridad en materia de protección de datos
 
