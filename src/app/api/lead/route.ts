@@ -27,10 +27,12 @@ const BRANCH_CRM_LABEL: Record<BranchKey, "Antigua" | "Cúspide"> = {
 // fuente de verdad, versionada y visible en el diff.
 const CRM_WEBHOOK_URL = "https://api.scndal.com/leads/gioventu?source=website";
 
-// Respond.io (bandeja única de WhatsApp): upsert del contacto por teléfono. El identificador
-// va como `phone:+52XXXXXXXXXX` SIN encodeURIComponent (igual que el SDK oficial; en el path
-// el "+" es literal). Respond guarda los contactos de WhatsApp de este workspace como
-// +52 + 10 dígitos (sin el 1), así que el contacto creado aquí y el del chat son el mismo.
+// Respond.io (bandeja única de WhatsApp): upsert del contacto por teléfono. En el upsert el
+// identificador va como `phone:+52XXXXXXXXXX` SIN codificar (así funciona en producción).
+// Respond guarda los contactos de WhatsApp de este workspace como +52 + 10 dígitos (sin el
+// 1), así que el contacto creado aquí y el del chat son el mismo. Las llamadas POSTERIORES
+// (tag, GET, lifecycle) usan `id:<contactId>` que devuelve el upsert; con `phone:+…` sin
+// codificar no se aplicaban en producción.
 const RESPOND_API = "https://api.respond.io/v2/contact";
 const RESPOND_TIMEOUT_MS = 5_000;
 // Etiqueta que se agrega a todo contacto que entra por el formulario. Body del endpoint de
@@ -41,14 +43,40 @@ const RESPOND_INITIAL_LIFECYCLE = "Lead Entrante";
 
 type RespondCall = SendResult & { res?: Response };
 
-/** Una llamada a Respond: timeout de 5 s, SIN reintentos (un 429 se registra y ya), nunca
- *  lanza. Logs SIN PII: solo el paso y el status, jamás la URL (lleva el teléfono). */
+const RESPOND_404_RETRY_DELAY_MS = 1_000;
+
+/** Motivo de error de Respond, apto para logs: solo el `message`, con cualquier secuencia
+ *  de 7+ dígitos y correos enmascarados (por si Respond eco-ea el identificador), recortado. */
+async function respondErrorReason(res: Response): Promise<string> {
+  try {
+    const text = await res.text();
+    let msg = text;
+    try {
+      const j = JSON.parse(text) as { message?: unknown };
+      if (typeof j.message === "string") msg = j.message;
+    } catch {
+      /* no es JSON: usamos el texto */
+    }
+    return msg
+      .replace(/\+?\d[\d\s-]{6,}\d/g, "[num]")
+      .replace(/[^\s@]+@[^\s@]+/g, "[email]")
+      .slice(0, 200);
+  } catch {
+    return "";
+  }
+}
+
+/** Una llamada a Respond: timeout de 5 s por intento, nunca lanza. Sin reintentos, salvo
+ *  `retry404`: ante un 404 espera 1 s y reintenta UNA sola vez (el contacto recién creado
+ *  puede no estar disponible aún). Un 429 se registra y ya. Logs SIN PII: el paso, el
+ *  status y el motivo enmascarado; jamás la URL (puede llevar el teléfono). */
 async function respondFetch(
   step: string,
   url: string,
   token: string,
   method: "GET" | "POST",
-  body?: unknown
+  body?: unknown,
+  opts: { retry404?: boolean } = {}
 ): Promise<RespondCall> {
   try {
     const res = await fetch(url, {
@@ -62,11 +90,18 @@ async function respondFetch(
     });
     if (!res.ok) {
       const retryAfter = res.status === 429 ? res.headers.get("retry-after") : null;
+      const reason = await respondErrorReason(res);
       console.error(
         `lead: Respond (${step}) respondió con status`,
         res.status,
-        ...(retryAfter ? ["retry-after", retryAfter] : [])
+        ...(retryAfter ? ["retry-after", retryAfter] : []),
+        ...(reason ? ["motivo", reason] : [])
       );
+      if (res.status === 404 && opts.retry404) {
+        console.error(`lead: Respond (${step}) 404; reintento único en 1 s`);
+        await new Promise((r) => setTimeout(r, RESPOND_404_RETRY_DELAY_MS));
+        return respondFetch(step, url, token, method, body, { retry404: false });
+      }
       return { ok: false, error: `respond_${step}_${res.status}` };
     }
     return { ok: true, res };
@@ -330,7 +365,9 @@ export async function POST(req: NextRequest) {
   //     tratamiento, texto libre de "Otro", origen ni ningún otro dato.
   //  2) tag "Formulario web" y 3) lifecycle "Lead Entrante" SOLO si no tiene etapa (se lee
   //     con GET; si el GET falla, NO se toca la etapa). 2 y 3 corren en paralelo y solo si el
-  //     1 salió bien; su fallo no afecta al 1 ni al correo/CRM. Sin reintentos.
+  //     1 salió bien; su fallo no afecta al 1 ni al correo/CRM. Usan `id:<contactId>` del
+  //     upsert (fallback: `phone:` con encodeURIComponent). Único reintento: un 404 en 2/3.
+  //  TODO se espera (await) antes de responder: en Vercel lo no esperado puede no ejecutarse.
   const sendRespond = async (): Promise<
     SendResult & { tag?: string; lifecycle?: string }
   > => {
@@ -351,9 +388,6 @@ export async function POST(req: NextRequest) {
       ...(servicio ? [{ name: "servicio", value: servicio }] : []),
     ];
 
-    // Identificador `phone:+52…` sin encodeURIComponent (ver RESPOND_API).
-    const contactUrl = `${RESPOND_API}/phone:${e164}`;
-
     const upsert = await respondFetch(
       "upsert",
       `${RESPOND_API}/create_or_update/phone:${e164}`,
@@ -367,13 +401,40 @@ export async function POST(req: NextRequest) {
         ...(customFields.length ? { custom_fields: customFields } : {}),
       }
     );
-    if (!upsert.ok) return { ok: false, error: upsert.error };
+    if (!upsert.ok || !upsert.res) return { ok: false, error: upsert.error };
+
+    // contactId del upsert ({ contactId: number }). Si no viene, fallback a phone: con el "+"
+    // codificado (encodeURIComponent del identificador completo → phone%3A%2B52…).
+    let contactId: number | null = null;
+    try {
+      const j = (await upsert.res.json()) as { contactId?: unknown };
+      if (typeof j.contactId === "number" && Number.isFinite(j.contactId)) {
+        contactId = j.contactId;
+      } else if (typeof j.contactId === "string" && /^\d+$/.test(j.contactId)) {
+        contactId = Number(j.contactId);
+      }
+    } catch {
+      /* cuerpo no JSON: usamos el fallback */
+    }
+    if (contactId === null) {
+      console.error("lead: Respond (upsert) sin contactId; se usa phone codificado");
+    }
+    // `id:<n>` va literal (solo dígitos, nada que codificar); el fallback por teléfono sí se
+    // codifica completo para que el "+" no se interprete como espacio.
+    const contactUrl =
+      contactId !== null
+        ? `${RESPOND_API}/id:${contactId}`
+        : `${RESPOND_API}/${encodeURIComponent(`phone:${e164}`)}`;
 
     const addTag = async (): Promise<SendResult> =>
-      respondFetch("tag", `${contactUrl}/tag`, token, "POST", [RESPOND_TAG]);
+      respondFetch("tag", `${contactUrl}/tag`, token, "POST", [RESPOND_TAG], {
+        retry404: true,
+      });
 
     const setLifecycle = async (): Promise<SendResult & { skipped?: boolean }> => {
-      const got = await respondFetch("get", contactUrl, token, "GET");
+      const got = await respondFetch("get", contactUrl, token, "GET", undefined, {
+        retry404: true,
+      });
       if (!got.ok || !got.res) return got;
       let contact: unknown;
       try {
@@ -383,9 +444,14 @@ export async function POST(req: NextRequest) {
         return { ok: false, error: "respond_get_json" };
       }
       if (hasLifecycle(contact)) return { ok: true, skipped: true };
-      return respondFetch("lifecycle", `${contactUrl}/lifecycle/update`, token, "POST", {
-        name: RESPOND_INITIAL_LIFECYCLE,
-      });
+      return respondFetch(
+        "lifecycle",
+        `${contactUrl}/lifecycle/update`,
+        token,
+        "POST",
+        { name: RESPOND_INITIAL_LIFECYCLE },
+        { retry404: true }
+      );
     };
 
     const [tagR, lcR] = await Promise.allSettled([addTag(), setLifecycle()]);
